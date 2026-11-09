@@ -1,0 +1,13 @@
+{
+  "name": "@woor/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Règles métier partagées : rôles, états, machine à états des commandes",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json"
+  }
+}
