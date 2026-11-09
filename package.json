@@ -1,0 +1,33 @@
+{
+  "name": "woor",
+  "private": true,
+  "type": "module",
+  "description": "Wóor : l'acompte bloqué sur Lightning, pour le commerce en ligne à Dakar",
+  "license": "MIT",
+  "packageManager": "pnpm@10.34.9",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --recursive --parallel --filter \"./apps/*\" dev",
+    "build": "pnpm --recursive build",
+    "typecheck": "pnpm --recursive typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "infra:up": "docker compose --file infra/docker-compose.yml up --detach",
+    "infra:down": "docker compose --file infra/docker-compose.yml down",
+    "infra:reset": "docker compose --file infra/docker-compose.yml down --volumes && docker compose --file infra/docker-compose.yml up --detach"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "prettier": "^3.9.10",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.72.1"
+  }
+}

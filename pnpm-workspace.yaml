@@ -1,0 +1,7 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Seuls ces paquets ont le droit d'exécuter un script à l'installation.
+onlyBuiltDependencies:
+  - esbuild
