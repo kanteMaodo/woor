@@ -1,0 +1,47 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--wo-bg);
+  color: var(--wo-ink);
+  font-family: var(--wo-font);
+  font-size: var(--wo-text-md);
+  line-height: 1.5;
+}
+
+h1 {
+  margin: 0 0 var(--wo-space-2);
+  font-size: var(--wo-text-lg);
+}
+
+p {
+  margin: 0 0 var(--wo-space-2);
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--wo-space-3) var(--wo-space-2);
+}
+
+.muted {
+  color: var(--wo-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

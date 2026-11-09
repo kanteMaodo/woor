@@ -1,0 +1,40 @@
+/*
+ * Jetons du design system Wóor (parchemin technique, section « Design system »).
+ * Contrastes vérifiés selon WCAG 2.1 AA. --wo-bitcoin ne sert jamais pour du texte.
+ */
+:root {
+  /* Couleurs */
+  --wo-ink: #14213d;
+  --wo-bg: #fffdf8;
+  --wo-surface: #ffffff;
+  --wo-primary: #0b6e4f;
+  --wo-primary-soft: #e3f2ec;
+  --wo-muted: #5b6475;
+  --wo-line: #e6e1d6;
+  --wo-line-strong: #9a9384;
+  --wo-sats: #b45309;
+  --wo-warning: #8a4b00;
+  --wo-warning-bg: #fff4e5;
+  --wo-danger: #b42318;
+  --wo-danger-bg: #fdecea;
+  --wo-bitcoin: #f7931a;
+
+  /* Typographie : police du système, zéro téléchargement */
+  --wo-font: system-ui, Roboto, "Noto Sans", sans-serif;
+  --wo-text-xs: 0.875rem; /* 14 px, mentions */
+  --wo-text-md: 1rem; /* 16 px, texte */
+  --wo-text-lg: 1.25rem; /* 20 px, titres */
+  --wo-text-xl: 1.75rem; /* 28 px, montants */
+  --wo-text-code: 2.5rem; /* 40 px, code de remise */
+
+  /* Espacements sur une grille de 8 px */
+  --wo-space-1: 0.5rem;
+  --wo-space-2: 1rem;
+  --wo-space-3: 1.5rem;
+  --wo-space-4: 2rem;
+
+  /* Formes */
+  --wo-radius: 12px;
+  --wo-touch: 48px;
+  --wo-button-height: 56px;
+}
