@@ -1,0 +1,13 @@
+{
+  "name": "@woor/ln",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interface LightningProvider et ses adaptateurs (LND en premier)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json"
+  }
+}
