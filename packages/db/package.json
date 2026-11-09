@@ -1,0 +1,20 @@
+{
+  "name": "@woor/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Accès PostgreSQL : pool, transactions, contexte de session pour la RLS",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@woor/core": "workspace:*",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
+  }
+}
