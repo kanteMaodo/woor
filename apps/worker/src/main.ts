@@ -1,22 +1,39 @@
 import { loadEnv } from "./config/env";
-import { JOB_NAMES } from "./jobs/job-names";
+import { createContainer } from "./container";
 import { createLogger } from "./logger";
+import { runPeriodically } from "./runtime/periodic-task";
 
 const env = loadEnv();
 const logger = createLogger(env);
+const container = createContainer(env, logger);
 
-function waitForShutdownSignal(): Promise<NodeJS.Signals> {
-  return new Promise((resolve) => {
-    process.once("SIGINT", () => resolve("SIGINT"));
-    process.once("SIGTERM", () => resolve("SIGTERM"));
+const shutdown = new AbortController();
+for (const signal of ["SIGINT", "SIGTERM"] as const) {
+  process.once(signal, () => {
+    logger.info({ signal }, "Arrêt demandé");
+    shutdown.abort();
   });
 }
 
-// Garde le processus en vie tant que la file de tâches (phase 1) n'existe pas encore.
-const keepAlive = setInterval(() => undefined, 60_000);
+const node = await container.lightning.getInfo();
+if (!node.synced) {
+  logger.warn({ blockHeight: node.blockHeight }, "Nœud Lightning pas encore synchronisé");
+}
+logger.info({ blockHeight: node.blockHeight }, "Service de paiements démarré");
 
-logger.info({ jobs: JOB_NAMES }, "Service de paiements démarré");
+container.watcher.resume(await container.invoices.listWatchedPaymentHashes());
 
-const signal = await waitForShutdownSignal();
-clearInterval(keepAlive);
-logger.info({ signal }, "Arrêt du service de paiements");
+await Promise.all([
+  container.outboxRunner.run(shutdown.signal),
+  runPeriodically(
+    "maintenance",
+    env.MAINTENANCE_INTERVAL_MS,
+    () => container.maintenance.execute(),
+    logger,
+    shutdown.signal,
+  ),
+]);
+
+container.watcher.stop();
+await container.pool.end();
+logger.info({}, "Service de paiements arrêté");
