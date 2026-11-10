@@ -28,6 +28,27 @@ export default defineConfig(
     },
   },
   {
+    // Architecture propre : la couche application ne dépend que du domaine et de ses ports.
+    files: ["apps/*/src/application/**/*.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/infrastructure/**", "**/runtime/**", "**/container"],
+              message: "La couche application ne connaît que ses ports, pas leurs implémentations.",
+            },
+            {
+              group: ["pg", "lightning", "node:*", "fastify", "pino", "@woor/db"],
+              message: "Dépendance technique interdite ici : passer par un port.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ["apps/web/**/*.{ts,tsx}"],
     languageOptions: { globals: globals.browser },
     plugins: { "react-hooks": reactHooks },
