@@ -4,7 +4,10 @@
  */
 export interface LightningProvider {
   createHoldInvoice(params: CreateHoldInvoiceParams): Promise<{ bolt11: string }>;
-  subscribeInvoice(paymentHash: Buffer, onEvent: (event: InvoiceEvent) => void): Unsubscribe;
+  /** Suit une facture. Le nœud envoie d'abord son état actuel, puis chaque changement. */
+  subscribeInvoice(paymentHash: Buffer, handlers: InvoiceSubscriptionHandlers): Unsubscribe;
+  /** État actuel d'une facture, ou null si le nœud ne la connaît pas. */
+  lookupInvoice(paymentHash: Buffer): Promise<InvoiceSnapshot | null>;
   settleHoldInvoice(preimage: Buffer): Promise<void>;
   cancelHoldInvoice(paymentHash: Buffer): Promise<void>;
   payInvoice(params: PayInvoiceParams): Promise<PaymentResult>;
@@ -26,21 +29,27 @@ export interface PayInvoiceParams {
   maxFeeMsat: bigint;
 }
 
-/** États LND d'une hold invoice : OPEN, puis ACCEPTED quand le paiement est bloqué. */
+/** États d'une hold invoice côté nœud : open, puis accepted quand le paiement est bloqué. */
 export type HoldInvoiceState = "open" | "accepted" | "settled" | "canceled";
 
-export interface InvoiceEvent {
+export interface InvoiceSnapshot {
   paymentHash: Buffer;
   state: HoldInvoiceState;
-  amountMsat: bigint;
-  /** Hauteur d'expiration la plus basse des HTLC reçus : c'est elle qui fixe l'échéance réelle. */
+  receivedMsat: bigint;
+  /** Hauteur d'expiration la plus basse des HTLC bloqués : c'est elle qui fixe l'échéance réelle. */
   minHtlcExpiryHeight: number | null;
+}
+
+export interface InvoiceSubscriptionHandlers {
+  onUpdate(snapshot: InvoiceSnapshot): void;
+  onError(error: Error): void;
 }
 
 export type PaymentResult =
   { status: "succeeded"; preimage: Buffer; feeMsat: bigint } | { status: "failed"; reason: string };
 
-export type PaymentStatus = "in_flight" | "succeeded" | "failed" | "unknown";
+/** not_found : le nœud n'a jamais tenté ce paiement, on peut donc le relancer sans risque. */
+export type PaymentStatus = "in_flight" | "succeeded" | "failed" | "not_found";
 
 export interface NodeInfo {
   blockHeight: number;
