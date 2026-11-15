@@ -1,12 +1,15 @@
 import { buildApp } from "./app";
 import { loadEnv } from "./config/env";
+import { createContainer } from "./container";
 
 const env = loadEnv();
-const app = buildApp(env);
+const container = createContainer(env);
+const app = buildApp(env, container);
 
 async function shutdown(signal: NodeJS.Signals): Promise<void> {
   app.log.info({ signal }, "Arrêt de l'API");
   await app.close();
+  await container.pool.end();
   process.exit(0);
 }
 
