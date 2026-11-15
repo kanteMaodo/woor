@@ -46,3 +46,42 @@ minuteur ──► RunMaintenance (chaque minute)
 Le secret de déblocage est tiré au hasard sur 32 octets, chiffré en AES-256-GCM avec
 l'empreinte du paiement comme donnée associée, et rangé dans `woor_secret`. Au
 déchiffrement, le worker vérifie que le secret correspond bien à l'empreinte.
+
+## L'API
+
+Mêmes couches que le worker : `application/` (cas d'usage et ports), `infrastructure/`
+(PostgreSQL, cryptographie), `http/` (routes Fastify), `container.ts`.
+
+- **La base vérifie les droits.** Chaque action de l'acheteur s'exécute dans une transaction
+  qui pose le contexte « acheteur de cette commande » ; la RLS et les fonctions du schéma
+  refusent tout le reste.
+- **Les refus métier gardent leur sens.** Une fonction SQL lève « code_stable: message » ;
+  l'API le renvoie en 409 avec ce code et ce message. Un refus de droit devient un 404,
+  identique à un jeton inconnu.
+
+| Route                        | Cas d'usage                             |
+| ---------------------------- | --------------------------------------- |
+| `GET /v1/o/:token`           | GetPublicOrder                          |
+| `GET /v1/o/:token/me`        | GetBuyerOrder                           |
+| `POST /v1/o/:token/claim`    | ClaimOrder, pose le cookie du téléphone |
+| `POST /v1/o/:token/invoices` | RequestInvoices                         |
+| `POST /v1/o/:token/code`     | RevealDeliveryCode, une seule fois      |
+| `POST /v1/o/:token/cancel`   | CancelBuyerOrder                        |
+
+## L'application web
+
+- **Le navigateur ne parle qu'au serveur web.** Les loaders et actions de React Router
+  appellent l'API côté serveur et valident ses réponses avec Zod. Les modules `.server.ts`
+  ne partent jamais vers le téléphone.
+- **Les formulaires marchent sans JavaScript.** Chaque action est un vrai formulaire ;
+  le JavaScript ajoute le rafraîchissement automatique, la copie et la garde du code.
+- **Les écrans n'ont pas de règle.** `selectBuyerScreen` choisit l'écran à partir des
+  données ; les composants ne font qu'afficher.
+
+```
+app/
+  routes/          loader, action, aiguillage
+  features/buyer/  choix de l'écran, écrans, composants propres à l'acheteur
+  components/ui/   composants du design system
+  lib/             appels à l'API, formatage, sécurité
+```
