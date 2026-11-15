@@ -1,0 +1,520 @@
+/*
+ * Composants du design system, repris de la maquette des écrans.
+ * Une action par écran, en bas ; le FCFA en grand ; l'état toujours visible.
+ */
+
+/* Gabarit d'écran ------------------------------------------------------ */
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--wo-bg);
+}
+
+.appbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--wo-line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.brand .i {
+  color: var(--wo-bitcoin);
+}
+
+.ctx {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--wo-text-xs);
+  color: var(--wo-muted);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+}
+
+.bottom {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px 18px;
+  border-top: 1px solid var(--wo-line);
+  background: var(--wo-bg);
+}
+
+/* L'espacement vertical vient du gap du contenu, pas des marges des paragraphes. */
+.content p,
+.bottom form {
+  margin: 0;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--wo-text-xs);
+  color: var(--wo-muted);
+  text-align: center;
+}
+
+/* Icônes --------------------------------------------------------------- */
+.i {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.i-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.i-lg {
+  width: 28px;
+  height: 28px;
+}
+
+.i-xl {
+  width: 56px;
+  height: 56px;
+  stroke-width: 2.4;
+}
+
+/* Boutons -------------------------------------------------------------- */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: var(--wo-button-height);
+  border: 0;
+  border-radius: var(--wo-radius);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--wo-ink);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--wo-primary);
+  color: #fff;
+}
+
+.btn-secondary {
+  border: 1.5px solid var(--wo-primary);
+  background: transparent;
+  color: var(--wo-primary);
+}
+
+.btn-link {
+  height: var(--wo-touch);
+  background: none;
+  color: var(--wo-primary);
+  font-size: var(--wo-text-md);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.btn-link.muted {
+  color: var(--wo-muted);
+}
+
+/* Cartes et encadrés --------------------------------------------------- */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--wo-line);
+  border-radius: var(--wo-radius);
+  background: var(--wo-surface);
+}
+
+.card p {
+  margin: 0;
+}
+
+.trust {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: var(--wo-radius);
+  background: var(--wo-primary-soft);
+  color: var(--wo-primary);
+}
+
+.trust p {
+  margin: 0;
+}
+
+.trust .amount {
+  color: var(--wo-ink);
+}
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--wo-radius);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.banner .i {
+  margin-top: 1px;
+}
+
+.banner p {
+  margin: 0;
+}
+
+.banner p + p {
+  margin-top: 6px;
+}
+
+.banner.info {
+  background: var(--wo-primary-soft);
+  color: var(--wo-primary);
+}
+
+.banner.warn {
+  background: var(--wo-warning-bg);
+  color: var(--wo-warning);
+}
+
+.banner.danger {
+  background: var(--wo-danger-bg);
+  color: var(--wo-danger);
+}
+
+/* Texte ---------------------------------------------------------------- */
+.h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.h2 {
+  margin: 0;
+  font-size: var(--wo-text-lg);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.small {
+  font-size: var(--wo-text-xs);
+}
+
+.center {
+  text-align: center;
+}
+
+.kv {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--wo-text-xs);
+  font-weight: 500;
+  color: var(--wo-primary);
+}
+
+/* Montants ------------------------------------------------------------- */
+.amount {
+  font-size: var(--wo-text-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+.sats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--wo-text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--wo-sats);
+}
+
+.sats .i {
+  width: 14px;
+  height: 14px;
+  color: var(--wo-bitcoin);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.row .v {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.row.total {
+  padding-top: 8px;
+  border-top: 1px solid var(--wo-line);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Frise de statut ------------------------------------------------------ */
+.frise {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.frise li {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--wo-text-xs);
+  color: var(--wo-muted);
+}
+
+.frise li::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--wo-line);
+}
+
+.frise li:first-child::before {
+  display: none;
+}
+
+.frise li.done::before,
+.frise li.now::before {
+  background: var(--wo-primary);
+}
+
+.frise .dot {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--wo-line-strong);
+  border-radius: 50%;
+  background: var(--wo-bg);
+  color: var(--wo-muted);
+}
+
+.frise li.done {
+  color: var(--wo-ink);
+}
+
+.frise li.done .dot {
+  border-color: var(--wo-primary);
+  background: var(--wo-primary);
+  color: #fff;
+}
+
+.frise li.now {
+  font-weight: 700;
+  color: var(--wo-primary);
+}
+
+.frise li.now .dot {
+  border-color: var(--wo-primary);
+  background: var(--wo-primary-soft);
+  color: var(--wo-primary);
+}
+
+/* Paiement ------------------------------------------------------------- */
+.steps {
+  display: flex;
+  gap: 8px;
+}
+
+.steps span {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--wo-line);
+}
+
+.steps span.on {
+  background: var(--wo-primary);
+}
+
+.qr {
+  align-self: center;
+  width: min(260px, 100%);
+  padding: 10px;
+  border: 1px solid var(--wo-line);
+  border-radius: var(--wo-radius);
+  background: #fff;
+}
+
+.qr svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.how {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.how li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.how .ic {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--wo-primary-soft);
+  color: var(--wo-primary);
+}
+
+/* Code de remise ------------------------------------------------------- */
+.codebox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px;
+  border: 1.5px solid var(--wo-line-strong);
+  border-radius: var(--wo-radius);
+  background: var(--wo-surface);
+}
+
+.code {
+  font-size: var(--wo-text-code);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 3px;
+  text-align: center;
+}
+
+/* Personnes et icônes d'état ------------------------------------------- */
+.person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #efece5;
+  font-weight: 700;
+}
+
+.bigicon {
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+  margin-top: 8px;
+  border-radius: 50%;
+}
+
+.bigicon.ok {
+  border: 3px solid var(--wo-primary);
+  background: var(--wo-primary-soft);
+  color: var(--wo-primary);
+}
+
+.bigicon.neutral {
+  background: #efece5;
+  color: var(--wo-ink);
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  font-size: 15px;
+}
+
+.check .i {
+  margin-top: 1px;
+  color: var(--wo-primary);
+}
