@@ -14,6 +14,8 @@ services:
     volumes:
       # Exécutés une seule fois, au premier démarrage d'une base vide.
       - ../packages/db/migrations:/docker-entrypoint-initdb.d:ro
+      # Comptes de connexion locaux, créés après le schéma (ordre alphabétique : « zz »).
+      - ./postgres/dev-logins.sql:/docker-entrypoint-initdb.d/zz_dev_logins.sql:ro
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d woor"]
