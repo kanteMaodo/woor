@@ -5,7 +5,7 @@ const EnvSchema = z.object({
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
 
   // En recette et en pilote : compte de connexion membre du rôle woor_worker.
-  DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
+  WORKER_DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
 
   LND_SOCKET: z.string().regex(/^[\w.-]+:\d+$/, "format attendu : hôte:port"),
   LND_CERT_BASE64: z.string().min(1),

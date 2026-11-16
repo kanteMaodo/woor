@@ -37,7 +37,10 @@ export interface Container {
  * Les cas d'usage reçoivent leurs dépendances ici et ne savent rien de PostgreSQL ni de LND.
  */
 export function createContainer(env: Env, logger: Logger): Container {
-  const pool = createPool({ connectionString: env.DATABASE_URL, applicationName: "woor-worker" });
+  const pool = createPool({
+    connectionString: env.WORKER_DATABASE_URL,
+    applicationName: "woor-worker",
+  });
   const lightning = LndLightningProvider.connect({
     socket: env.LND_SOCKET,
     certBase64: env.LND_CERT_BASE64,

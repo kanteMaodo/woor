@@ -18,7 +18,7 @@ export interface Container {
 
 /** Racine de composition : le seul endroit qui connaît les implémentations concrètes. */
 export function createContainer(env: Env): Container {
-  const pool = createPool({ connectionString: env.DATABASE_URL, applicationName: "woor-api" });
+  const pool = createPool({ connectionString: env.API_DATABASE_URL, applicationName: "woor-api" });
   const orders = new PgBuyerOrders(pool);
   const secrets = new NodeBuyerSecrets(Buffer.from(env.CODE_HMAC_KEY, "base64"));
 

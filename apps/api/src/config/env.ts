@@ -14,7 +14,7 @@ const EnvSchema = z.object({
   API_PORT: z.coerce.number().int().min(1).max(65_535).default(3000),
 
   // En recette et en pilote : compte de connexion membre du rôle woor_api.
-  DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
+  API_DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
 
   // Clé HMAC des codes de remise : sans elle, la base ne permet pas de retrouver un code.
   CODE_HMAC_KEY: base64Key,
