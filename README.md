@@ -42,7 +42,7 @@ fictives, sans base ni Lightning.
 | -------- | ------------------------------- |
 | Web      | http://localhost:5173           |
 | API      | http://localhost:3000/v1/health |
-| Postgres | localhost:5432                  |
+| Postgres | localhost:5433                  |
 | Valkey   | localhost:6379                  |
 
 ## Organisation

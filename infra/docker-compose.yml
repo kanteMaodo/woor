@@ -10,12 +10,13 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
-      # Exécutés une seule fois, au premier démarrage d'une base vide.
-      - ../packages/db/migrations:/docker-entrypoint-initdb.d:ro
-      # Comptes de connexion locaux, créés après le schéma (ordre alphabétique : « zz »).
-      - ./postgres/dev-logins.sql:/docker-entrypoint-initdb.d/zz_dev_logins.sql:ro
+      # Au premier démarrage d'une base vide, init.sh applique les migrations
+      # puis les comptes de connexion locaux (infra/postgres/dev-logins.sql).
+      - ./postgres/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+      - ../packages/db/migrations:/woor/migrations:ro
+      - ./postgres/dev-logins.sql:/woor/dev/dev-logins.sql:ro
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d woor"]
