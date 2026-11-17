@@ -68,6 +68,27 @@ Mêmes couches que le worker : `application/` (cas d'usage et ports), `infrastru
 | `POST /v1/o/:token/code`     | RevealDeliveryCode, une seule fois      |
 | `POST /v1/o/:token/cancel`   | CancelBuyerOrder                        |
 
+Vendeuses et livreurs se connectent par numéro et PIN. Le numéro n'est connu de la base que
+par son HMAC, le PIN est haché en Argon2id avec un poivre, et la session est un cookie
+HttpOnly dont la base ne garde que l'empreinte. Chaque requête pose le contexte
+« cette personne, cette session » : la RLS ne montre à chacun que ses commandes.
+L'adresse de livraison est chiffrée en AES-256-GCM avant d'entrer en base.
+
+| Route                                | Cas d'usage                                  |
+| ------------------------------------ | -------------------------------------------- |
+| `POST /v1/auth/login`                | LogIn, pose le cookie de session             |
+| `POST /v1/auth/logout`               | LogOut, révoque la session en base           |
+| `GET /v1/me`                         | GetProfile                                   |
+| `GET /v1/seller/couriers`            | ListLinkedCouriers                           |
+| `GET /v1/seller/orders`              | ListSellerOrders                             |
+| `POST /v1/seller/orders`             | CreateSellerOrder, rend le lien une fois     |
+| `GET /v1/seller/orders/:id`          | GetSellerOrder                               |
+| `POST /v1/seller/orders/:id/cancel`  | CancelSellerOrder                            |
+| `GET /v1/courier/orders`             | ListDeliveries                               |
+| `GET /v1/courier/orders/:id`         | GetDelivery                                  |
+| `POST /v1/courier/orders/:id/pickup` | ConfirmPickup                                |
+| `POST /v1/courier/orders/:id/code`   | SubmitDeliveryCode, 5 essais puis verrouillé |
+
 ## L'application web
 
 - **Le navigateur ne parle qu'au serveur web.** Les loaders et actions de React Router
@@ -82,6 +103,8 @@ Mêmes couches que le worker : `application/` (cas d'usage et ports), `infrastru
 app/
   routes/          loader, action, aiguillage
   features/buyer/  choix de l'écran, écrans, composants propres à l'acheteur
+  features/seller/ espace de la vendeuse
+  features/courier/ espace du livreur
   components/ui/   composants du design system
   lib/             appels à l'API, formatage, sécurité
 ```

@@ -23,7 +23,19 @@ Dans `.env`, remplir avant `pnpm dev` :
   canal), puis copier l'adresse gRPC, le certificat TLS et le macaron admin (base64 ou hexa).
 
 Au premier `pnpm infra:up`, PostgreSQL charge le schéma et crée les comptes locaux de l'API
-et du service de paiements.
+et du service de paiements. Créez ensuite les comptes de démonstration :
+
+```bash
+pnpm --filter @woor/api seed:demo
+```
+
+| Compte   | Numéro       | PIN    | Espace                         |
+| -------- | ------------ | ------ | ------------------------------ |
+| Vendeuse | 77 000 00 01 | 111111 | http://localhost:5173/vendeuse |
+| Livreur  | 77 000 00 02 | 222222 | http://localhost:5173/livreur  |
+
+En développement, http://localhost:5173/apercu montre tous les écrans avec des données
+fictives, sans base ni Lightning.
 
 | Service  | Adresse                         |
 | -------- | ------------------------------- |
