@@ -36,7 +36,7 @@ export class ApiError extends Error {
 
   /** Refus métier ou saisie refusée : le message peut être montré tel quel. */
   get isUserFacing(): boolean {
-    return this.status === 400 || this.status === 401 || this.status === 409;
+    return [400, 401, 409, 503].includes(this.status);
   }
 }
 
@@ -68,7 +68,7 @@ export async function callApi<T>({
   body,
 }: ApiRequest<T>): Promise<ApiResponse<T>> {
   const cookie = forwardedCookies(cookieHeader);
-  const response = await fetch(new URL(path, API_URL), {
+  const response = await fetchApi(new URL(path, API_URL), {
     method,
     headers: {
       accept: "application/json",
@@ -85,6 +85,15 @@ export async function callApi<T>({
 
   const raw: unknown = response.status === 204 ? null : await response.json();
   return { body: schema.parse(raw), setCookies: response.headers.getSetCookie() };
+}
+
+/** API injoignable ou trop lente : une erreur 503 lisible plutôt qu'une page cassée. */
+async function fetchApi(url: URL, init: RequestInit): Promise<Response> {
+  try {
+    return await fetch(url, init);
+  } catch {
+    throw new ApiError(503, "Service momentanément indisponible. Réessayez dans un instant.", null);
+  }
 }
 
 /** Transforme les cookies posés par l'API en en-tête Cookie, pour un appel suivant. */
