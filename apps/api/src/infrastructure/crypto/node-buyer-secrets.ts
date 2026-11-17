@@ -1,15 +1,22 @@
 import { createHash, createHmac, randomBytes, randomInt } from "node:crypto";
 
 import type { BuyerSecrets } from "../../application/ports/buyer-secrets";
+import type { OrderLinks } from "../../application/ports/order-links";
 
+const ORDER_TOKEN_BYTES = 16;
 const DEVICE_TOKEN_BYTES = 32;
 const HMAC_KEY_BYTES = 32;
 
-export class NodeBuyerSecrets implements BuyerSecrets {
+/** Secrets du lien et de l'acheteur. Les jetons ne sont jamais stockés : seulement leur SHA-256. */
+export class NodeBuyerSecrets implements BuyerSecrets, OrderLinks {
   constructor(private readonly codeHmacKey: Buffer) {
     if (codeHmacKey.length !== HMAC_KEY_BYTES) {
       throw new Error(`La clé HMAC des codes doit faire ${HMAC_KEY_BYTES} octets`);
     }
+  }
+
+  newOrderToken(): string {
+    return randomBytes(ORDER_TOKEN_BYTES).toString("base64url");
   }
 
   hashOrderToken(token: string): Buffer {
