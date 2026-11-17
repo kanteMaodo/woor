@@ -9,6 +9,8 @@ import type { Pool, PoolClient } from "./pool";
 export interface RequestContext {
   role: AppRole;
   userId?: string;
+  /** Session de la vendeuse ou du livreur, lue par woor.ctx_session(). */
+  sessionId?: string;
   buyerOrderId?: string;
 }
 
@@ -45,8 +47,9 @@ export function withContext<T>(
     await client.query(
       `SELECT set_config('woor.role', $1, true),
               set_config('woor.user_id', $2, true),
-              set_config('woor.buyer_order_id', $3, true)`,
-      [context.role, context.userId ?? "", context.buyerOrderId ?? ""],
+              set_config('woor.buyer_order_id', $3, true),
+              set_config('woor.session_id', $4, true)`,
+      [context.role, context.userId ?? "", context.buyerOrderId ?? "", context.sessionId ?? ""],
     );
     return fn(client);
   });
