@@ -1,6 +1,6 @@
 import type { OrderState } from "@woor/core";
 
-import { Icon, type IconName } from "../../../components/ui/icon";
+import { Icon, type IconName } from "../../components/ui/icon";
 
 const STEPS: readonly { label: string; icon: IconName }[] = [
   { label: "Commandé", icon: "check" },

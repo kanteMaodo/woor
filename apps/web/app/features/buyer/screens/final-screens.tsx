@@ -5,7 +5,7 @@ import { Icon } from "../../../components/ui/icon";
 import { Screen } from "../../../components/ui/screen";
 import type { BuyerOrderView } from "../../../lib/api/buyer-schemas";
 import { formatTime, formatXof } from "../../../lib/format";
-import { OrderProgress } from "../components/order-progress";
+import { OrderProgress } from "../../orders/order-progress";
 import { PriceLines } from "../components/price-lines";
 
 /** B10 : le code a été donné, la vente est conclue. */

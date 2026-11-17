@@ -8,7 +8,7 @@ import type { BuyerPageContext } from "../buyer-page-context";
 import { CourierCard } from "../components/courier-card";
 import { DeliveryCode } from "../components/delivery-code";
 import { IntentButton } from "../components/intent-button";
-import { OrderProgress } from "../components/order-progress";
+import { OrderProgress } from "../../orders/order-progress";
 
 interface LockedScreenProps {
   view: BuyerOrderView;
