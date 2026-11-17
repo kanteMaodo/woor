@@ -22,58 +22,77 @@ export function SellerOrderScreen({ profile, order, error }: SellerOrderScreenPr
     <AccountScreen
       profile={profile}
       backTo="/vendeuse"
-      footer={
+      title={order.itemLabel}
+      subtitle={<Chip {...SELLER_STATUS[order.state]} />}
+      actions={
         cancellable && (
           <ActionButton
             intent="cancel"
-            className="btn btn-link muted"
+            className="btn btn-secondary btn-danger"
             confirm="Annuler la commande ? L'acheteur sera remboursé en entier."
           >
+            <Icon name="x" />
             Annuler la commande
           </ActionButton>
         )
       }
     >
-      <div className="row">
-        <h1 className="h2">{order.itemLabel}</h1>
-        <Chip {...SELLER_STATUS[order.state]} />
-      </div>
-
-      <OrderProgress state={order.state} />
       {error && <Banner tone="danger">{error}</Banner>}
 
-      <div className="card">
-        <div className="row">
-          <span className="muted">Article, pour vous</span>
-          <span className="v">{formatXof(order.itemPriceXof)}</span>
-        </div>
-        <div className="row">
-          <span className="muted">Livraison, pour {order.courierName}</span>
-          <span className="v">{formatXof(order.deliveryFeeXof)}</span>
-        </div>
-        {order.neighborhood && (
-          <p className="small muted">
-            <Icon name="pin" size="sm" /> {order.neighborhood}
-            {order.landmark ? `, ${order.landmark}` : ""}
-          </p>
+      <section className="panel">
+        <OrderProgress state={order.state} />
+        {order.state === "locked" && (
+          <Banner tone="info">
+            L'acheteur a payé : l'argent est bloqué. Remettez le colis à {order.courierName}.
+          </Banner>
         )}
+      </section>
+
+      <div className="split">
+        <section className="panel split-main">
+          <h2>Chronologie</h2>
+          <ol className="timeline">
+            {sellerTimeline(order).map((entry) => (
+              <li key={`${entry.at}-${entry.label}`}>
+                <time dateTime={entry.at}>{formatTime(entry.at)}</time>
+                <span>{entry.label}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <aside className="split-side">
+          <section className="panel summary">
+            <h2>Montants</h2>
+            <div className="row">
+              <span className="muted">Article, pour vous</span>
+              <span>{formatXof(order.itemPriceXof)}</span>
+            </div>
+            <div className="row">
+              <span className="muted">Livraison, pour {order.courierName}</span>
+              <span>{formatXof(order.deliveryFeeXof)}</span>
+            </div>
+            <div className="row total">
+              <span>Payé par l'acheteur</span>
+              <span>{formatXof(order.totalXof)}</span>
+            </div>
+          </section>
+          {order.neighborhood && (
+            <section className="panel summary">
+              <h2>Livraison</h2>
+              <p className="kv">
+                <b>
+                  <Icon name="pin" size="sm" /> {order.neighborhood}
+                </b>
+                {order.landmark && <span className="muted">{order.landmark}</span>}
+              </p>
+              <p className="muted">
+                <Icon name="moto" size="sm" /> {order.courierName}
+              </p>
+            </section>
+          )}
+        </aside>
       </div>
-
-      <h2 className="h3">Chronologie</h2>
-      <ol className="timeline">
-        {sellerTimeline(order).map((entry) => (
-          <li key={`${entry.at}-${entry.label}`}>
-            <time dateTime={entry.at}>{formatTime(entry.at)}</time>
-            <span>{entry.label}</span>
-          </li>
-        ))}
-      </ol>
-
-      {order.state === "locked" && (
-        <Banner tone="info">
-          L'acheteur a payé : l'argent est bloqué. Remettez le colis à {order.courierName}.
-        </Banner>
-      )}
     </AccountScreen>
   );
 }

@@ -37,45 +37,51 @@ export function ShareLinkScreen({ profile, order }: ShareLinkScreenProps) {
   return (
     <AccountScreen
       profile={profile}
-      footer={
-        <>
-          <a href={whatsapp} className="btn btn-primary" target="_blank" rel="noreferrer">
-            <Icon name="send" />
-            Envoyer sur WhatsApp
-          </a>
-          <CopyButton value={order.link} label="Copier le lien" />
-          <Link to={`/vendeuse/commandes/${order.orderId}`} className="btn btn-link">
-            Voir la commande
-          </Link>
-        </>
-      }
+      title="Lien prêt"
+      subtitle="Envoyez-le dans votre discussion avec l'acheteur."
     >
-      <div className="kv">
-        <h1 className="h2">Lien prêt</h1>
-        <p className="muted">Envoyez-le dans votre discussion avec l'acheteur.</p>
-      </div>
-
-      <div className="bubble">
-        Bonjour ! Voici votre commande <b>{order.itemLabel}</b> : {formatXof(order.totalXof)}{" "}
-        livraison comprise. Payez en toute sécurité : votre argent reste bloqué jusqu'à la remise du
-        colis.
-        <div className="linkcard">
-          <span className="lc-ic">
-            <Icon name="lock" />
-          </span>
-          <div className="kv">
-            <b className="small">Wóor · Paiement protégé</b>
-            <span className="small muted">
-              {profile.displayName} · {formatXof(order.totalXof)}
-            </span>
-          </div>
+      <div className="split">
+        <div className="split-main">
+          <section className="panel">
+            <h2>Aperçu du message</h2>
+            <div className="bubble">
+              Bonjour ! Voici votre commande <b>{order.itemLabel}</b> : {formatXof(order.totalXof)}{" "}
+              livraison comprise. Payez en toute sécurité : votre argent reste bloqué jusqu'à la
+              remise du colis.
+              <div className="linkcard">
+                <span className="lc-ic">
+                  <Icon name="lock" />
+                </span>
+                <div className="kv">
+                  <b className="small">Wóor · Paiement protégé</b>
+                  <span className="small muted">
+                    {profile.displayName} · {formatXof(order.totalXof)}
+                  </span>
+                </div>
+              </div>
+              <span className="link small">{order.link}</span>
+            </div>
+          </section>
+          <Banner tone="warn" icon="clock">
+            Gardez ce message : le lien n'est affiché qu'une fois. Un seul téléphone pourra
+            commander.
+          </Banner>
         </div>
-        <span className="link small">{order.link}</span>
-      </div>
 
-      <Banner tone="warn" icon="clock">
-        Gardez ce message : le lien n'est affiché qu'une fois. Un seul téléphone pourra commander.
-      </Banner>
+        <aside className="split-side">
+          <section className="panel summary">
+            <h2>Partager</h2>
+            <a href={whatsapp} className="btn btn-primary" target="_blank" rel="noreferrer">
+              <Icon name="send" />
+              Envoyer sur WhatsApp
+            </a>
+            <CopyButton value={order.link} label="Copier le lien" />
+            <Link to={`/vendeuse/commandes/${order.orderId}`} className="btn btn-link">
+              Suivre la commande
+            </Link>
+          </section>
+        </aside>
+      </div>
     </AccountScreen>
   );
 }

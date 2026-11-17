@@ -2,15 +2,17 @@ import { Link } from "react-router";
 
 import { Chip } from "../../../components/ui/chip";
 import { Icon } from "../../../components/ui/icon";
+import { StatCard } from "../../../components/ui/stat-card";
 import type { Profile, SellerOrder } from "../../../lib/api/account-schemas";
 import { formatTime, formatXof } from "../../../lib/format";
 import { AccountScreen } from "../../account/account-screen";
 import {
+  countByFilter,
   filterSellerOrders,
-  pendingForSeller,
   SELLER_FILTERS,
   SELLER_STATUS,
   type SellerFilterKey,
+  sellerKpis,
 } from "../seller-orders";
 
 interface SellerOrdersScreenProps {
@@ -19,79 +21,124 @@ interface SellerOrdersScreenProps {
   filter: SellerFilterKey;
 }
 
-/** S1 : les commandes de la vendeuse, et l'argent qui l'attend. */
+/** S1 : tableau de bord de la vendeuse. Chiffres clés, puis ses commandes. */
 export function SellerOrdersScreen({ profile, orders, filter }: SellerOrdersScreenProps) {
-  const pending = pendingForSeller(orders);
+  const kpis = sellerKpis(orders);
+  const counts = countByFilter(orders);
   const shown = filterSellerOrders(orders, filter);
+  const firstName = profile.displayName.split(" ")[0];
 
   return (
     <AccountScreen
       profile={profile}
-      footer={
+      title="Tableau de bord"
+      subtitle={`Bonjour ${firstName}, voici où en sont vos ventes.`}
+      actions={
         <Link to="/vendeuse/nouvelle" className="btn btn-primary">
           <Icon name="plus" />
           Nouvelle commande
         </Link>
       }
     >
-      <div className="trust">
-        <p className="small">À recevoir pour les commandes en cours</p>
-        <div className="amount">{formatXof(pending.totalXof)}</div>
-        <p className="small">
-          {pending.count} commande{pending.count > 1 ? "s" : ""} bloquée
-          {pending.count > 1 ? "s" : ""} chez les acheteurs
-        </p>
-      </div>
+      <section className="stat-grid" aria-label="Chiffres clés">
+        <StatCard
+          tone="primary"
+          icon="lock"
+          label="À recevoir"
+          value={formatXof(kpis.pendingXof)}
+          hint={`${kpis.pendingCount} commande${plural(kpis.pendingCount)} bloquée${plural(kpis.pendingCount)}`}
+        />
+        <StatCard
+          tone="warn"
+          icon="clock"
+          label="Liens en attente"
+          value={String(kpis.awaitingCount)}
+          hint="pas encore payés"
+        />
+        <StatCard
+          icon="check-circle"
+          label="Commandes remises"
+          value={String(kpis.deliveredCount)}
+          hint="code validé à la porte"
+        />
+        <StatCard
+          icon="coin"
+          label="Encaissé"
+          value={formatXof(kpis.earnedXof)}
+          hint="prix des articles remis"
+        />
+      </section>
 
-      <nav className="filters" aria-label="Filtrer les commandes">
-        {SELLER_FILTERS.map((candidate) => (
-          <Link
-            key={candidate.key}
-            to={`?filtre=${candidate.key}`}
-            aria-current={candidate.key === filter ? "page" : undefined}
-          >
-            {candidate.label}
-          </Link>
-        ))}
-      </nav>
+      <section className="panel">
+        <div className="panel-head">
+          <h2>Commandes</h2>
+          <nav className="tabs" aria-label="Filtrer les commandes">
+            {SELLER_FILTERS.map((candidate) => (
+              <Link
+                key={candidate.key}
+                to={`?filtre=${candidate.key}`}
+                aria-current={candidate.key === filter ? "page" : undefined}
+              >
+                {candidate.label}
+                <span className="tab-count">{counts[candidate.key]}</span>
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-      {shown.length === 0 ? (
-        <p className="empty">Aucune commande ici pour l'instant.</p>
-      ) : (
-        <ul className="list">
-          {shown.map((order) => (
-            <li key={order.id}>
-              <Link to={`/vendeuse/commandes/${order.id}`} className="item">
-                <span className="top">
-                  <span className="t">{order.itemLabel}</span>
+        {shown.length === 0 ? (
+          <div className="empty-state">
+            <Icon name="box" size="lg" />
+            <p>Aucune commande ici pour l'instant.</p>
+            <Link to="/vendeuse/nouvelle" className="btn-link">
+              Créer une commande
+            </Link>
+          </div>
+        ) : (
+          <div className="data-table" role="table" aria-label="Commandes">
+            <div className="dt-row dt-head" role="row">
+              <span role="columnheader">Article</span>
+              <span role="columnheader">Quartier</span>
+              <span role="columnheader">Livreur</span>
+              <span role="columnheader">Prix</span>
+              <span role="columnheader">État</span>
+              <span role="columnheader">Créée</span>
+            </div>
+            {shown.map((order) => (
+              <Link
+                key={order.id}
+                to={`/vendeuse/commandes/${order.id}`}
+                className="dt-row"
+                role="row"
+              >
+                <span className="dt-main" role="cell">
+                  {order.itemLabel}
+                </span>
+                <span className="dt-sub" role="cell">
+                  <Icon name="pin" size="sm" />
+                  {order.neighborhood ?? "Adresse effacée"}
+                </span>
+                <span className="dt-sub" role="cell">
+                  {order.courierName}
+                </span>
+                <span className="dt-amount" role="cell">
+                  {formatXof(order.itemPriceXof)}
+                </span>
+                <span className="dt-state" role="cell">
                   <Chip {...SELLER_STATUS[order.state]} />
                 </span>
-                <span className="top">
-                  <span className="s">
-                    <Icon name="pin" size="sm" />
-                    {order.neighborhood ?? "Adresse effacée"}
-                  </span>
-                  <span>{formatXof(order.itemPriceXof)}</span>
+                <span className="dt-date" role="cell">
+                  {formatTime(order.createdAt)}
                 </span>
-                <span className="s">{orderHint(order)}</span>
               </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+            ))}
+          </div>
+        )}
+      </section>
     </AccountScreen>
   );
 }
 
-function orderHint(order: SellerOrder): string {
-  if (order.pickedUpAt && order.state === "in_transit") {
-    return `${order.courierName} · ramassé à ${formatTime(order.pickedUpAt)}`;
-  }
-  if (order.state === "locked") {
-    return `Prêt pour ${order.courierName}`;
-  }
-  if (order.state === "awaiting_payment") {
-    return `Lien créé à ${formatTime(order.createdAt)}`;
-  }
-  return order.courierName;
+function plural(count: number): string {
+  return count > 1 ? "s" : "";
 }

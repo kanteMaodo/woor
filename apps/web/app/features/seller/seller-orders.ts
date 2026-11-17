@@ -38,15 +38,41 @@ export function filterSellerOrders(orders: SellerOrder[], key: SellerFilterKey):
   return orders.filter((order) => states.includes(order.state));
 }
 
-/** Argent bloqué chez les acheteurs, qui reviendra à la vendeuse à la remise. */
-export function pendingForSeller(orders: SellerOrder[]): { totalXof: number; count: number } {
-  const pending = orders.filter((order) =>
-    (["locked", "in_transit", "disputed"] as OrderState[]).includes(order.state),
-  );
+/** Nombre de commandes derrière chaque filtre, affiché sur l'onglet. */
+export function countByFilter(orders: SellerOrder[]): Record<SellerFilterKey, number> {
+  return Object.fromEntries(
+    SELLER_FILTERS.map((filter) => [filter.key, filterSellerOrders(orders, filter.key).length]),
+  ) as Record<SellerFilterKey, number>;
+}
+
+export interface SellerKpis {
+  /** Prix des articles bloqués chez les acheteurs, versés à la remise. */
+  pendingXof: number;
+  pendingCount: number;
+  /** Liens envoyés, pas encore payés. */
+  awaitingCount: number;
+  /** Commandes remises : le prix de l'article est acquis à la vendeuse. */
+  deliveredCount: number;
+  earnedXof: number;
+}
+
+const PENDING: readonly OrderState[] = ["locked", "in_transit", "disputed"];
+const EARNED: readonly OrderState[] = ["delivered", "paid_out"];
+
+export function sellerKpis(orders: SellerOrder[]): SellerKpis {
+  const pending = orders.filter((order) => PENDING.includes(order.state));
+  const earned = orders.filter((order) => EARNED.includes(order.state));
   return {
-    totalXof: pending.reduce((sum, order) => sum + order.itemPriceXof, 0),
-    count: pending.length,
+    pendingXof: sum(pending.map((order) => order.itemPriceXof)),
+    pendingCount: pending.length,
+    awaitingCount: orders.filter((order) => order.state === "awaiting_payment").length,
+    deliveredCount: earned.length,
+    earnedXof: sum(earned.map((order) => order.itemPriceXof)),
   };
+}
+
+function sum(values: number[]): number {
+  return values.reduce((total, value) => total + value, 0);
 }
 
 export interface TimelineEntry {
