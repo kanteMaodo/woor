@@ -32,7 +32,7 @@ export function SellerOrdersScreen({ profile, orders, filter }: SellerOrdersScre
     <AccountScreen
       profile={profile}
       title="Tableau de bord"
-      subtitle={`Bonjour ${firstName}, voici où en sont vos ventes.`}
+      subtitle={`Nanga def, ${firstName} ? Voici où en sont vos ventes.`}
       actions={
         <Link to="/vendeuse/nouvelle" className="btn btn-primary">
           <Icon name="plus" />
