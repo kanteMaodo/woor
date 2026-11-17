@@ -4,6 +4,11 @@ import { BusinessRuleError, NotFoundError } from "../../application/errors";
 const RAISED_BY_RULE = "P0001";
 const NOT_FOUND = "P0002";
 const NOT_ALLOWED = "42501";
+/** Contrainte CHECK : les fonctions du schéma l'utilisent aussi pour « livreur non lié »… */
+const CHECK_VIOLATION = "23514";
+
+/** Message écrit par une fonction du schéma : « code_stable: message ». */
+const RULE_MESSAGE = /^[a-z_]+:/;
 
 const GENERIC_MESSAGE = "Action impossible pour le moment.";
 
@@ -25,16 +30,21 @@ export function translatePgError(error: unknown): unknown {
     case NOT_ALLOWED:
     case NOT_FOUND:
       return new NotFoundError();
-    case RAISED_BY_RULE: {
-      const separator = error.message.indexOf(":");
-      const code = separator === -1 ? error.message : error.message.slice(0, separator);
-      const message =
-        separator === -1 ? GENERIC_MESSAGE : error.message.slice(separator + 1).trim();
-      return new BusinessRuleError(code.trim(), message || GENERIC_MESSAGE);
-    }
+    case CHECK_VIOLATION:
+      // Une vraie contrainte de table (« violates check constraint ») reste une erreur interne.
+      return RULE_MESSAGE.test(error.message) ? toBusinessRule(error.message) : error;
+    case RAISED_BY_RULE:
+      return toBusinessRule(error.message);
     default:
       return error;
   }
+}
+
+function toBusinessRule(raw: string): BusinessRuleError {
+  const separator = raw.indexOf(":");
+  const code = separator === -1 ? raw : raw.slice(0, separator);
+  const message = separator === -1 ? GENERIC_MESSAGE : raw.slice(separator + 1).trim();
+  return new BusinessRuleError(code.trim(), message || GENERIC_MESSAGE);
 }
 
 /** Exécute une requête et traduit son erreur éventuelle. */
