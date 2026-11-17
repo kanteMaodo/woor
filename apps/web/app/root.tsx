@@ -14,6 +14,7 @@ import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/landing.css";
 import "./styles/auth.css";
+import "./styles/app.css";
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

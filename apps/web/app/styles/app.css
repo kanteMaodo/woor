@@ -1,0 +1,218 @@
+/*
+ * Espaces vendeuse et livreur.
+ * Téléphone : une colonne, l'action principale collée en bas.
+ * Ordinateur : barre de navigation, contenu large, action dans un panneau latéral.
+ */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--wo-bg);
+}
+
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  border-bottom: 1px solid var(--wo-line);
+  background: rgba(255, 253, 248, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+.app-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1160px;
+  height: 56px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.app-brand {
+  color: var(--wo-ink);
+  text-decoration: none;
+}
+
+.app-menu {
+  display: none;
+}
+
+.app-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--wo-muted);
+  font-size: var(--wo-text-xs);
+}
+
+.app-avatar {
+  display: none;
+}
+
+.app-user form {
+  margin: 0;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+}
+
+.app-content p {
+  margin: 0;
+}
+
+.app-actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px 18px;
+  border-top: 1px solid var(--wo-line);
+  background: var(--wo-bg);
+}
+
+.app-actions form {
+  margin: 0;
+}
+
+/* Tablette : un peu plus d'air, cartes de liste sur deux colonnes. */
+@media (min-width: 720px) {
+  .app-bar-inner {
+    padding: 0 24px;
+  }
+
+  .app-content {
+    padding: 24px;
+  }
+
+  .app .list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Ordinateur : menu dans la barre, action dans un panneau à droite. */
+@media (min-width: 1024px) {
+  .app-bar-inner {
+    height: 68px;
+  }
+
+  .app-menu {
+    display: flex;
+    flex: 1;
+    gap: 4px;
+    margin-left: 32px;
+  }
+
+  .app-menu a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    color: var(--wo-muted);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .app-menu a:hover {
+    background: #f3eee4;
+    color: var(--wo-ink);
+  }
+
+  .app-menu a.active {
+    background: var(--wo-primary-soft);
+    color: var(--wo-primary);
+  }
+
+  .app-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--wo-ink);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .app-user-name {
+    color: var(--wo-ink);
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .app-body {
+    padding: 16px 0 48px;
+  }
+
+  .app-body.has-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: start;
+    gap: 32px;
+    padding-right: 24px;
+  }
+
+  .app-content {
+    gap: 18px;
+  }
+
+  .app-content > .h1,
+  .app-content > .row .h2 {
+    font-size: 1.75rem;
+  }
+
+  .app-actions {
+    position: sticky;
+    top: 92px;
+    bottom: auto;
+    margin-top: 24px;
+    padding: 20px;
+    border: 1px solid var(--wo-line);
+    border-radius: 20px;
+    background: var(--wo-surface);
+    box-shadow: 0 12px 32px -18px rgba(20, 33, 61, 0.25);
+  }
+
+  .app .trust {
+    padding: 24px 28px;
+  }
+
+  .app .trust .amount {
+    font-size: 2.5rem;
+  }
+
+  .app .item {
+    padding: 16px 18px;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+
+  .app .item:hover {
+    border-color: var(--wo-line-strong);
+    box-shadow: 0 8px 24px -16px rgba(20, 33, 61, 0.35);
+  }
+
+  .app .card {
+    padding: 20px 24px;
+  }
+}
