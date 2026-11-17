@@ -2,8 +2,11 @@ import { z } from "zod";
 
 const API_URL = z.url().parse(process.env.API_URL ?? "http://127.0.0.1:3000");
 
-/** Seul cookie transmis à l'API : celui qui identifie le téléphone de l'acheteur. */
-const DEVICE_COOKIE = "woor_device";
+/**
+ * Seuls cookies transmis à l'API : le téléphone de l'acheteur et la session des comptes.
+ * Tout autre cookie du navigateur reste sur le serveur web.
+ */
+const FORWARDED_COOKIES = ["woor_device", "woor_session"] as const;
 
 const ProblemSchema = z.object({
   title: z.string(),
@@ -26,6 +29,15 @@ export class ApiError extends Error {
   get isNotFound(): boolean {
     return this.status === 404;
   }
+
+  get isUnauthorized(): boolean {
+    return this.status === 401;
+  }
+
+  /** Refus métier ou saisie refusée : le message peut être montré tel quel. */
+  get isUserFacing(): boolean {
+    return this.status === 400 || this.status === 401 || this.status === 409;
+  }
 }
 
 export interface ApiResponse<T> {
@@ -40,6 +52,8 @@ interface ApiRequest<T> {
   /** En-tête Cookie de la requête du navigateur. */
   cookieHeader: string | null;
   schema: z.ZodType<T>;
+  /** Corps JSON, pour les POST qui portent des données. */
+  body?: unknown;
 }
 
 /**
@@ -51,14 +65,17 @@ export async function callApi<T>({
   path,
   cookieHeader,
   schema,
+  body,
 }: ApiRequest<T>): Promise<ApiResponse<T>> {
-  const deviceCookie = pickCookie(cookieHeader, DEVICE_COOKIE);
+  const cookie = forwardedCookies(cookieHeader);
   const response = await fetch(new URL(path, API_URL), {
     method,
     headers: {
       accept: "application/json",
-      ...(deviceCookie && { cookie: `${DEVICE_COOKIE}=${deviceCookie}` }),
+      ...(cookie && { cookie }),
+      ...(body !== undefined && { "content-type": "application/json" }),
     },
+    body: body === undefined ? undefined : JSON.stringify(body),
     signal: AbortSignal.timeout(10_000),
   });
 
@@ -82,15 +99,24 @@ async function toApiError(response: Response): Promise<ApiError> {
     : new ApiError(response.status, "Service indisponible", null);
 }
 
-function pickCookie(header: string | null, name: string): string | null {
+function forwardedCookies(header: string | null): string | null {
   if (!header) {
     return null;
   }
-  for (const part of header.split(";")) {
-    const [key, ...value] = part.trim().split("=");
-    if (key === name) {
-      return value.join("=");
-    }
+  const kept = header
+    .split(";")
+    .map((part) => part.trim())
+    .filter((part) => FORWARDED_COOKIES.some((name) => part.startsWith(`${name}=`)));
+  return kept.length > 0 ? kept.join("; ") : null;
+}
+
+/**
+ * Message à montrer quand l'API refuse une saisie ou une règle métier.
+ * Toute autre erreur remonte telle quelle vers la page d'erreur.
+ */
+export function userMessageOrThrow(error: unknown): string {
+  if (error instanceof ApiError && error.isUserFacing) {
+    return error.message;
   }
-  return null;
+  throw error;
 }
