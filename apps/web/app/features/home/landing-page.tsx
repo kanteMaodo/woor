@@ -1,154 +1,331 @@
 import { Link } from "react-router";
 
-import { Icon, type IconName } from "../../components/ui/icon";
-import { formatXof } from "../../lib/format";
-import { OrderProgress } from "../orders/order-progress";
+import { Icon } from "../../components/ui/icon";
+import { EscrowDiagram } from "./escrow-diagram";
+import { AUDIENCES, COMPARISON, FACTS, FAQ, GUARANTEES } from "./landing-content";
+import { LockedMock, PaidMock, SellerListMock, ShareMock } from "./mockup-screens";
 
 const SOURCE_URL = "https://github.com/kanteMaodo/woor";
 
-const STEPS: { icon: IconName; title: string; text: string }[] = [
-  {
-    icon: "send",
-    title: "La vendeuse envoie un lien",
-    text: "Elle décrit l'article, le prix et la livraison, puis partage le lien sur WhatsApp.",
-  },
-  {
-    icon: "lock",
-    title: "L'acheteur bloque son paiement",
-    text: "Il paie en bitcoin sur Lightning. L'argent est bloqué dans son wallet, pas encaissé.",
-  },
-  {
-    icon: "moto",
-    title: "Le livreur remet le colis",
-    text: "L'acheteur lui donne un code à 6 chiffres, seulement s'il a bien reçu sa commande.",
-  },
-  {
-    icon: "coin",
-    title: "Le code débloque l'argent",
-    text: "Vendeuse et livreur sont payés. Si rien n'arrive, l'acheteur est remboursé tout seul.",
-  },
-];
+const AUDIENCE_MOCKS = {
+  acheteur: LockedMock,
+  vendeuse: ShareMock,
+  livreur: PaidMock,
+} as const;
 
-const GUARANTEES: { icon: IconName; title: string; text: string }[] = [
-  {
-    icon: "lock",
-    title: "Bloqué, jamais encaissé",
-    text: "Les hold invoices Lightning gardent l'argent chez l'acheteur jusqu'au code. Wóor ne peut pas partir avec.",
-  },
-  {
-    icon: "undo",
-    title: "Remboursement automatique",
-    text: "Pas de remise à temps, colis refusé, commande annulée : le paiement bloqué est simplement annulé.",
-  },
-  {
-    icon: "key",
-    title: "Données chiffrées",
-    text: "Numéros, adresses et secrets de paiement sont chiffrés ou réduits à une empreinte avant d'entrer en base.",
-  },
-  {
-    icon: "eye-off",
-    title: "Chacun voit sa part",
-    text: "La base elle-même limite chaque vendeuse, livreur ou acheteur à ses propres commandes.",
-  },
-];
-
-/** Page d'accueil : ce qu'est Wóor, comment ça marche, pourquoi on peut lui faire confiance. */
+/**
+ * Page d'accueil. Structure inspirée des meilleures pages fintech : promesse et produit
+ * en tête, chiffres concrets, un chemin par public, preuve de sécurité, FAQ avant l'appel final.
+ */
 export function LandingPage() {
   return (
     <div className="landing">
-      <header className="landing-bar">
-        <span className="brand">
+      <LandingNav />
+      <Hero />
+      <FactsBand />
+      <ProblemSection />
+      <AudienceSection />
+      <SecuritySection />
+      <ComparisonSection />
+      <FaqSection />
+      <FinalCta />
+      <LandingFooter />
+    </div>
+  );
+}
+
+function LandingNav() {
+  return (
+    <header className="l-nav">
+      <div className="l-container l-nav-inner">
+        <Link to="/" className="brand l-brand">
           <Icon name="bolt" />
           Wóor
-        </span>
-        <Link to="/connexion" className="landing-login">
+        </Link>
+        <nav className="l-nav-links" aria-label="Sections">
+          <a href="#comment">Comment ça marche</a>
+          <a href="#securite">Sécurité</a>
+          <a href="#questions">Questions</a>
+        </nav>
+        <Link to="/connexion" className="l-nav-cta">
           Se connecter
         </Link>
-      </header>
+      </div>
+    </header>
+  );
+}
 
-      <section className="hero">
-        <div className="hero-text">
-          <p className="eyebrow">Commerce en ligne à Dakar · Bitcoin Lightning</p>
-          <h1>Votre argent est bloqué, pas encaissé, jusqu'à la remise du colis.</h1>
-          <p className="lead">
-            Wóor protège les ventes sur WhatsApp, Instagram et TikTok. L'acheteur ne paie pas dans
-            le vide, la vendeuse ne livre plus à perte.
+function Hero() {
+  return (
+    <section className="l-hero">
+      <div className="l-container l-hero-grid">
+        <div className="l-hero-text">
+          <p className="l-eyebrow">
+            <Icon name="bolt" size="sm" />
+            Paiement protégé sur Bitcoin Lightning
           </p>
-          <div className="hero-actions">
-            <Link to="/connexion" className="btn btn-primary">
+          <h1>
+            Vendez en ligne à Dakar. <span>Sans risque pour personne.</span>
+          </h1>
+          <p className="l-lead">
+            L'argent de l'acheteur est bloqué, pas encaissé, jusqu'à la remise du colis. Un code à 6
+            chiffres le débloque. Sinon, il revient tout seul.
+          </p>
+          <div className="l-actions">
+            <Link to="/connexion" className="btn btn-primary l-btn">
               Espace vendeuse et livreur
+              <Icon name="chev" />
             </Link>
-            <a href="#comment" className="btn btn-secondary">
-              Comment ça marche
+            <a href="#comment" className="btn l-btn l-btn-ghost">
+              Voir comment ça marche
             </a>
           </div>
+          <ul className="l-pills">
+            <li>
+              <Icon name="check" size="sm" /> Sans compte pour l'acheteur
+            </li>
+            <li>
+              <Icon name="check" size="sm" /> Remboursement automatique
+            </li>
+            <li>
+              <Icon name="check" size="sm" /> Pensé pour WhatsApp
+            </li>
+          </ul>
         </div>
 
-        <div className="hero-card" aria-hidden="true">
-          <div className="trust">
-            <p className="small">Robe en wax, taille M</p>
-            <div className="amount">{formatXof(13_500)}</div>
-            <p className="small">bloqués dans le wallet de l'acheteur</p>
+        <div className="l-hero-visual">
+          <SellerListMock className="l-phone-back" />
+          <LockedMock className="l-phone-front" />
+          <div className="l-float l-float-top" aria-hidden="true">
+            <span className="l-float-icon ok">
+              <Icon name="lock" />
+            </span>
+            <div>
+              <b>Paiement bloqué</b>
+              <span>13 500 F · Robe en wax</span>
+            </div>
           </div>
-          <OrderProgress state="in_transit" />
-          <div className="banner info">
-            <Icon name="lock" />
-            <div>Moussa est en route. Le code à 6 chiffres débloquera le paiement.</div>
+          <div className="l-float l-float-bottom" aria-hidden="true">
+            <span className="l-float-icon btc">
+              <Icon name="bolt" />
+            </span>
+            <div>
+              <b>Code juste, argent débloqué</b>
+              <span>Vendeuse et livreur payés</span>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      <section className="landing-section problem">
-        <h2>À Dakar, vendre en ligne repose sur la confiance</h2>
-        <div className="landing-grid two">
-          <article className="landing-card">
+function FactsBand() {
+  return (
+    <section className="l-facts" aria-label="Les règles du pilote en chiffres">
+      <div className="l-container l-facts-grid">
+        {FACTS.map((fact) => (
+          <div key={fact.value} className="l-fact">
+            <b>{fact.value}</b>
+            <span>{fact.label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ProblemSection() {
+  return (
+    <section className="l-section">
+      <div className="l-container">
+        <p className="l-kicker">Le problème</p>
+        <h2>À Dakar, la vente en ligne repose sur la confiance. Et la confiance se perd vite.</h2>
+        <div className="l-grid two">
+          <article className="l-card l-card-problem">
             <Icon name="wallet" size="lg" />
-            <h3>L'acheteur hésite à payer d'avance</h3>
-            <p>Il a peur de ne jamais recevoir le colis, ou de recevoir autre chose.</p>
-          </article>
-          <article className="landing-card">
-            <Icon name="box" size="lg" />
-            <h3>La vendeuse livre à ses risques</h3>
+            <h3>Payer d'avance ? L'acheteur hésite.</h3>
             <p>
-              Au paiement à la livraison, le client refuse ou disparaît, et la course est perdue.
+              Il a vu trop de vendeurs disparaître après le virement. Il préfère ne pas commander.
+            </p>
+          </article>
+          <article className="l-card l-card-problem">
+            <Icon name="moto" size="lg" />
+            <h3>Payer à la livraison ? La vendeuse perd.</h3>
+            <p>
+              Le client refuse à la porte ou ne répond plus. La course est perdue, le livreur rentre
+              avec le colis et des billets en poche.
             </p>
           </article>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      <section className="landing-section" id="comment">
-        <h2>Comment ça marche</h2>
-        <ol className="landing-grid four steps-list">
-          {STEPS.map((step, index) => (
-            <li key={step.title} className="landing-card">
-              <span className="step-number">{index + 1}</span>
-              <Icon name={step.icon} size="lg" />
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
+function AudienceSection() {
+  return (
+    <section className="l-section l-tinted" id="comment">
+      <div className="l-container">
+        <p className="l-kicker">Comment ça marche</p>
+        <h2>Un lien, un paiement bloqué, un code. Chacun y gagne.</h2>
+        <div className="l-rows">
+          {AUDIENCES.map((audience, index) => {
+            const Mock = AUDIENCE_MOCKS[audience.key as keyof typeof AUDIENCE_MOCKS];
+            return (
+              <article key={audience.key} className={`l-row${index % 2 ? " reverse" : ""}`}>
+                <div className="l-row-text">
+                  <span className="l-row-icon">
+                    <Icon name={audience.icon} size="lg" />
+                  </span>
+                  <p className="l-row-title">{audience.title}</p>
+                  <h3>{audience.promise}</h3>
+                  <ul className="l-checks">
+                    {audience.points.map((point) => (
+                      <li key={point}>
+                        <Icon name="check-circle" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="l-row-visual">
+                  <Mock />
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-      <section className="landing-section">
-        <h2>Sûr par construction</h2>
-        <div className="landing-grid four">
+function SecuritySection() {
+  return (
+    <section className="l-section l-dark" id="securite">
+      <div className="l-container">
+        <p className="l-kicker">Sécurité</p>
+        <h2>Sûr par construction, pas par promesse.</h2>
+        <p className="l-section-lead">
+          Wóor ne garde jamais l'argent : il reste bloqué sur le réseau Lightning jusqu'au code.
+        </p>
+        <EscrowDiagram />
+        <div className="l-grid four">
           {GUARANTEES.map((item) => (
-            <article key={item.title} className="landing-card">
+            <article key={item.title} className="l-card l-card-dark">
               <Icon name={item.icon} size="lg" />
               <h3>{item.title}</h3>
               <p>{item.text}</p>
             </article>
           ))}
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      <footer className="landing-footer">
-        <span>Wóor · Dakar Bitcoin Hack 2026</span>
+function ComparisonSection() {
+  return (
+    <section className="l-section">
+      <div className="l-container">
+        <p className="l-kicker">Pourquoi Wóor</p>
+        <h2>Le meilleur des deux façons de payer, sans leurs risques.</h2>
+        <div className="l-table-wrap">
+          <table className="l-table">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <span className="sr-only">Critère</span>
+                </th>
+                {COMPARISON.columns.map((column) => (
+                  <th key={column} scope="col" className={column === "Wóor" ? "hl" : undefined}>
+                    {column}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARISON.rows.map((row) => (
+                <tr key={row.label}>
+                  <th scope="row">{row.label}</th>
+                  {row.values.map((value, index) => (
+                    <td key={COMPARISON.columns[index]} className={index === 2 ? "hl" : undefined}>
+                      {value ? (
+                        <span className="yes">
+                          <Icon name="check" size="sm" />
+                          <span className="sr-only">Oui</span>
+                        </span>
+                      ) : (
+                        <span className="no">
+                          <Icon name="x" size="sm" />
+                          <span className="sr-only">Non</span>
+                        </span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FaqSection() {
+  return (
+    <section className="l-section l-tinted" id="questions">
+      <div className="l-container l-faq-grid">
+        <div>
+          <p className="l-kicker">Questions</p>
+          <h2>Ce qu'on nous demande le plus.</h2>
+        </div>
+        <div className="l-faq">
+          {FAQ.map((item) => (
+            <details key={item.question}>
+              <summary>
+                {item.question}
+                <Icon name="plus" />
+              </summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalCta() {
+  return (
+    <section className="l-cta">
+      <div className="l-container l-cta-inner">
+        <h2>Votre prochaine vente, sans risque.</h2>
+        <p>Créez un lien protégé en moins d'une minute et envoyez-le sur WhatsApp.</p>
+        <Link to="/connexion" className="btn l-btn l-btn-light">
+          Accéder à mon espace
+          <Icon name="chev" />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function LandingFooter() {
+  return (
+    <footer className="l-footer">
+      <div className="l-container l-footer-inner">
+        <span className="brand">
+          <Icon name="bolt" />
+          Wóor
+        </span>
+        <span>Dakar Bitcoin Hack 2026 · Pilote à Dakar</span>
         <a href={SOURCE_URL} target="_blank" rel="noreferrer">
-          Code source
+          Code source sur GitHub
         </a>
-      </footer>
-    </div>
+      </div>
+    </footer>
   );
 }

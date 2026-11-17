@@ -1,170 +1,824 @@
 /*
- * Page d'accueil. Pensée pour le téléphone d'abord, elle s'élargit sur ordinateur :
- * une colonne, puis deux, puis quatre.
+ * Page d'accueil. Téléphone d'abord, puis tablette (640 px) et ordinateur (1024 px).
+ * Couleurs du design system : encre, vert Wóor, orange bitcoin pour les accents seulement.
  */
 .landing {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 0 16px;
+  --l-ink-deep: #0d1730;
+  --l-mint: #3ddc97;
+  overflow-x: clip;
 }
 
-.landing-bar {
+.l-container {
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Navigation ----------------------------------------------------------- */
+.l-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(13, 23, 48, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+.l-nav-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 24px;
   height: 64px;
 }
 
-.landing-login {
-  color: var(--wo-primary);
+.l-brand {
+  color: #fff;
+  text-decoration: none;
+}
+
+.l-nav-links {
+  display: none;
+  gap: 28px;
+}
+
+.l-nav-links a {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.l-nav-links a:hover {
+  color: #fff;
+}
+
+.l-nav-cta {
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 15px;
   font-weight: 500;
   text-decoration: none;
 }
 
-.hero {
+.l-nav-cta:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Héros ---------------------------------------------------------------- */
+.l-hero {
+  position: relative;
+  padding: 48px 0 64px;
+  background:
+    radial-gradient(600px 400px at 85% 20%, rgba(11, 110, 79, 0.55), transparent 70%),
+    radial-gradient(500px 300px at 10% 90%, rgba(247, 147, 26, 0.18), transparent 70%),
+    var(--l-ink-deep);
+  color: #fff;
+}
+
+.l-hero::before {
+  /* Grille discrète, comme sur les pages produit des fintech. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, #000 40%, transparent);
+  pointer-events: none;
+}
+
+.l-hero-grid {
+  position: relative;
   display: grid;
-  gap: 32px;
-  padding: 24px 0 48px;
+  gap: 56px;
 }
 
-.hero h1 {
-  margin: 0 0 16px;
-  font-size: clamp(1.75rem, 5vw, 3rem);
-  line-height: 1.15;
-  letter-spacing: -0.5px;
+.l-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 14px;
 }
 
-.eyebrow {
-  margin: 0 0 12px;
-  color: var(--wo-primary);
-  font-size: var(--wo-text-xs);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.l-eyebrow .i {
+  color: var(--wo-bitcoin);
 }
 
-.lead {
+.l-hero h1 {
+  margin: 0 0 20px;
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+}
+
+.l-hero h1 span {
+  display: block;
+  background: linear-gradient(90deg, var(--l-mint), #9ff0c9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.l-lead {
   max-width: 34em;
-  color: var(--wo-muted);
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
   font-size: 1.125rem;
+  line-height: 1.6;
 }
 
-.hero-actions {
+.l-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.l-btn {
+  padding: 0 24px;
+  font-size: 17px;
+}
+
+.l-btn .i {
+  width: 18px;
+  height: 18px;
+}
+
+.l-btn-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #fff;
+}
+
+.l-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.l-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+.l-pills li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.l-pills .i {
+  color: var(--l-mint);
+}
+
+/* Téléphones du héros -------------------------------------------------- */
+.l-hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-height: 560px;
+}
+
+.phone-mockup {
+  position: relative;
+  width: 280px;
+  padding: 10px;
+  border-radius: 40px;
+  background: #0a0f1c;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 40px 80px -20px rgba(0, 0, 0, 0.6);
+  color: var(--wo-ink);
+}
+
+.phone-notch {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  z-index: 2;
+  width: 84px;
+  height: 22px;
+  border-radius: 12px;
+  background: #0a0f1c;
+  transform: translateX(-50%);
+}
+
+.phone-screen {
+  overflow: hidden;
+  border-radius: 31px;
+  background: var(--wo-bg);
+}
+
+.phone-screen .appbar {
+  height: 52px;
+  padding-top: 14px;
+}
+
+.phone-screen .brand {
+  font-size: 17px;
+}
+
+.phone-content {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 24px;
+  min-height: 440px;
+  padding: 12px;
+  font-size: 14px;
 }
 
-.hero-card {
+.phone-content p {
+  margin: 0;
+}
+
+.phone-content .amount {
+  font-size: 24px;
+}
+
+.phone-content .code {
+  font-size: 30px;
+}
+
+.phone-content .frise {
+  transform: scale(0.92);
+  transform-origin: left center;
+}
+
+.phone-content .btn {
+  height: 46px;
+  font-size: 15px;
+}
+
+.phone-content .bigicon {
+  width: 92px;
+  height: 92px;
+}
+
+.l-phone-front {
+  z-index: 1;
+}
+
+.l-phone-back {
+  display: none;
+}
+
+.l-float {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.45);
+  color: var(--wo-ink);
+  font-size: 14px;
+  animation: l-float 6s ease-in-out infinite;
+}
+
+.l-float div {
   display: flex;
   flex-direction: column;
+}
+
+.l-float span:not(.l-float-icon) {
+  color: var(--wo-muted);
+  font-size: 13px;
+}
+
+.l-float-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+.l-float-icon.ok {
+  background: var(--wo-primary-soft);
+  color: var(--wo-primary);
+}
+
+.l-float-icon.btc {
+  background: #fff1e0;
+  color: var(--wo-bitcoin);
+}
+
+.l-float-top {
+  top: 40px;
+  left: 0;
+}
+
+.l-float-bottom {
+  right: 0;
+  bottom: 40px;
+  animation-delay: -3s;
+}
+
+@keyframes l-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Chiffres ------------------------------------------------------------- */
+.l-facts {
+  border-bottom: 1px solid var(--wo-line);
+  background: var(--wo-surface);
+}
+
+.l-facts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.l-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.l-fact b {
+  color: var(--wo-primary);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  letter-spacing: -0.5px;
+}
+
+.l-fact span {
+  color: var(--wo-muted);
+  font-size: 14px;
+}
+
+/* Sections ------------------------------------------------------------- */
+.l-section {
+  padding: 72px 0;
+}
+
+.l-section h2 {
+  max-width: 22em;
+  margin: 0 0 40px;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+}
+
+.l-kicker {
+  margin: 0 0 12px;
+  color: var(--wo-primary);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.l-section-lead {
+  max-width: 36em;
+  margin: -24px 0 40px;
+  font-size: 1.125rem;
+}
+
+.l-tinted {
+  background: #f6f1e7;
+}
+
+.l-grid {
+  display: grid;
   gap: 16px;
-  padding: 20px;
+}
+
+.l-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px;
   border: 1px solid var(--wo-line);
   border-radius: 20px;
   background: var(--wo-surface);
-  box-shadow: 0 20px 50px -20px rgba(20, 33, 61, 0.25);
 }
 
-.landing-section {
-  padding: 40px 0;
-  border-top: 1px solid var(--wo-line);
+.l-card h3 {
+  margin: 0;
+  font-size: 1.25rem;
 }
 
-.landing-section h2 {
-  margin: 0 0 24px;
-  font-size: clamp(1.375rem, 3vw, 2rem);
+.l-card p {
+  margin: 0;
+  color: var(--wo-muted);
 }
 
-.landing-grid {
+.l-card > .i {
+  color: var(--wo-primary);
+}
+
+.l-card-problem > .i {
+  color: var(--wo-danger);
+}
+
+/* Un chemin par public, texte et téléphone en alternance. */
+.l-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+
+.l-row {
   display: grid;
-  gap: 16px;
+  gap: 32px;
+  align-items: center;
+}
+
+.l-row-icon {
+  display: inline-flex;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--wo-primary-soft);
+  color: var(--wo-primary);
+}
+
+.l-row-title {
+  margin: 16px 0 6px;
+  color: var(--wo-muted);
+  font-weight: 500;
+}
+
+.l-row h3 {
+  margin: 0 0 20px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.2;
+}
+
+.l-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.landing-card {
-  position: relative;
+.l-checks li {
+  display: flex;
+  gap: 10px;
+  font-size: 1.0625rem;
+}
+
+.l-checks .i {
+  margin-top: 2px;
+  color: var(--wo-primary);
+}
+
+.l-row-visual {
+  display: flex;
+  justify-content: center;
+}
+
+/* Sécurité, sur fond sombre. */
+.l-dark {
+  background: var(--l-ink-deep);
+  color: #fff;
+}
+
+.l-dark .l-kicker {
+  color: var(--l-mint);
+}
+
+.l-dark .l-section-lead {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.escrow-diagram {
+  margin: 0 0 40px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.escrow-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.escrow-diagram .d-title {
+  fill: #fff;
+  font: 600 18px var(--wo-font);
+}
+
+.escrow-diagram .d-sub {
+  fill: rgba(255, 255, 255, 0.65);
+  font: 14px var(--wo-font);
+}
+
+.escrow-diagram .d-badge {
+  fill: var(--l-ink-deep);
+  font: 700 13px var(--wo-font);
+}
+
+.escrow-diagram .d-back {
+  fill: var(--wo-bitcoin);
+  font: 500 14px var(--wo-font);
+}
+
+.l-card-dark {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.l-card-dark > .i {
+  color: var(--l-mint);
+}
+
+.l-card-dark p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Comparaison ---------------------------------------------------------- */
+.l-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--wo-line);
+  border-radius: 20px;
+  background: var(--wo-surface);
+}
+
+.l-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+}
+
+.l-table th,
+.l-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--wo-line);
+  text-align: center;
+}
+
+.l-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.l-table th[scope="row"] {
+  font-weight: 400;
+  text-align: left;
+}
+
+.l-table thead th {
+  color: var(--wo-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.l-table .hl {
+  background: var(--wo-primary-soft);
+}
+
+.l-table thead .hl {
+  color: var(--wo-primary);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.l-table .yes,
+.l-table .no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.l-table .yes {
+  background: var(--wo-primary);
+  color: #fff;
+}
+
+.l-table .no {
+  background: #efece5;
+  color: var(--wo-muted);
+}
+
+/* Questions ------------------------------------------------------------ */
+.l-faq-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.l-faq {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 20px;
+  gap: 12px;
+}
+
+.l-faq details {
   border: 1px solid var(--wo-line);
   border-radius: 16px;
   background: var(--wo-surface);
 }
 
-.landing-card > .i {
-  color: var(--wo-primary);
-}
-
-.landing-card h3 {
-  margin: 4px 0 0;
+.l-faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
   font-size: 1.0625rem;
+  font-weight: 500;
+  list-style: none;
+  cursor: pointer;
 }
 
-.landing-card p {
+.l-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.l-faq summary .i {
+  color: var(--wo-primary);
+  transition: transform 0.2s;
+}
+
+.l-faq details[open] summary .i {
+  transform: rotate(45deg);
+}
+
+.l-faq details p {
   margin: 0;
+  padding: 0 24px 20px;
   color: var(--wo-muted);
 }
 
-.step-number {
-  position: absolute;
-  top: 16px;
-  right: 18px;
-  color: var(--wo-line-strong);
-  font-size: 1.5rem;
-  font-weight: 700;
+/* Appel final et pied de page ------------------------------------------ */
+.l-cta {
+  padding: 80px 0;
+  background:
+    radial-gradient(500px 300px at 80% 0%, rgba(61, 220, 151, 0.35), transparent 70%),
+    var(--wo-primary);
+  color: #fff;
+  text-align: center;
 }
 
-.landing-footer {
+.l-cta-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.l-cta h2 {
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  letter-spacing: -0.8px;
+}
+
+.l-cta p {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.125rem;
+}
+
+.l-btn-light {
+  width: auto;
+  background: #fff;
+  color: var(--wo-primary);
+}
+
+.l-footer {
+  background: var(--l-ink-deep);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.l-footer-inner {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 24px 0 40px;
-  border-top: 1px solid var(--wo-line);
-  color: var(--wo-muted);
-  font-size: var(--wo-text-xs);
+  gap: 16px;
+  padding-top: 32px;
+  padding-bottom: 32px;
 }
 
-.landing-footer a {
-  color: var(--wo-primary);
+.l-footer .brand {
+  color: #fff;
 }
 
-/* Tablette : deux colonnes. */
+.l-footer a {
+  color: var(--l-mint);
+}
+
+/* Tablette ------------------------------------------------------------- */
 @media (min-width: 640px) {
-  .landing {
+  .l-container {
     padding: 0 32px;
   }
 
-  .hero-actions {
+  .l-actions {
     flex-direction: row;
   }
 
-  .hero-actions .btn {
+  .l-actions .btn {
     width: auto;
-    padding: 0 28px;
   }
 
-  .landing-grid.two,
-  .landing-grid.four {
+  .l-facts-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .l-grid.two,
+  .l-grid.four {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Ordinateur : texte et carte côte à côte, quatre étapes en ligne. */
-@media (min-width: 960px) {
-  .hero {
-    grid-template-columns: 1.2fr 1fr;
-    align-items: center;
-    gap: 56px;
-    padding: 56px 0 72px;
+/* Ordinateur ----------------------------------------------------------- */
+@media (min-width: 1024px) {
+  .l-nav-links {
+    display: flex;
   }
 
-  .landing-grid.four {
+  .l-hero {
+    padding: 80px 0 96px;
+  }
+
+  .l-hero-grid {
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+  }
+
+  .l-phone-back {
+    position: absolute;
+    top: 40px;
+    right: -10px;
+    display: block;
+    opacity: 0.55;
+    transform: rotate(6deg) scale(0.9);
+  }
+
+  .l-phone-front {
+    transform: translateX(-60px) rotate(-3deg);
+  }
+
+  .l-float-top {
+    left: -20px;
+  }
+
+  .l-float-bottom {
+    right: 10px;
+  }
+
+  .l-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+
+  .l-row.reverse .l-row-text {
+    order: 2;
+  }
+
+  .l-grid.four {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .l-faq-grid {
+    grid-template-columns: 1fr 1.6fr;
+    gap: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .l-float {
+    animation: none;
   }
 }
