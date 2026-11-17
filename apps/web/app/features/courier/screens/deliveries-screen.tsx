@@ -22,7 +22,7 @@ export function DeliveriesScreen({ profile, deliveries }: DeliveriesScreenProps)
     <AccountScreen
       profile={profile}
       title="Mes courses"
-      subtitle={`Bonjour ${firstName}. Une course apparaît dès que l'acheteur a payé.`}
+      subtitle={`Nanga def, ${firstName} ? Une course apparaît dès que l'acheteur a payé.`}
     >
       <section className="stat-grid" aria-label="Chiffres clés">
         <StatCard

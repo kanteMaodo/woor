@@ -144,7 +144,7 @@ function PaidScreen({ profile, delivery }: { profile: Profile; delivery: Deliver
         <div className="bigicon ok">
           <Icon name="check" size="xl" />
         </div>
-        <p className="paid-title">Remettez le colis.</p>
+        <p className="paid-title">Jërëjëf ! Remettez le colis.</p>
         <div className="row">
           <span className="muted">Article</span>
           <span>{delivery.itemLabel}</span>
