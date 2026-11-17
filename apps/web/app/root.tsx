@@ -12,6 +12,7 @@ import type { Route } from "./+types/root";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/components.css";
+import "./styles/landing.css";
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

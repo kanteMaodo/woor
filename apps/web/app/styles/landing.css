@@ -1,0 +1,170 @@
+/*
+ * Page d'accueil. Pensée pour le téléphone d'abord, elle s'élargit sur ordinateur :
+ * une colonne, puis deux, puis quatre.
+ */
+.landing {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.landing-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.landing-login {
+  color: var(--wo-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.hero {
+  display: grid;
+  gap: 32px;
+  padding: 24px 0 48px;
+}
+
+.hero h1 {
+  margin: 0 0 16px;
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--wo-primary);
+  font-size: var(--wo-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lead {
+  max-width: 34em;
+  color: var(--wo-muted);
+  font-size: 1.125rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--wo-line);
+  border-radius: 20px;
+  background: var(--wo-surface);
+  box-shadow: 0 20px 50px -20px rgba(20, 33, 61, 0.25);
+}
+
+.landing-section {
+  padding: 40px 0;
+  border-top: 1px solid var(--wo-line);
+}
+
+.landing-section h2 {
+  margin: 0 0 24px;
+  font-size: clamp(1.375rem, 3vw, 2rem);
+}
+
+.landing-grid {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--wo-line);
+  border-radius: 16px;
+  background: var(--wo-surface);
+}
+
+.landing-card > .i {
+  color: var(--wo-primary);
+}
+
+.landing-card h3 {
+  margin: 4px 0 0;
+  font-size: 1.0625rem;
+}
+
+.landing-card p {
+  margin: 0;
+  color: var(--wo-muted);
+}
+
+.step-number {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  color: var(--wo-line-strong);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.landing-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 0 40px;
+  border-top: 1px solid var(--wo-line);
+  color: var(--wo-muted);
+  font-size: var(--wo-text-xs);
+}
+
+.landing-footer a {
+  color: var(--wo-primary);
+}
+
+/* Tablette : deux colonnes. */
+@media (min-width: 640px) {
+  .landing {
+    padding: 0 32px;
+  }
+
+  .hero-actions {
+    flex-direction: row;
+  }
+
+  .hero-actions .btn {
+    width: auto;
+    padding: 0 28px;
+  }
+
+  .landing-grid.two,
+  .landing-grid.four {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Ordinateur : texte et carte côte à côte, quatre étapes en ligne. */
+@media (min-width: 960px) {
+  .hero {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: 56px;
+    padding: 56px 0 72px;
+  }
+
+  .landing-grid.four {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
