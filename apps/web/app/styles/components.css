@@ -518,3 +518,304 @@
   margin-top: 1px;
   color: var(--wo-primary);
 }
+
+/* Formulaires ---------------------------------------------------------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: var(--wo-text-xs);
+  font-weight: 500;
+  color: var(--wo-muted);
+}
+
+.input {
+  width: 100%;
+  min-height: var(--wo-touch);
+  padding: 12px 14px;
+  border: 1px solid var(--wo-line-strong);
+  border-radius: var(--wo-radius);
+  background: var(--wo-surface);
+  color: var(--wo-ink);
+  font-family: inherit;
+  font-size: var(--wo-text-md);
+}
+
+.input:focus-visible {
+  outline: none;
+  border: 2px solid var(--wo-primary);
+  padding: 11px 13px;
+}
+
+textarea.input {
+  min-height: 72px;
+  resize: vertical;
+}
+
+/* Code de remise saisi par le livreur : gros chiffres espacés. */
+.input.code-input {
+  font-size: 32px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.4em;
+  text-align: center;
+}
+
+.hint {
+  font-size: var(--wo-text-xs);
+  color: var(--wo-muted);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sep {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--wo-text-xs);
+  color: var(--wo-muted);
+}
+
+.sep::before,
+.sep::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--wo-line);
+}
+
+/* Listes de commandes -------------------------------------------------- */
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.filters a {
+  padding: 6px 12px;
+  border: 1px solid var(--wo-line-strong);
+  border-radius: 999px;
+  color: var(--wo-ink);
+  font-size: var(--wo-text-xs);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.filters a[aria-current="page"] {
+  border-color: var(--wo-ink);
+  background: var(--wo-ink);
+  color: #fff;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--wo-line);
+  border-radius: var(--wo-radius);
+  background: var(--wo-surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.item:focus-visible {
+  outline: 3px solid var(--wo-ink);
+  outline-offset: 2px;
+}
+
+.item .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.item .t {
+  font-size: var(--wo-text-md);
+  font-weight: 500;
+}
+
+.item .s {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--wo-text-xs);
+  color: var(--wo-muted);
+}
+
+.item.faded {
+  opacity: 0.75;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px 3px 8px;
+  border-radius: 999px;
+  font-size: var(--wo-text-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip .i {
+  width: 15px;
+  height: 15px;
+}
+
+.chip.locked {
+  background: var(--wo-primary-soft);
+  color: var(--wo-primary);
+}
+
+.chip.route {
+  background: #e6eef9;
+  color: #1d4f91;
+}
+
+.chip.wait {
+  background: var(--wo-warning-bg);
+  color: var(--wo-warning);
+}
+
+.chip.done {
+  background: #efece5;
+  color: var(--wo-ink);
+}
+
+.chip.danger {
+  background: var(--wo-danger-bg);
+  color: var(--wo-danger);
+}
+
+.empty {
+  padding: var(--wo-space-3) 0;
+  text-align: center;
+  color: var(--wo-muted);
+}
+
+/* Chronologie d'une commande ------------------------------------------- */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--wo-line);
+  font-size: 15px;
+}
+
+.timeline li:last-child {
+  border-bottom: 0;
+}
+
+.timeline time {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--wo-muted);
+}
+
+/* Partage du lien : aperçu du message WhatsApp ------------------------- */
+.bubble {
+  padding: 12px 14px;
+  border: 1px solid #cfe8d3;
+  border-radius: 12px 12px 12px 4px;
+  background: #e7f6e9;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.bubble .link {
+  color: #1d4f91;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.linkcard {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0 6px;
+  padding: 10px;
+  border: 1px solid var(--wo-line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.linkcard .lc-ic {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--wo-primary);
+  color: #fff;
+}
+
+/* Barre du haut d'un espace connecté ----------------------------------- */
+.appbar form {
+  margin: 0;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--wo-touch);
+  height: var(--wo-touch);
+  border: 0;
+  background: none;
+  color: var(--wo-muted);
+  cursor: pointer;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  color: var(--wo-primary);
+  font-size: var(--wo-text-xs);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* Pile verticale, pour les champs d'un formulaire. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+}
+
+/* Barre de navigation de la galerie d'aperçu (développement seulement). */
+.preview-nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+}

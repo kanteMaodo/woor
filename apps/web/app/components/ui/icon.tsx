@@ -93,6 +93,17 @@ const PATHS = {
       <circle cx="12" cy="19" r="1.2" fill="currentColor" />
     </>
   ),
+  plus: <path d="M12 5v14M5 12h14" />,
+  send: <path d="M21 3 10 14M21 3l-7 18-4-7-7-4z" />,
+  pin: (
+    <>
+      <path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z" />
+      <circle cx="12" cy="9.5" r="2.5" />
+    </>
+  ),
+  chev: <path d="m9 6 6 6-6 6" />,
+  "arrow-left": <path d="M19 12H5M12 19l-7-7 7-7" />,
+  power: <path d="M12 3v9M6.3 6.3a8 8 0 1 0 11.4 0" />,
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof PATHS;
