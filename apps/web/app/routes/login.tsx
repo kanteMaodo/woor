@@ -1,6 +1,6 @@
 import { redirect } from "react-router";
 
-import { LoginScreen } from "../features/account/login-screen";
+import { type DemoAccount, LoginScreen } from "../features/account/login-screen";
 import { authApi } from "../lib/api/account-api.server";
 import { userMessageOrThrow } from "../lib/api/api-client.server";
 import { assertSameOrigin } from "../lib/security.server";
@@ -11,13 +11,25 @@ export function meta(_: Route.MetaArgs) {
   return [{ title: "Se connecter · Wóor" }, { name: "robots", content: "noindex, nofollow" }];
 }
 
+/** Comptes créés par le script seed:demo de l'API. */
+const DEMO_ACCOUNTS: DemoAccount[] = [
+  { label: "Vendeuse", phone: "77 000 00 01", pin: "111111" },
+  { label: "Livreur", phone: "77 000 00 02", pin: "222222" },
+];
+
+/** Démonstration : en développement, ou en ligne si WOOR_DEMO=1 (le MVP testé par le jury). */
+function demoEnabled(): boolean {
+  return process.env.NODE_ENV !== "production" || process.env.WOOR_DEMO === "1";
+}
+
 /** Déjà connecté : directement vers son espace. */
 export async function loader({ request }: Route.LoaderArgs) {
-  const profile = await findProfile(request);
+  // API injoignable : on montre quand même le formulaire, l'envoi dira ce qui ne va pas.
+  const profile = await findProfile(request).catch(() => null);
   if (profile) {
     throw redirect(HOME_BY_ROLE[profile.role]);
   }
-  return null;
+  return { demoAccounts: demoEnabled() ? DEMO_ACCOUNTS : [] };
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -38,6 +50,12 @@ export async function action({ request }: Route.ActionArgs) {
   }
 }
 
-export default function LoginRoute({ actionData }: Route.ComponentProps) {
-  return <LoginScreen error={actionData?.error ?? null} phone={actionData?.phone ?? ""} />;
+export default function LoginRoute({ loaderData, actionData }: Route.ComponentProps) {
+  return (
+    <LoginScreen
+      error={actionData?.error ?? null}
+      phone={actionData?.phone ?? ""}
+      demoAccounts={loaderData.demoAccounts}
+    />
+  );
 }
