@@ -8,8 +8,7 @@ import {
   type BuyerPreview,
   buildBuyerPreviews,
 } from "../features/buyer/preview/buyer-fixtures.server";
-import { buildAccountPreviews } from "../features/preview/account-fixtures.server";
-import { AccountPreviewScreen } from "../features/preview/account-preview";
+import { ACCOUNT_CATALOG } from "../features/preview/account-catalog";
 import { invoiceQrSvg } from "../lib/qr.server";
 import type { Route } from "./+types/preview";
 
@@ -25,17 +24,17 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
   const now = new Date();
   const buyerPreviews = buildBuyerPreviews(now);
-  const accountPreviews = buildAccountPreviews(now);
-  const index = [...buyerPreviews, ...accountPreviews].map(({ slug, label }) => ({ slug, label }));
+  const index = [...buyerPreviews, ...ACCOUNT_CATALOG].map(({ slug, label }) => ({ slug, label }));
   if (!params.slug) {
     return { index, current: null };
   }
 
-  const account = accountPreviews.find((candidate) => candidate.slug === params.slug);
+  const account = ACCOUNT_CATALOG.find((candidate) => candidate.slug === params.slug);
   if (account) {
+    const qrSvg = await invoiceQrSvg("WOOR-PICKUP:0190a1b2:demo-signature");
     return {
       index,
-      current: { type: "account" as const, slug: account.slug, label: account.label, account },
+      current: { type: "account" as const, slug: account.slug, label: account.label, qrSvg },
     };
   }
 
@@ -94,7 +93,9 @@ export default function PreviewRoute({ loaderData }: Route.ComponentProps) {
         {next ? <Link to={`/apercu/${next.slug}`}>Suivant ›</Link> : <span />}
       </nav>
       {current.type === "account" ? (
-        <AccountPreviewScreen preview={current.account} />
+        ACCOUNT_CATALOG.find((entry) => entry.slug === current.slug)?.render({
+          qrSvg: current.qrSvg,
+        })
       ) : (
         <BuyerOrderPage screen={selectBuyerScreen(current)} context={buyerPageContext(current)} />
       )}
