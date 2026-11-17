@@ -1,0 +1,405 @@
+/*
+ * Identité de Wóor : un motif inspiré du wax, en filigrane, sur les surfaces fortes
+ * (barre latérale, connexion, page d'accueil, cartes de chiffres). Un seul motif, très discret :
+ * il signe l'interface sans gêner la lecture. SVG en ligne : aucun fichier à télécharger.
+ */
+:root {
+  --wo-wax-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.07' stroke-width='2'%3E%3Ccircle cx='32' cy='32' r='12'/%3E%3Ccircle cx='32' cy='32' r='5'/%3E%3Cpath d='M0 32 32 0l32 32-32 32z'/%3E%3Ccircle cx='0' cy='0' r='12'/%3E%3Ccircle cx='64' cy='0' r='12'/%3E%3Ccircle cx='0' cy='64' r='12'/%3E%3Ccircle cx='64' cy='64' r='12'/%3E%3C/g%3E%3C/svg%3E");
+  --wo-wax-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%230b6e4f' stroke-opacity='.08' stroke-width='2'%3E%3Ccircle cx='32' cy='32' r='12'/%3E%3Ccircle cx='32' cy='32' r='5'/%3E%3Cpath d='M0 32 32 0l32 32-32 32z'/%3E%3Ccircle cx='0' cy='0' r='12'/%3E%3Ccircle cx='64' cy='0' r='12'/%3E%3Ccircle cx='0' cy='64' r='12'/%3E%3Ccircle cx='64' cy='64' r='12'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Les fonds en dégradé gardent leur dégradé, le motif passe par-dessus. */
+@media (min-width: 1024px) {
+  .dash-side {
+    background:
+      var(--wo-wax-light),
+      radial-gradient(260px 220px at 0% 100%, rgba(11, 110, 79, 0.45), transparent 70%),
+      var(--dash-ink);
+  }
+}
+
+@media (min-width: 900px) {
+  .auth-side {
+    background:
+      var(--wo-wax-light),
+      radial-gradient(500px 360px at 90% 10%, rgba(11, 110, 79, 0.6), transparent 70%),
+      radial-gradient(420px 300px at 0% 100%, rgba(247, 147, 26, 0.2), transparent 70%), #0d1730;
+  }
+}
+
+.l-hero {
+  background:
+    var(--wo-wax-light),
+    radial-gradient(600px 400px at 85% 20%, rgba(11, 110, 79, 0.55), transparent 70%),
+    radial-gradient(500px 300px at 10% 90%, rgba(247, 147, 26, 0.18), transparent 70%), #0d1730;
+}
+
+.l-cta {
+  background:
+    var(--wo-wax-light),
+    radial-gradient(500px 300px at 80% 0%, rgba(61, 220, 151, 0.35), transparent 70%),
+    var(--wo-primary);
+}
+
+.stat-card.primary {
+  background: var(--wo-wax-light), linear-gradient(135deg, var(--wo-primary), #0f8a63);
+}
+
+.empty-state,
+.paid-panel {
+  background-image: var(--wo-wax-dark);
+}
+
+/* Bandeau en tête de page : liseré aux couleurs de Wóor. */
+.dash-head {
+  position: relative;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--wo-line);
+}
+
+.dash-head::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 72px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--wo-primary) 0 60%, var(--wo-bitcoin) 60%);
+}
+
+/* Montants : le chiffre en grand, l'unité en retrait. */
+.money {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.money small {
+  margin-left: 2px;
+  font-size: 0.6em;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+/* Choix en cartes ------------------------------------------------------- */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choices legend {
+  margin-bottom: 10px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--wo-line);
+  border-radius: 14px;
+  background: var(--wo-surface);
+  cursor: pointer;
+}
+
+.choice input {
+  position: absolute;
+  opacity: 0;
+}
+
+.choice-dot {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--wo-line-strong);
+  border-radius: 50%;
+}
+
+.choice-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.choice-text small {
+  color: var(--wo-muted);
+  font-size: 13px;
+}
+
+.choice:has(input:checked) {
+  border-color: var(--wo-primary);
+  background: var(--wo-primary-soft);
+}
+
+.choice:has(input:checked) .choice-dot {
+  border: 7px solid var(--wo-primary);
+}
+
+.choice:has(input:focus-visible) {
+  outline: 3px solid var(--wo-ink);
+  outline-offset: 2px;
+}
+
+/* Personnes ------------------------------------------------------------- */
+.person-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--wo-line);
+}
+
+.person-row:last-child {
+  border-bottom: 0;
+}
+
+.initial {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--wo-wax-dark), var(--wo-primary-soft);
+  color: var(--wo-primary);
+  font-weight: 700;
+}
+
+.person-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.person-text span {
+  color: var(--wo-muted);
+  font-size: 14px;
+}
+
+.person-aside {
+  flex: none;
+}
+
+/* Liste de conditions --------------------------------------------------- */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist li {
+  display: flex;
+  gap: 10px;
+}
+
+.checklist li.done .i {
+  color: var(--wo-primary);
+}
+
+.checklist li.todo {
+  color: var(--wo-muted);
+}
+
+/* Petites mesures en grille (arbitre, fiche d'un compte) ---------------- */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f6f1e7;
+}
+
+.metric span {
+  color: var(--wo-muted);
+  font-size: 13px;
+}
+
+.metric b {
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--wo-primary);
+  box-shadow: 0 0 0 4px var(--wo-primary-soft);
+}
+
+/* Réglages : libellé à gauche, valeur à droite. */
+.setting {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--wo-line);
+}
+
+.setting:last-child {
+  border-bottom: 0;
+}
+
+.setting span {
+  display: flex;
+  flex-direction: column;
+}
+
+.setting small {
+  color: var(--wo-muted);
+}
+
+.setting .input {
+  text-align: right;
+}
+
+/* Interrupteur général : bandeau d'alerte fort. */
+.alert-block {
+  display: flex;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--wo-danger);
+  color: #fff;
+}
+
+.alert-block .i {
+  width: 28px;
+  height: 28px;
+}
+
+/* QR de ramassage. */
+.qr-large {
+  display: flex;
+  justify-content: center;
+  padding: 18px;
+  border: 1px solid var(--wo-line);
+  border-radius: 20px;
+  background: #fff;
+}
+
+.qr-large svg {
+  width: min(100%, 280px);
+  height: auto;
+}
+
+@media (min-width: 720px) {
+  .metrics {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Sections du menu latéral. */
+.dash-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+/* Compléments des écrans de compte et de l'équipe ----------------------- */
+.chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.contact-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.contact-buttons .btn,
+.btn-compact {
+  height: 44px;
+  font-size: 15px;
+}
+
+.btn-compact {
+  width: auto;
+  padding: 0 16px;
+}
+
+.btn-danger-solid {
+  background: var(--wo-danger);
+}
+
+.search {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  max-width: 420px;
+}
+
+.search .i {
+  position: absolute;
+  left: 14px;
+  color: var(--wo-muted);
+}
+
+.search .input {
+  padding-left: 44px;
+}
+
+.account-hero {
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.initial.big {
+  width: 64px;
+  height: 64px;
+  font-size: 1.5rem;
+}
+
+.account-name {
+  font-size: 1.25rem;
+}
+
+.bigicon.danger {
+  border: 3px solid var(--wo-danger);
+  background: var(--wo-danger-bg);
+  color: var(--wo-danger);
+}
+
+.locked-panel {
+  align-items: center;
+  text-align: left;
+}
+
+.data-table.payouts .dt-row {
+  grid-template-areas:
+    "main state"
+    "sub amount";
+}
+
+@media (min-width: 1024px) {
+  .data-table.payouts .dt-row {
+    grid-template-columns: 2fr 1.6fr 1fr 1fr;
+  }
+}
