@@ -34,6 +34,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const view = await buyerApi.findMyOrder(token, cookieHeader);
   const summary = view ? null : await loadPublicSummary(token, cookieHeader);
 
+  const url = new URL(request.url);
   const qr: Partial<Record<InvoiceKind, string>> = {};
   for (const invoice of view?.invoices ?? []) {
     if (invoice.state === "open") {
@@ -41,7 +42,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     }
   }
 
-  const url = new URL(request.url);
   return {
     token,
     view,
@@ -49,6 +49,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     qr,
     now: new Date().toISOString(),
     inAppBrowser: isInAppBrowser(request),
+    reporting: url.searchParams.has("signaler"),
     pageUrl: url.href,
     chromeIntentUrl: `intent://${url.host}${url.pathname}#Intent;scheme=https;package=com.android.chrome;end`,
   };
@@ -93,6 +94,11 @@ export async function action({ request, params }: Route.ActionArgs) {
       case "cancel":
         await buyerApi.cancel(token, cookieHeader);
         return redirect(`/o/${token}`);
+      case "confirm-refusal":
+      case "contest":
+      case "report":
+        // Écrans prêts ; les appels à l'API arrivent avec les litiges.
+        return { revealedCode: null, error: "Cette action sera disponible très bientôt." };
     }
   } catch (error) {
     if (error instanceof ApiError && error.status === 409) {

@@ -15,6 +15,7 @@ export interface BuyerPreview {
   summary: PublicOrderSummary | null;
   inAppBrowser: boolean;
   revealedCode: string | null;
+  reporting: boolean;
 }
 
 const FAKE_BOLT11 =
@@ -88,7 +89,9 @@ export function buildBuyerPreviews(now: Date): BuyerPreview[] {
     slug: string,
     label: string,
     view: BuyerOrderView | null,
-    options: Partial<Pick<BuyerPreview, "summary" | "inAppBrowser" | "revealedCode">> = {},
+    options: Partial<
+      Pick<BuyerPreview, "summary" | "inAppBrowser" | "revealedCode" | "reporting">
+    > = {},
   ): BuyerPreview => ({
     slug,
     label,
@@ -96,6 +99,7 @@ export function buildBuyerPreviews(now: Date): BuyerPreview[] {
     summary: options.summary ?? null,
     inAppBrowser: options.inAppBrowser ?? false,
     revealedCode: options.revealedCode ?? null,
+    reporting: options.reporting ?? false,
   });
 
   return [
@@ -132,12 +136,13 @@ export function buildBuyerPreviews(now: Date): BuyerPreview[] {
     ),
     preview("en-route", "B7 · Livreur en route", inTransit),
     preview("arrive", "B7 · Livreur arrivé", { ...inTransit, arrivedAt: at(-1) }),
-    preview("refus", "B7 · Refus déclaré à la porte", {
+    preview("refus", "B8 · Refus déclaré à la porte", {
       ...inTransit,
       arrivedAt: at(-6),
       refusalDeclaredAt: at(-2),
       contestDeadline: at(28),
     }),
+    preview("signaler", "B9 · Signaler un problème", inTransit, { reporting: true }),
     preview("litige", "B7 · Litige en cours", { ...inTransit, state: "disputed" }),
     preview("remis", "B10 · Commande remise", {
       ...inTransit,

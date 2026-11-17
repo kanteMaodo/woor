@@ -1,5 +1,6 @@
 import type { BuyerPageContext } from "./buyer-page-context";
 import type { BuyerScreen } from "./buyer-screen";
+import { RefusalDeclaredScreen, ReportProblemScreen } from "./screens/dispute-screens";
 import { OpenInBrowserScreen, UnavailableScreen } from "./screens/entry-screens";
 import { ClosedScreen, DeliveredScreen } from "./screens/final-screens";
 import { LockedScreen, TrackingScreen } from "./screens/locked-screens";
@@ -46,6 +47,10 @@ export function BuyerOrderPage({ screen, context }: BuyerOrderPageProps) {
       return <LockedScreen view={screen.view} context={context} />;
     case "tracking":
       return <TrackingScreen view={screen.view} context={context} />;
+    case "refusal-declared":
+      return <RefusalDeclaredScreen view={screen.view} context={context} />;
+    case "report-problem":
+      return <ReportProblemScreen view={screen.view} context={context} />;
     case "delivered":
       return <DeliveredScreen view={screen.view} />;
     case "closed":

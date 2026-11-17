@@ -12,6 +12,8 @@ export type BuyerScreen =
   | { kind: "payment-expired"; view: BuyerOrderView }
   | { kind: "locked"; view: BuyerOrderView }
   | { kind: "tracking"; view: BuyerOrderView }
+  | { kind: "refusal-declared"; view: BuyerOrderView }
+  | { kind: "report-problem"; view: BuyerOrderView }
   | { kind: "delivered"; view: BuyerOrderView }
   | { kind: "closed"; view: BuyerOrderView };
 
@@ -21,13 +23,20 @@ interface ScreenInput {
   /** Résumé public, quand le téléphone n'est pas lié. */
   summary: PublicOrderSummary | null;
   inAppBrowser: boolean;
+  /** L'acheteur a ouvert « Signaler un problème » (?signaler dans l'adresse). */
+  reporting?: boolean;
 }
 
 /**
  * Choisit l'écran de l'acheteur. Fonction pure : tout se décide à partir des données,
  * l'écran ne contient aucune règle.
  */
-export function selectBuyerScreen({ view, summary, inAppBrowser }: ScreenInput): BuyerScreen {
+export function selectBuyerScreen({
+  view,
+  summary,
+  inAppBrowser,
+  reporting = false,
+}: ScreenInput): BuyerScreen {
   if (!view) {
     if (!summary || summary.state !== "awaiting_payment") {
       return { kind: "unavailable", reason: "closed" };
@@ -39,12 +48,21 @@ export function selectBuyerScreen({ view, summary, inAppBrowser }: ScreenInput):
     return inAppBrowser ? { kind: "open-in-browser" } : { kind: "summary", summary };
   }
 
+  const canReport = ["locked", "in_transit", "delivered"].includes(view.state);
+  if (reporting && canReport) {
+    return { kind: "report-problem", view };
+  }
+
   switch (view.state) {
     case "awaiting_payment":
       return paymentScreen(view);
     case "locked":
       return { kind: "locked", view };
     case "in_transit":
+      // Refus déclaré à la porte : l'acheteur a quelques minutes pour confirmer ou contester.
+      return view.refusalDeclaredAt
+        ? { kind: "refusal-declared", view }
+        : { kind: "tracking", view };
     case "disputed":
       return { kind: "tracking", view };
     case "delivered":

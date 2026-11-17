@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 import { Amount } from "../../../components/ui/amount";
 import { Banner } from "../../../components/ui/banner";
 import { Icon } from "../../../components/ui/icon";
@@ -57,7 +59,16 @@ export function LockedScreen({ view, context }: LockedScreenProps) {
 /** B7 : le colis est en route. Le livreur attend le code, colis en main. */
 export function TrackingScreen({ view, context }: LockedScreenProps) {
   return (
-    <Screen context="En route">
+    <Screen
+      context="En route"
+      footer={
+        view.state === "in_transit" && (
+          <Link to="?signaler" className="btn btn-link muted">
+            Signaler un problème
+          </Link>
+        )
+      }
+    >
       <OrderProgress state={view.state} />
 
       {view.state === "disputed" && (
