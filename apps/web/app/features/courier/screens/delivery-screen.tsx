@@ -26,7 +26,7 @@ export function DeliveryScreen({ profile, delivery, error }: DeliveryScreenProps
 
   return (
     <AccountScreen
-      displayName={profile.displayName}
+      profile={profile}
       backTo="/livreur"
       footer={<DeliveryAction step={step} delivery={delivery} />}
     >
@@ -144,7 +144,7 @@ function CodeForm({ delivery }: { delivery: Delivery }) {
 function PaidScreen({ profile, delivery }: { profile: Profile; delivery: Delivery }) {
   return (
     <AccountScreen
-      displayName={profile.displayName}
+      profile={profile}
       footer={
         <Link to="/livreur" className="btn btn-primary">
           Terminé

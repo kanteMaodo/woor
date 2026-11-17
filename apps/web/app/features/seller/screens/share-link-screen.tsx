@@ -36,7 +36,7 @@ export function ShareLinkScreen({ profile, order }: ShareLinkScreenProps) {
 
   return (
     <AccountScreen
-      displayName={profile.displayName}
+      profile={profile}
       footer={
         <>
           <a href={whatsapp} className="btn btn-primary" target="_blank" rel="noreferrer">

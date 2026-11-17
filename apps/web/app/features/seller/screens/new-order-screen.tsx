@@ -26,7 +26,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
 
   return (
     <AccountScreen
-      displayName={profile.displayName}
+      profile={profile}
       backTo="/vendeuse"
       footer={
         <button

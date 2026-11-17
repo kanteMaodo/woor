@@ -26,7 +26,7 @@ export function SellerOrdersScreen({ profile, orders, filter }: SellerOrdersScre
 
   return (
     <AccountScreen
-      displayName={profile.displayName}
+      profile={profile}
       footer={
         <Link to="/vendeuse/nouvelle" className="btn btn-primary">
           <Icon name="plus" />

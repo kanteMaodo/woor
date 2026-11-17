@@ -17,7 +17,7 @@ export function DeliveriesScreen({ profile, deliveries }: DeliveriesScreenProps)
   const active = activeDeliveries(deliveries);
 
   return (
-    <AccountScreen displayName={profile.displayName}>
+    <AccountScreen profile={profile}>
       <div className="trust">
         <p className="small">Courses en cours</p>
         <div className="amount">{formatXof(active.totalXof)}</div>

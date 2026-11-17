@@ -20,7 +20,7 @@ export function SellerOrderScreen({ profile, order, error }: SellerOrderScreenPr
 
   return (
     <AccountScreen
-      displayName={profile.displayName}
+      profile={profile}
       backTo="/vendeuse"
       footer={
         cancellable && (
