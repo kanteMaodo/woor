@@ -1,0 +1,188 @@
+/*
+ * Page de connexion : formulaire seul sur téléphone ; sur ordinateur, un panneau
+ * aux couleurs de la page d'accueil rappelle la promesse à gauche.
+ */
+.auth {
+  display: grid;
+  min-height: 100dvh;
+  background: var(--wo-bg);
+}
+
+.auth-side {
+  display: none;
+}
+
+.auth-main {
+  display: flex;
+  justify-content: center;
+  padding: 24px 20px 40px;
+}
+
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.auth-card h1 {
+  margin: 8px 0 0;
+  font-size: 2rem;
+  letter-spacing: -0.6px;
+}
+
+.auth-sub {
+  margin: -8px 0 8px;
+  color: var(--wo-muted);
+}
+
+.auth-brand-mobile {
+  color: var(--wo-ink);
+  text-decoration: none;
+}
+
+.auth-back {
+  display: none;
+}
+
+/* Numéro : indicatif fixe à gauche du champ. */
+.auth-phone {
+  display: flex;
+  align-items: stretch;
+}
+
+.auth-phone span {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid var(--wo-line-strong);
+  border-right: 0;
+  border-radius: var(--wo-radius) 0 0 var(--wo-radius);
+  background: #f6f1e7;
+  color: var(--wo-muted);
+  font-weight: 500;
+}
+
+.auth-phone .input {
+  border-radius: 0 var(--wo-radius) var(--wo-radius) 0;
+}
+
+.auth-pin {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5em;
+}
+
+.auth-pin::placeholder {
+  letter-spacing: 0.5em;
+}
+
+/* Comptes de démonstration. */
+.auth-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px dashed var(--wo-line-strong);
+  border-radius: 16px;
+  background: #f6f1e7;
+}
+
+.auth-demo h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+}
+
+.auth-demo-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.auth-demo-actions form {
+  margin: 0;
+}
+
+.auth-demo-actions .btn {
+  height: 48px;
+  font-size: 15px;
+}
+
+/* Ordinateur : deux panneaux. */
+@media (min-width: 900px) {
+  .auth {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .auth-side {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 56px;
+    overflow: hidden;
+    background:
+      radial-gradient(500px 360px at 90% 10%, rgba(11, 110, 79, 0.6), transparent 70%),
+      radial-gradient(420px 300px at 0% 100%, rgba(247, 147, 26, 0.2), transparent 70%), #0d1730;
+    color: #fff;
+  }
+
+  .auth-brand {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .auth-side-body h2 {
+    max-width: 12em;
+    margin: 0 0 32px;
+    font-size: clamp(2rem, 3.2vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+
+  .auth-side-body ul {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .auth-side-body li {
+    display: flex;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 1.0625rem;
+  }
+
+  .auth-side-body li .i {
+    color: #3ddc97;
+  }
+
+  .auth-side-foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 14px;
+  }
+
+  .auth-main {
+    align-items: center;
+    padding: 40px;
+  }
+
+  .auth-brand-mobile {
+    display: none;
+  }
+
+  .auth-back {
+    display: inline-flex;
+  }
+}

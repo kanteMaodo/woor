@@ -13,6 +13,7 @@ import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/landing.css";
+import "./styles/auth.css";
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

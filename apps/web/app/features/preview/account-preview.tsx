@@ -11,7 +11,16 @@ import type { AccountPreview } from "./account-fixtures.server";
 export function AccountPreviewScreen({ preview }: { preview: AccountPreview }) {
   switch (preview.kind) {
     case "login":
-      return <LoginScreen error={preview.error} phone="77 000 00 01" />;
+      return (
+        <LoginScreen
+          error={preview.error}
+          phone="77 000 00 01"
+          demoAccounts={[
+            { label: "Vendeuse", phone: "77 000 00 01", pin: "111111" },
+            { label: "Livreur", phone: "77 000 00 02", pin: "222222" },
+          ]}
+        />
+      );
     case "seller-orders":
       return (
         <SellerOrdersScreen profile={preview.profile} orders={preview.orders} filter="en-cours" />
