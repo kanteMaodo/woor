@@ -5,11 +5,9 @@ import { Banner } from "../../../components/ui/banner";
 import { Chip } from "../../../components/ui/chip";
 import { Icon } from "../../../components/ui/icon";
 import type { Delivery, Profile } from "../../../lib/api/account-schemas";
-import { formatXof } from "../../../lib/format";
+import { formatTime, formatXof } from "../../../lib/format";
 import { AccountScreen } from "../../account/account-screen";
-import { COURIER_STATUS, type DeliveryStep, deliveryStep } from "../deliveries";
-
-const CODE_FORM_ID = "delivery-code";
+import { COURIER_STATUS, deliveryStep } from "../deliveries";
 
 interface DeliveryScreenProps {
   profile: Profile;
@@ -28,78 +26,70 @@ export function DeliveryScreen({ profile, delivery, error }: DeliveryScreenProps
     <AccountScreen
       profile={profile}
       backTo="/livreur"
-      footer={<DeliveryAction step={step} delivery={delivery} />}
+      title={delivery.itemLabel}
+      subtitle={<Chip {...COURIER_STATUS[delivery.state]} />}
+      actions={
+        step === "pickup" && (
+          <ActionButton intent="pickup" pendingLabel="Confirmation…">
+            <Icon name="box" />
+            J'ai récupéré le colis
+          </ActionButton>
+        )
+      }
     >
-      <div className="row">
-        <h1 className="h2">{delivery.itemLabel}</h1>
-        <Chip {...COURIER_STATUS[delivery.state]} />
-      </div>
-
-      <div className="card">
-        <div className="person">
-          <span className="avatar">
-            <Icon name="pin" />
-          </span>
-          <div className="kv">
-            <b>{delivery.neighborhood ?? "Adresse effacée"}</b>
-            {delivery.landmark && <span className="small muted">{delivery.landmark}</span>}
-          </div>
-        </div>
-      </div>
-
-      <div className="card small">
-        <div className="row">
-          <span className="muted">Vendeuse</span>
-          <span>{delivery.sellerName}</span>
-        </div>
-        <div className="row">
-          <span className="muted">Votre course</span>
-          <span className="v">{formatXof(delivery.deliveryFeeXof)}</span>
-        </div>
-      </div>
-
       {error && <Banner tone="danger">{error}</Banner>}
 
-      {step === "pickup" && (
-        <Banner tone="info">
-          L'acheteur a payé : l'argent est bloqué. Récupérez le colis chez {delivery.sellerName}.
-        </Banner>
-      )}
+      <div className="split">
+        <div className="split-main">
+          {step === "pickup" && (
+            <Banner tone="info">
+              L'acheteur a payé : l'argent est bloqué. Récupérez le colis chez {delivery.sellerName}
+              {delivery.pickupDeadline ? ` avant ${formatTime(delivery.pickupDeadline)}` : ""}.
+            </Banner>
+          )}
+          {step === "handover" && <CodeForm delivery={delivery} />}
+          {step === "closed" && (
+            <Banner tone="info" icon="check">
+              Cette course est terminée : {COURIER_STATUS[delivery.state].label.toLowerCase()}.
+            </Banner>
+          )}
+        </div>
 
-      {step === "handover" && <CodeForm delivery={delivery} />}
-
-      {step === "closed" && (
-        <Banner tone="info" icon="check">
-          Cette course est terminée : {COURIER_STATUS[delivery.state].label.toLowerCase()}.
-        </Banner>
-      )}
+        <aside className="split-side">
+          <section className="panel summary">
+            <h2>Adresse</h2>
+            <div className="person">
+              <span className="avatar">
+                <Icon name="pin" />
+              </span>
+              <div className="kv">
+                <b>{delivery.neighborhood ?? "Adresse effacée"}</b>
+                {delivery.landmark && <span className="small muted">{delivery.landmark}</span>}
+              </div>
+            </div>
+          </section>
+          <section className="panel summary">
+            <h2>Course</h2>
+            <div className="row">
+              <span className="muted">Vendeuse</span>
+              <span>{delivery.sellerName}</span>
+            </div>
+            <div className="row total">
+              <span>Votre course</span>
+              <span>{formatXof(delivery.deliveryFeeXof)}</span>
+            </div>
+          </section>
+        </aside>
+      </div>
     </AccountScreen>
   );
 }
 
-function DeliveryAction({ step, delivery }: { step: DeliveryStep; delivery: Delivery }) {
-  const navigation = useNavigation();
-  if (step === "pickup") {
-    return (
-      <ActionButton intent="pickup" pendingLabel="Confirmation…">
-        <Icon name="box" />
-        J'ai récupéré le colis
-      </ActionButton>
-    );
-  }
-  if (step === "handover" && !delivery.codeLocked) {
-    const pending = navigation.state === "submitting";
-    return (
-      <button type="submit" form={CODE_FORM_ID} className="btn btn-primary" disabled={pending}>
-        {pending ? "Vérification…" : "Valider le code"}
-      </button>
-    );
-  }
-  return null;
-}
-
 /** C4 : le code lu sur le téléphone de l'acheteur. */
 function CodeForm({ delivery }: { delivery: Delivery }) {
+  const navigation = useNavigation();
+  const pending = navigation.state === "submitting";
+
   if (delivery.codeLocked) {
     return (
       <Banner tone="danger">
@@ -109,25 +99,27 @@ function CodeForm({ delivery }: { delivery: Delivery }) {
   }
 
   return (
-    <>
-      <Banner tone="warn" icon="alert">
-        Ne remettez le colis qu'après l'écran vert « Paiement confirmé ».
-      </Banner>
-      <Form method="post" id={CODE_FORM_ID} className="stack">
+    <section className="panel code-panel">
+      <h2>Code de l'acheteur</h2>
+      <p className="muted">
+        Il le lit sur son téléphone. Ne remettez le colis qu'après validation.
+      </p>
+      <Form method="post" className="stack">
         <input type="hidden" name="intent" value="code" />
-        <div className="field">
-          <label htmlFor="code">Code de l'acheteur, lu sur son téléphone</label>
-          <input
-            id="code"
-            name="code"
-            className="input code-input"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            pattern="\d{6}"
-            maxLength={6}
-            required
-          />
-        </div>
+        <label htmlFor="code" className="sr-only">
+          Code à 6 chiffres
+        </label>
+        <input
+          id="code"
+          name="code"
+          className="input code-input"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          pattern="\d{6}"
+          maxLength={6}
+          placeholder="••••••"
+          required
+        />
         <p className="center">
           <Chip
             tone="wait"
@@ -135,38 +127,37 @@ function CodeForm({ delivery }: { delivery: Delivery }) {
             label={`Il reste ${delivery.codeAttemptsLeft} essai${delivery.codeAttemptsLeft > 1 ? "s" : ""}`}
           />
         </p>
+        <button type="submit" className="btn btn-primary" disabled={pending}>
+          <Icon name="check" />
+          {pending ? "Vérification…" : "Valider le code"}
+        </button>
       </Form>
-    </>
+    </section>
   );
 }
 
 /** C5 : le code était juste, le paiement est débloqué. */
 function PaidScreen({ profile, delivery }: { profile: Profile; delivery: Delivery }) {
   return (
-    <AccountScreen
-      profile={profile}
-      footer={
-        <Link to="/livreur" className="btn btn-primary">
-          Terminé
-        </Link>
-      }
-    >
-      <div className="bigicon ok">
-        <Icon name="check" size="xl" />
-      </div>
-      <h1 className="h1 center">Paiement confirmé</h1>
-      <p className="center">Remettez le colis.</p>
-      <div className="card">
-        <div className="row">
-          <span className="muted">Votre course</span>
-          <span className="v">{formatXof(delivery.deliveryFeeXof)}</span>
+    <AccountScreen profile={profile} backTo="/livreur" title="Paiement confirmé">
+      <section className="panel paid-panel">
+        <div className="bigicon ok">
+          <Icon name="check" size="xl" />
         </div>
+        <p className="paid-title">Remettez le colis.</p>
         <div className="row">
           <span className="muted">Article</span>
           <span>{delivery.itemLabel}</span>
         </div>
-      </div>
-      <p className="note">La vendeuse est payée automatiquement.</p>
+        <div className="row total">
+          <span>Votre course</span>
+          <span>{formatXof(delivery.deliveryFeeXof)}</span>
+        </div>
+        <p className="note">La vendeuse est payée automatiquement.</p>
+        <Link to="/livreur" className="btn btn-primary">
+          Retour à mes courses
+        </Link>
+      </section>
     </AccountScreen>
   );
 }

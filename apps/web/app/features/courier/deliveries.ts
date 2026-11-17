@@ -17,17 +17,31 @@ export const COURIER_STATUS: Record<OrderState, ChipProps> = {
 };
 
 const ACTIVE_STATES: readonly OrderState[] = ["locked", "in_transit", "disputed"];
+const EARNED_STATES: readonly OrderState[] = ["delivered", "paid_out", "courier_paid"];
 
 export function isActiveDelivery(delivery: Delivery): boolean {
   return ACTIVE_STATES.includes(delivery.state);
 }
 
-/** Courses du jour encore à faire, et ce qu'elles rapporteront. */
-export function activeDeliveries(deliveries: Delivery[]): { totalXof: number; count: number } {
+export interface CourierKpis {
+  toPickUp: number;
+  onTheWay: number;
+  /** Courses en cours : payées à la remise. */
+  pendingXof: number;
+  /** Courses remises ou refusées à la porte : acquises au livreur. */
+  earnedXof: number;
+  earnedCount: number;
+}
+
+export function courierKpis(deliveries: Delivery[]): CourierKpis {
   const active = deliveries.filter(isActiveDelivery);
+  const earned = deliveries.filter((delivery) => EARNED_STATES.includes(delivery.state));
   return {
-    totalXof: active.reduce((sum, delivery) => sum + delivery.deliveryFeeXof, 0),
-    count: active.length,
+    toPickUp: deliveries.filter((delivery) => delivery.state === "locked").length,
+    onTheWay: deliveries.filter((delivery) => delivery.state === "in_transit").length,
+    pendingXof: active.reduce((total, delivery) => total + delivery.deliveryFeeXof, 0),
+    earnedXof: earned.reduce((total, delivery) => total + delivery.deliveryFeeXof, 0),
+    earnedCount: earned.length,
   };
 }
 

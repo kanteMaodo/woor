@@ -2,72 +2,112 @@ import { Link } from "react-router";
 
 import { Chip } from "../../../components/ui/chip";
 import { Icon } from "../../../components/ui/icon";
+import { StatCard } from "../../../components/ui/stat-card";
 import type { Delivery, Profile } from "../../../lib/api/account-schemas";
 import { formatTime, formatXof } from "../../../lib/format";
 import { AccountScreen } from "../../account/account-screen";
-import { activeDeliveries, COURIER_STATUS, isActiveDelivery } from "../deliveries";
+import { COURIER_STATUS, courierKpis, isActiveDelivery } from "../deliveries";
 
 interface DeliveriesScreenProps {
   profile: Profile;
   deliveries: Delivery[];
 }
 
-/** C1 : les courses du livreur, celles à faire d'abord. */
+/** C1 : tableau de bord du livreur. Ce qui reste à faire, ce qui est gagné. */
 export function DeliveriesScreen({ profile, deliveries }: DeliveriesScreenProps) {
-  const active = activeDeliveries(deliveries);
+  const kpis = courierKpis(deliveries);
+  const firstName = profile.displayName.split(" ")[0];
 
   return (
-    <AccountScreen profile={profile}>
-      <div className="trust">
-        <p className="small">Courses en cours</p>
-        <div className="amount">{formatXof(active.totalXof)}</div>
-        <p className="small">
-          {active.count} course{active.count > 1 ? "s" : ""} à livrer
-        </p>
-      </div>
+    <AccountScreen
+      profile={profile}
+      title="Mes courses"
+      subtitle={`Bonjour ${firstName}. Une course apparaît dès que l'acheteur a payé.`}
+    >
+      <section className="stat-grid" aria-label="Chiffres clés">
+        <StatCard
+          tone="warn"
+          icon="box"
+          label="À ramasser"
+          value={String(kpis.toPickUp)}
+          hint="argent déjà bloqué"
+        />
+        <StatCard
+          icon="moto"
+          label="En route"
+          value={String(kpis.onTheWay)}
+          hint="code à saisir à la porte"
+        />
+        <StatCard
+          tone="primary"
+          icon="lock"
+          label="Courses en cours"
+          value={formatXof(kpis.pendingXof)}
+          hint="payées à la remise"
+        />
+        <StatCard
+          icon="coin"
+          label="Gagné"
+          value={formatXof(kpis.earnedXof)}
+          hint={`${kpis.earnedCount} course${kpis.earnedCount > 1 ? "s" : ""} payée${kpis.earnedCount > 1 ? "s" : ""}`}
+        />
+      </section>
 
-      {deliveries.length === 0 ? (
-        <p className="empty">
-          Aucune course pour l'instant. Elles apparaissent dès que l'acheteur a payé.
-        </p>
-      ) : (
-        <ul className="list">
-          {deliveries.map((delivery) => (
-            <li key={delivery.id}>
+      <section className="panel">
+        <div className="panel-head">
+          <h2>Courses</h2>
+        </div>
+
+        {deliveries.length === 0 ? (
+          <div className="empty-state">
+            <Icon name="moto" size="lg" />
+            <p>Aucune course pour l'instant.</p>
+          </div>
+        ) : (
+          <div className="data-table courier" role="table" aria-label="Courses">
+            <div className="dt-row dt-head" role="row">
+              <span role="columnheader">Colis</span>
+              <span role="columnheader">Trajet</span>
+              <span role="columnheader">Course</span>
+              <span role="columnheader">État</span>
+              <span role="columnheader">Heure</span>
+            </div>
+            {deliveries.map((delivery) => (
               <Link
+                key={delivery.id}
                 to={`/livreur/courses/${delivery.id}`}
-                className={`item${isActiveDelivery(delivery) ? "" : " faded"}`}
+                className={`dt-row${isActiveDelivery(delivery) ? "" : " faded"}`}
+                role="row"
               >
-                <span className="top">
-                  <span className="t">{delivery.itemLabel}</span>
-                  <Chip {...COURIER_STATUS[delivery.state]} />
+                <span className="dt-main" role="cell">
+                  {delivery.itemLabel}
                 </span>
-                <span className="s">
+                <span className="dt-sub" role="cell">
                   <Icon name="pin" size="sm" />
                   {delivery.sellerName} → {delivery.neighborhood ?? "adresse effacée"}
                 </span>
-                <span className="top">
-                  <span className="s">{deliveryHint(delivery)}</span>
-                  <span>{formatXof(delivery.deliveryFeeXof)}</span>
+                <span className="dt-amount" role="cell">
+                  {formatXof(delivery.deliveryFeeXof)}
+                </span>
+                <span className="dt-state" role="cell">
+                  <Chip {...COURIER_STATUS[delivery.state]} />
+                </span>
+                <span className="dt-date" role="cell">
+                  {deliveryTime(delivery)}
                 </span>
               </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+            ))}
+          </div>
+        )}
+      </section>
     </AccountScreen>
   );
 }
 
-function deliveryHint(delivery: Delivery): string {
+function deliveryTime(delivery: Delivery): string {
   if (delivery.state === "locked" && delivery.pickupDeadline) {
-    return `Bloqué · à ramasser avant ${formatTime(delivery.pickupDeadline)}`;
+    return `avant ${formatTime(delivery.pickupDeadline)}`;
   }
-  if (delivery.pickedUpAt && delivery.state === "in_transit") {
-    return `Ramassé à ${formatTime(delivery.pickedUpAt)}`;
-  }
-  if (delivery.deliveredAt) {
-    return `Remis à ${formatTime(delivery.deliveredAt)}`;
-  }
-  return "";
+  const at = delivery.deliveredAt ?? delivery.pickedUpAt ?? delivery.lockedAt;
+  return at ? formatTime(at) : "";
 }
