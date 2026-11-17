@@ -1,218 +1,655 @@
 /*
- * Espaces vendeuse et livreur.
- * Téléphone : une colonne, l'action principale collée en bas.
- * Ordinateur : barre de navigation, contenu large, action dans un panneau latéral.
+ * Tableaux de bord de la vendeuse et du livreur.
+ * Téléphone : barre du haut, contenu en une colonne, onglets en bas.
+ * Ordinateur (1024 px et plus) : barre latérale sombre, contenu large, panneaux côte à côte.
  */
-.app {
-  display: flex;
-  flex-direction: column;
+.dash {
+  --dash-side: 264px;
+  --dash-ink: #0d1730;
   min-height: 100dvh;
-  background: var(--wo-bg);
+  background: #f6f3ec;
 }
 
-.app-bar {
+/* Barre latérale (ordinateur) ------------------------------------------ */
+.dash-side {
+  display: none;
+}
+
+.dash-brand {
+  color: #fff;
+  text-decoration: none;
+}
+
+.dash-section {
+  margin: 0 0 8px;
+  padding: 0 14px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dash-nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 32px;
+}
+
+.dash-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.dash-nav a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.dash-nav a.active {
+  background: #fff;
+  color: var(--dash-ink);
+  box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.6);
+}
+
+.dash-nav a.active .i {
+  color: var(--wo-primary);
+}
+
+.dash-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dash-who {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dash-who b {
+  overflow: hidden;
+  color: #fff;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-who span {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
+
+.dash-account .icon-btn {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.dash-avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--wo-primary), #3ddc97);
+  color: #fff;
+  font-weight: 700;
+}
+
+.dash-avatar.small {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.dash-logout {
+  margin: 0;
+}
+
+/* Barre du haut (téléphone et tablette) -------------------------------- */
+.dash-top {
   position: sticky;
   top: 0;
   z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 8px 0 16px;
   border-bottom: 1px solid var(--wo-line);
   background: rgba(255, 253, 248, 0.92);
   backdrop-filter: blur(10px);
 }
 
-.app-bar-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  max-width: 1160px;
-  height: 56px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-.app-brand {
+.dash-top .brand {
   color: var(--wo-ink);
   text-decoration: none;
 }
 
-.app-menu {
-  display: none;
-}
-
-.app-user {
+.dash-top-user {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--wo-muted);
-  font-size: var(--wo-text-xs);
+  gap: 4px;
 }
 
-.app-avatar {
-  display: none;
+/* Contenu --------------------------------------------------------------- */
+.dash-main {
+  padding: 20px 16px 32px;
 }
 
-.app-user form {
-  margin: 0;
+.dash.has-tabs .dash-main {
+  padding-bottom: 96px;
 }
 
-.app-body {
+.dash-page {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  width: 100%;
-  max-width: 1160px;
+  gap: 20px;
+  max-width: 1120px;
   margin: 0 auto;
 }
 
-.app-content {
+.dash-page p {
+  margin: 0;
+}
+
+.dash-head {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dash-head h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.dash-subtitle {
+  margin-top: 6px !important;
+  color: var(--wo-muted);
+}
+
+.dash-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dash-actions form {
+  margin: 0;
+}
+
+/* Barre d'onglets (téléphone) : posée sur le contenu, trait sur l'onglet actif. */
+.dash-tabs {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  display: flex;
+  border: 1px solid var(--wo-line);
+  border-bottom: 0;
+  border-radius: 20px 20px 0 0;
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow: 0 -8px 24px -16px rgba(20, 33, 61, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+.dash-tabs a {
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 14px;
-  padding: 16px;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 0 14px;
+  color: var(--wo-muted);
+  font-size: 12px;
+  text-decoration: none;
 }
 
-.app-content p {
-  margin: 0;
+.dash-tabs a.active {
+  color: var(--wo-primary);
+  font-weight: 600;
 }
 
-.app-actions {
-  position: sticky;
-  bottom: 0;
+.dash-tabs a.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 32px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--wo-primary);
+}
+
+/* Cartes de chiffres ---------------------------------------------------- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.stat-card {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px 16px 18px;
-  border-top: 1px solid var(--wo-line);
-  background: var(--wo-bg);
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid var(--wo-line);
+  border-radius: 18px;
+  background: var(--wo-surface);
 }
 
-.app-actions form {
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  background: #f3eee4;
+  color: var(--wo-ink);
+}
+
+.stat-label {
+  color: var(--wo-muted);
+  font-size: 14px;
+}
+
+.stat-value {
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+}
+
+.stat-hint {
+  color: var(--wo-muted);
+  font-size: 13px;
+}
+
+.stat-card.primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--wo-primary), #0f8a63);
+  color: #fff;
+}
+
+.stat-card.primary .stat-icon {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.stat-card.primary .stat-label,
+.stat-card.primary .stat-hint {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.stat-card.warn .stat-icon {
+  background: var(--wo-warning-bg);
+  color: var(--wo-warning);
+}
+
+/* Panneaux ------------------------------------------------------------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--wo-line);
+  border-radius: 20px;
+  background: var(--wo-surface);
+}
+
+.panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.0625rem;
+}
+
+.panel h2 .i {
+  color: var(--wo-primary);
+}
+
+.panel-head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.tabs a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: var(--wo-muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tabs a:hover {
+  background: #f3eee4;
+}
+
+.tabs a[aria-current="page"] {
+  background: var(--wo-ink);
+  color: #fff;
+}
+
+.tab-count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(20, 33, 61, 0.08);
+  font-size: 12px;
+  text-align: center;
+}
+
+.tabs a[aria-current="page"] .tab-count {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 0;
+  color: var(--wo-muted);
+  text-align: center;
+}
+
+/* Tableau : cartes sur téléphone, lignes alignées sur ordinateur. */
+.data-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dt-head {
+  display: none !important;
+}
+
+.dt-row {
+  display: grid;
+  grid-template-areas:
+    "main state"
+    "sub amount"
+    "sub2 date";
+  grid-template-columns: 1fr auto;
+  gap: 6px 12px;
+  padding: 14px;
+  border: 1px solid var(--wo-line);
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dt-row:hover {
+  border-color: var(--wo-line-strong);
+}
+
+.dt-row.faded {
+  opacity: 0.7;
+}
+
+.dt-main {
+  grid-area: main;
+  font-weight: 600;
+}
+
+.dt-sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--wo-muted);
+  font-size: 14px;
+}
+
+.dt-sub:nth-of-type(2) {
+  grid-area: sub;
+}
+
+.dt-sub:nth-of-type(3) {
+  grid-area: sub2;
+}
+
+.dt-amount {
+  grid-area: amount;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: right;
+}
+
+.dt-state {
+  grid-area: state;
+  justify-self: end;
+}
+
+.dt-date {
+  grid-area: date;
+  color: var(--wo-muted);
+  font-size: 13px;
+  text-align: right;
+}
+
+.data-table.courier .dt-row {
+  grid-template-areas:
+    "main state"
+    "sub amount"
+    ". date";
+}
+
+/* Deux colonnes : contenu et panneau de résumé. */
+.split {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   margin: 0;
 }
 
-/* Tablette : un peu plus d'air, cartes de liste sur deux colonnes. */
+.split-main,
+.split-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.summary .row.total {
+  padding-top: 12px;
+  border-top: 1px solid var(--wo-line);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.form-panel {
+  gap: 18px;
+}
+
+.code-panel .code-input {
+  max-width: 320px;
+  align-self: center;
+}
+
+.code-panel .btn {
+  max-width: 320px;
+  align-self: center;
+}
+
+.paid-panel {
+  align-items: stretch;
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.paid-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.btn-danger {
+  color: var(--wo-danger);
+}
+
+/* Tablette ------------------------------------------------------------- */
 @media (min-width: 720px) {
-  .app-bar-inner {
-    padding: 0 24px;
+  .dash-main {
+    padding: 28px 24px 40px;
   }
 
-  .app-content {
-    padding: 24px;
+  .dash-head {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
   }
 
-  .app .list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+  .dash-actions .btn {
+    width: auto;
+    padding: 0 22px;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .panel {
+    padding: 22px 24px;
+  }
+
+  .panel-head {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 }
 
-/* Ordinateur : menu dans la barre, action dans un panneau à droite. */
+/* Ordinateur ----------------------------------------------------------- */
 @media (min-width: 1024px) {
-  .app-bar-inner {
-    height: 68px;
-  }
-
-  .app-menu {
-    display: flex;
-    flex: 1;
-    gap: 4px;
-    margin-left: 32px;
-  }
-
-  .app-menu a {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 10px;
-    color: var(--wo-muted);
-    font-weight: 500;
-    text-decoration: none;
-  }
-
-  .app-menu a:hover {
-    background: #f3eee4;
-    color: var(--wo-ink);
-  }
-
-  .app-menu a.active {
-    background: var(--wo-primary-soft);
-    color: var(--wo-primary);
-  }
-
-  .app-avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--wo-ink);
-    color: #fff;
-    font-weight: 600;
-  }
-
-  .app-user-name {
-    color: var(--wo-ink);
-    font-size: 15px;
-    font-weight: 500;
-  }
-
-  .app-body {
-    padding: 16px 0 48px;
-  }
-
-  .app-body.has-actions {
+  .dash {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
-    align-items: start;
-    gap: 32px;
-    padding-right: 24px;
+    grid-template-columns: var(--dash-side) 1fr;
   }
 
-  .app-content {
-    gap: 18px;
-  }
-
-  .app-content > .h1,
-  .app-content > .row .h2 {
-    font-size: 1.75rem;
-  }
-
-  .app-actions {
+  .dash-side {
     position: sticky;
-    top: 92px;
-    bottom: auto;
-    margin-top: 24px;
-    padding: 20px;
-    border: 1px solid var(--wo-line);
-    border-radius: 20px;
-    background: var(--wo-surface);
-    box-shadow: 0 12px 32px -18px rgba(20, 33, 61, 0.25);
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    padding: 24px 16px;
+    background:
+      radial-gradient(260px 220px at 0% 100%, rgba(11, 110, 79, 0.45), transparent 70%),
+      var(--dash-ink);
   }
 
-  .app .trust {
-    padding: 24px 28px;
+  .dash-brand {
+    padding: 0 14px;
+    font-size: 22px;
   }
 
-  .app .trust .amount {
-    font-size: 2.5rem;
+  .dash-top,
+  .dash-tabs {
+    display: none;
   }
 
-  .app .item {
-    padding: 16px 18px;
-    transition:
-      border-color 0.15s,
-      box-shadow 0.15s;
+  .dash.has-tabs .dash-main,
+  .dash-main {
+    padding: 40px 48px 56px;
   }
 
-  .app .item:hover {
-    border-color: var(--wo-line-strong);
-    box-shadow: 0 8px 24px -16px rgba(20, 33, 61, 0.35);
+  /* Tableau : de vraies lignes, avec un en-tête. */
+  .data-table {
+    gap: 0;
   }
 
-  .app .card {
-    padding: 20px 24px;
+  .dt-head {
+    display: grid !important;
+    padding-top: 0 !important;
+    color: var(--wo-muted);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .dt-row,
+  .data-table.courier .dt-row {
+    grid-template-areas: none;
+    grid-template-columns: 2fr 1.4fr 1fr 1fr 1.1fr 0.7fr;
+    align-items: center;
+    padding: 14px 12px;
+    border: 0;
+    border-bottom: 1px solid var(--wo-line);
+    border-radius: 0;
+  }
+
+  .data-table.courier .dt-row {
+    grid-template-columns: 2fr 2fr 1fr 1.1fr 0.8fr;
+  }
+
+  .dt-row:last-child {
+    border-bottom: 0;
+  }
+
+  .dt-row:not(.dt-head):hover {
+    background: #faf7f1;
+  }
+
+  .dt-row > span {
+    grid-area: auto !important;
+  }
+
+  .dt-amount,
+  .dt-date {
+    text-align: left;
+  }
+
+  .dt-state {
+    justify-self: start;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    align-items: start;
+    gap: 24px;
+  }
+
+  .split-side {
+    position: sticky;
+    top: 24px;
   }
 }
