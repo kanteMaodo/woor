@@ -17,7 +17,8 @@ pnpm dev
 
 Dans `.env`, remplir avant `pnpm dev` :
 
-- `CODE_HMAC_KEY` et `PREIMAGE_KEYS` : clés au hasard, la commande est indiquée dans le fichier.
+- `CODE_HMAC_KEY`, `PHONE_HMAC_KEY`, `PIN_PEPPER`, `PII_KEY` et `PREIMAGE_KEYS` : clés au hasard,
+  la commande est indiquée dans le fichier.
 - `LND_*` : le nœud Lightning de Wóor. En local, créer un réseau regtest avec
   [Polar](https://lightningpolar.com) (deux nœuds LND : Wóor et l'acheteur, reliés par un
   canal), puis copier l'adresse gRPC, le certificat TLS et le macaron admin (base64 ou hexa).
