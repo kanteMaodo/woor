@@ -1,6 +1,7 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from "fastify";
+import { ZodError } from "zod";
 
-import { BusinessRuleError, NotFoundError } from "../application/errors";
+import { AuthenticationError, BusinessRuleError, NotFoundError } from "../application/errors";
 
 /** Corps d'erreur au format RFC 9457, type application/problem+json. */
 export interface Problem {
@@ -21,12 +22,24 @@ export function notFoundHandler(_request: FastifyRequest, reply: FastifyReply): 
 }
 
 export function errorHandler(
-  error: FastifyError | BusinessRuleError | NotFoundError,
+  error: FastifyError | BusinessRuleError | NotFoundError | AuthenticationError | ZodError,
   request: FastifyRequest,
   reply: FastifyReply,
 ): FastifyReply {
   if (error instanceof NotFoundError) {
     return notFoundHandler(request, reply);
+  }
+  if (error instanceof AuthenticationError) {
+    return sendProblem(reply, {
+      type: "about:blank",
+      title: error.message,
+      status: 401,
+      code: error.code,
+    });
+  }
+  if (error instanceof ZodError) {
+    // Corps ou paramètres mal formés : on ne renvoie pas le détail de la validation.
+    return sendProblem(reply, { type: "about:blank", title: "Données invalides", status: 400 });
   }
   if (error instanceof BusinessRuleError) {
     return sendProblem(reply, {
