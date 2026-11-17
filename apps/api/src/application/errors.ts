@@ -14,6 +14,21 @@ export class BusinessRuleError extends Error {
 }
 
 /**
+ * Connexion refusée ou session absente. Le message reste vague exprès :
+ * « numéro ou PIN incorrect », sans dire lequel des deux.
+ */
+export class AuthenticationError extends Error {
+  override readonly name = "AuthenticationError";
+
+  constructor(
+    readonly code: string,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+/**
  * Ressource inexistante ou interdite. Les deux cas donnent la même réponse :
  * un jeton deviné ne doit rien apprendre de plus qu'un jeton inventé.
  */
