@@ -19,22 +19,66 @@ interface AccountScreenProps {
 interface MenuItem {
   to: string;
   label: string;
+  /** Libellé court, pour la barre d'onglets du téléphone. */
   short: string;
   icon: IconName;
 }
 
-const MENU: Partial<Record<Profile["role"], { section: string; items: MenuItem[] }>> = {
-  seller: {
-    section: "Ventes",
-    items: [
-      { to: "/vendeuse", label: "Tableau de bord", short: "Commandes", icon: "box" },
-      { to: "/vendeuse/nouvelle", label: "Nouvelle commande", short: "Nouvelle", icon: "plus" },
-    ],
-  },
-  courier: {
-    section: "Livraisons",
-    items: [{ to: "/livreur", label: "Mes courses", short: "Courses", icon: "moto" }],
-  },
+interface MenuSection {
+  label: string;
+  items: MenuItem[];
+}
+
+/** Menu de chaque rôle, en sections comme un logiciel de gestion. */
+const MENU: Record<Profile["role"], MenuSection[]> = {
+  seller: [
+    {
+      label: "Ventes",
+      items: [
+        { to: "/vendeuse", label: "Tableau de bord", short: "Accueil", icon: "box" },
+        { to: "/vendeuse/nouvelle", label: "Nouvelle commande", short: "Vendre", icon: "plus" },
+      ],
+    },
+    {
+      label: "Mon activité",
+      items: [
+        { to: "/vendeuse/livreurs", label: "Mes livreurs", short: "Livreurs", icon: "users" },
+        { to: "/vendeuse/versements", label: "Versements", short: "Argent", icon: "wallet" },
+        { to: "/vendeuse/compte", label: "Mon compte", short: "Compte", icon: "user" },
+      ],
+    },
+  ],
+  courier: [
+    {
+      label: "Livraisons",
+      items: [{ to: "/livreur", label: "Mes courses", short: "Courses", icon: "moto" }],
+    },
+    {
+      label: "Mon activité",
+      items: [
+        { to: "/livreur/versements", label: "Mes versements", short: "Argent", icon: "wallet" },
+        { to: "/livreur/compte", label: "Mon compte", short: "Compte", icon: "user" },
+      ],
+    },
+  ],
+  arbiter: [
+    {
+      label: "Arbitrage",
+      items: [
+        { to: "/arbitre", label: "Tableau de bord", short: "Accueil", icon: "scale" },
+        { to: "/arbitre/interrupteur", label: "Interrupteur", short: "Arrêt", icon: "power" },
+      ],
+    },
+  ],
+  admin: [
+    {
+      label: "Administration",
+      items: [
+        { to: "/admin", label: "Comptes", short: "Comptes", icon: "users" },
+        { to: "/admin/reglages", label: "Réglages du pilote", short: "Réglages", icon: "sliders" },
+      ],
+    },
+  ],
 };
 
 const ROLE_LABEL: Record<Profile["role"], string> = {
@@ -57,8 +101,8 @@ export function AccountScreen({
   backTo,
   children,
 }: AccountScreenProps) {
-  const menu = MENU[profile.role];
-  const items = menu?.items ?? [];
+  const sections = MENU[profile.role];
+  const items = sections.flatMap((section) => section.items);
   const initial = profile.displayName.charAt(0).toUpperCase();
 
   return (
@@ -68,17 +112,19 @@ export function AccountScreen({
           <Icon name="bolt" />
           Wóor
         </Link>
-        {menu && (
-          <nav className="dash-nav">
-            <p className="dash-section">{menu.section}</p>
-            {items.map((item) => (
-              <NavLink key={item.to} to={item.to} end>
-                <Icon name={item.icon} />
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-        )}
+        <nav className="dash-nav">
+          {sections.map((section) => (
+            <div key={section.label} className="dash-group">
+              <p className="dash-section">{section.label}</p>
+              {section.items.map((item) => (
+                <NavLink key={item.to} to={item.to} end>
+                  <Icon name={item.icon} />
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
+          ))}
+        </nav>
         <div className="dash-account">
           <span className="dash-avatar" aria-hidden="true">
             {initial}
