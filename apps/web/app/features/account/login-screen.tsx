@@ -3,6 +3,8 @@ import { Form, Link, useNavigation } from "react-router";
 
 import { Banner } from "../../components/ui/banner";
 import { Icon } from "../../components/ui/icon";
+import { ValidatedForm } from "../../components/ui/validated-form";
+import { LoginFormSchema } from "../../lib/form-validation";
 import { WoorBrand } from "../home/marketing-layout";
 
 /** Compte de démonstration proposé sur la page de connexion, hors production. */
@@ -85,7 +87,12 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
 
           {error && <Banner tone="danger">{error}</Banner>}
 
-          <Form method="post" className="stack" aria-busy={pending}>
+          <ValidatedForm
+            method="post"
+            schema={LoginFormSchema}
+            className="stack"
+            aria-busy={pending}
+          >
             <div className="field">
               <label htmlFor="phone">Numéro de téléphone</label>
               <div className="auth-phone">
@@ -98,6 +105,7 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
                   inputMode="tel"
                   autoComplete="username"
                   placeholder="77 000 00 01"
+                  maxLength={30}
                   defaultValue={phone}
                   required
                 />
@@ -136,7 +144,7 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
             <button type="submit" className="btn btn-primary" disabled={pending}>
               {pending ? "Connexion en cours…" : "Accéder à mon espace"}
             </button>
-          </Form>
+          </ValidatedForm>
 
           {demoAccounts.length > 0 && (
             <section className="auth-demo" aria-labelledby="demo-title">

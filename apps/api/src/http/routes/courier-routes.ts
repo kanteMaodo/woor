@@ -12,7 +12,9 @@ export interface CourierRoutesOptions {
 }
 
 const OrderParams = z.object({ id: z.uuid() });
-const CodeBody = z.object({ code: z.string().max(12) });
+export const CodeBody = z.strictObject({
+  code: z.string().regex(/^\d{6}$/, "Le code de remise doit contenir exactement 6 chiffres."),
+});
 
 /** Espace du livreur : chaque route exige une session de livreur. */
 export const courierRoutes: FastifyPluginAsync<CourierRoutesOptions> = async (

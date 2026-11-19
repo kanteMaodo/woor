@@ -1,9 +1,11 @@
 import { useState } from "react";
-import type { FormEvent } from "react";
 import { Link } from "react-router";
 
 import { Icon } from "../../components/ui/icon";
 import type { IconName } from "../../components/ui/icon";
+import { ValidatedForm } from "../../components/ui/validated-form";
+import { ContactFormSchema } from "../../lib/form-validation";
+import type { z } from "zod";
 import { EscrowDiagram } from "./escrow-diagram";
 import { CONTACT, HELP_QUESTIONS, IMAGES, PAGE_CONTENT, SOLUTIONS } from "./marketing-content";
 import type { MarketingPageKey } from "./marketing-content";
@@ -40,7 +42,9 @@ export function MarketingPage({ pageKey }: { pageKey: MarketingPageKey }) {
             ? { to: `mailto:${CONTACT.email}`, label: "Écrire un e-mail" }
             : pageKey === "aide"
               ? { to: "/fonctionnement", label: "Comprendre le parcours" }
-              : undefined
+              : pageKey === "a-propos"
+                ? { to: "/fonctionnement", label: "Découvrir le fonctionnement" }
+                : undefined
         }
       />
       {pageKey === "fonctionnement" ? (
@@ -165,8 +169,8 @@ function HowItWorks() {
               <Icon name="alert" size="lg" />
               <h3>Le colis est refusé</h3>
               <p>
-                Le livreur déclare le refus. L’acheteur dispose de dix minutes pour contester. Sans
-                contestation, la course peut être réglée séparément.
+                Ne validez pas de code de remise. Contactez l’équipe pour connaître la marche à
+                suivre et le traitement de l’article et de la course.
               </p>
             </article>
           </div>
@@ -322,8 +326,8 @@ const AUDIENCE_CONTENT = {
         "Le client vous donne les six chiffres lors de la remise. Saisissez-les dans la course.",
       ],
     ],
-    noteTitle: "Un imprévu se déclare. Il ne se devine pas.",
-    note: "Client absent, refus ou code incorrect : utilisez les actions prévues dans la course. En cas de refus déclaré, un délai de contestation protège aussi l’acheteur.",
+    noteTitle: "Un imprévu doit être signalé.",
+    note: "Client absent, colis refusé ou code bloqué : ne confirmez pas une remise qui n’a pas eu lieu. Gardez le lien de la course et contactez l’équipe pour connaître la marche à suivre.",
     account:
       "Les livreurs accèdent au service sur invitation et sont associés aux vendeurs. Contactez l’équipe pour connaître les possibilités du pilote.",
   },
@@ -488,7 +492,15 @@ function SecurityPage() {
             eyebrow="Des différences concrètes"
             title="Choisir un paiement, c’est aussi choisir ses règles."
           />
-          <div className="m-table-scroll">
+          <p className="m-table-hint">
+            Sur petit écran, faites défiler le tableau horizontalement.
+          </p>
+          <div
+            className="m-table-scroll"
+            role="region"
+            aria-label="Comparaison des modes de paiement"
+            tabIndex={0}
+          >
             <table className="m-comparison">
               <caption>Comparaison des parcours de paiement</caption>
               <thead>
@@ -501,7 +513,7 @@ function SecurityPage() {
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row">Quand le vendeur reçoit-il le paiement ?</th>
+                  <th scope="row">Quand le paiement de l’article est-il confirmé ?</th>
                   <td>Avant la livraison</td>
                   <td>Lors de l’encaissement</td>
                   <td>Après confirmation par le code</td>
@@ -602,7 +614,7 @@ function HelpPage() {
   const questions = HELP_QUESTIONS.filter(
     (item) =>
       (category === "Tout" || category === item.category) &&
-      normalize(`${item.question} ${item.answer}`).includes(normalize(query)),
+      normalize(`${item.question} ${item.answer}`).includes(normalize(query.trim())),
   );
   return (
     <>
@@ -794,10 +806,7 @@ function AboutPage() {
             </Link>
           </div>
           <div className="m-project-note">
-            <span className="m-brand-mark">
-              <Icon name="bolt" size="lg" />
-            </span>
-            <h3>Wóor.</h3>
+            <h3>Wóor</h3>
             <p>Un lien de confiance entre le paiement et la remise.</p>
             <hr />
             <span>Dakar, Sénégal</span>
@@ -816,12 +825,10 @@ function ContactPage() {
   const [draft, setDraft] = useState<{ subject: string; body: string } | null>(null);
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
-  function prepareMessage(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const values = new FormData(event.currentTarget);
+  function prepareMessage(values: z.output<typeof ContactFormSchema>) {
     setDraft({
-      subject: `Wóor — ${String(values.get("subject"))}`,
-      body: `Bonjour l’équipe Wóor,\n\n${String(values.get("message"))}\n\n${String(values.get("name"))}\nAdresse de réponse : ${String(values.get("email"))}\nProfil : ${String(values.get("profile"))}`,
+      subject: `Wóor — ${values.subject}`,
+      body: `Bonjour l’équipe Wóor,\n\n${values.message}\n\n${values.name}\nAdresse de réponse : ${values.email}\nProfil : ${values.profile}`,
     });
     setCopied(false);
     setCopyError(false);
@@ -879,7 +886,13 @@ function ContactPage() {
             <p>
               Ce formulaire prépare un e-mail. Vous confirmez son envoi depuis votre messagerie.
             </p>
-            <form onSubmit={prepareMessage} className="m-contact-form">
+            <ValidatedForm
+              native
+              method="post"
+              schema={ContactFormSchema}
+              onValidated={prepareMessage}
+              className="m-contact-form"
+            >
               <div className="m-form-row">
                 <label>
                   Votre nom
@@ -899,7 +912,7 @@ function ContactPage() {
                     type="email"
                     autoComplete="email"
                     placeholder="vous@exemple.com"
-                    maxLength={200}
+                    maxLength={254}
                   />
                 </label>
               </div>
@@ -942,7 +955,7 @@ function ContactPage() {
               <button type="submit" className="m-button">
                 Préparer mon e-mail
               </button>
-            </form>
+            </ValidatedForm>
             {draft && (
               <div className="m-prepared-message" role="status">
                 <Icon name="check-circle" />

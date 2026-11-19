@@ -4,6 +4,22 @@
  */
 
 /* Gabarit d'écran ------------------------------------------------------ */
+.form-validation-error {
+  grid-column: 1 / -1;
+  padding: 13px 16px;
+  border-left: 3px solid var(--wo-danger);
+  border-radius: 4px;
+  background: var(--wo-danger-bg);
+  color: var(--wo-danger);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+input[aria-invalid="true"],
+textarea[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: var(--wo-danger) !important;
+  outline-color: var(--wo-danger);
+}
 .screen {
   display: flex;
   flex-direction: column;

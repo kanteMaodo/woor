@@ -153,7 +153,7 @@ export const HELP_QUESTIONS = [
     category: "Livrer",
     question: "Que faire si le client refuse le colis ?",
     answer:
-      "Utilisez l’action de déclaration de problème prévue dans le parcours de livraison. Un refus déclaré peut être contesté par l’acheteur pendant dix minutes. Sans contestation, la course peut être réglée au livreur tandis que le prix de l’article est rendu à l’acheteur.",
+      "Ne validez pas le code d’un colis refusé. Gardez le lien de la course et contactez l’équipe Wóor pour connaître la marche à suivre. Le traitement du prix de l’article et de la course dépend de la situation de la commande.",
   },
   {
     category: "Livrer",
