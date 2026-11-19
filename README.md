@@ -1,42 +1,83 @@
 # Wóor
 
-L'acompte bloqué sur Lightning pour le commerce en ligne à Dakar. L'acheteur bloque son
-paiement, le livreur récupère le colis, et un code à 6 chiffres donné à la remise débloque
-l'argent. Si rien n'arrive, l'acheteur est remboursé automatiquement.
+**Votre argent est bloqué, pas encaissé, jusqu'à la remise du colis.**
 
-## Démarrer
+Wóor protège les ventes sur WhatsApp, Instagram et TikTok à Dakar. L'acheteur paie en
+bitcoin sur Lightning, mais son paiement reste bloqué. Le livreur remet le colis contre un
+code à 6 chiffres que l'acheteur lui donne : ce code débloque l'argent. Si rien n'arrive à
+temps, le paiement bloqué est annulé et l'acheteur récupère tout, sans démarche.
 
-Prérequis : Node.js 22.12 ou plus, pnpm 10, Docker.
+Projet du **Dakar Bitcoin Hack 2026**.
+
+## Le problème
+
+- **L'acheteur** hésite à payer d'avance quelqu'un qu'il n'a jamais vu.
+- **La vendeuse** qui accepte le paiement à la livraison se fait refuser le colis à la porte.
+- **Le livreur** rentre avec le colis, sans sa course, ou avec des billets en poche.
+
+## Comment ça marche
+
+1. **La vendeuse crée un lien** : article, prix, livraison, quartier, livreur. Elle l'envoie
+   sur WhatsApp.
+2. **L'acheteur ouvre le lien et paie**, sans compte : deux hold invoices Lightning, une pour
+   la course, une pour l'article. L'argent est bloqué, pas encaissé.
+3. **Le livreur voit la course dès que l'argent est bloqué**, ramasse le colis, livre.
+4. **L'acheteur donne son code** à la remise. Le livreur le saisit : code juste, les deux
+   paiements sont encaissés.
+5. **Sinon** : sans remise à temps, tout est annulé. Refus à la porte : la course est payée,
+   l'article reste à l'acheteur. Cinq codes faux : la commande se verrouille et un arbitre
+   tranche.
+
+## Sécurité par construction
+
+| Garantie                           | Comment                                                                                                                                                                          |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bloqué, jamais encaissé avant      | Hold invoices LND : le secret de déblocage reste chez Wóor, chiffré, et n'est utilisé qu'après le bon code                                                                       |
+| Remboursement automatique          | Les échéances (paiement, ramassage, arrêt final à 18 h) annulent les paiements bloqués                                                                                           |
+| La base décide, le service exécute | Machine à états dans PostgreSQL (`woor.apply_order_event`), effets écrits dans une boîte d'envoi traitée une seule fois                                                          |
+| Chacun voit sa part                | Row Level Security : vendeuse, livreur et acheteur ne voient que leurs commandes, même en cas de bug de l'API                                                                    |
+| Données chiffrées                  | Secrets Lightning et adresses en AES-256-GCM ; numéros réduits à un HMAC ; PIN en Argon2id avec poivre ; jetons de lien, de téléphone et de session stockés en SHA-256 seulement |
+| Code de remise                     | 6 chiffres tirés uniformément, stocké en HMAC, 5 essais puis verrouillage et litige                                                                                              |
+
+## Tester le projet
+
+Prérequis : Node.js 22.12 ou plus, pnpm 10, Docker, et [Polar](https://lightningpolar.com)
+pour le réseau Lightning local.
+
+### Voir tous les écrans en 1 minute, sans base ni Lightning
 
 ```bash
 pnpm install
 cp .env.example .env
-pnpm infra:up
-pnpm dev
+pnpm --filter @woor/web dev
 ```
 
-Dans `.env`, remplir avant `pnpm dev` :
+Ouvrir http://localhost:5173/apercu : tous les écrans de l'acheteur, de la vendeuse, du
+livreur, de l'arbitre et de l'administrateur, avec des données fictives.
 
-- `CODE_HMAC_KEY`, `PHONE_HMAC_KEY`, `PIN_PEPPER`, `PII_KEY` et `PREIMAGE_KEYS` : clés au hasard,
-  la commande est indiquée dans le fichier.
-- `LND_*` : le nœud Lightning de Wóor. En local, créer un réseau regtest avec
-  [Polar](https://lightningpolar.com) (deux nœuds LND : Wóor et l'acheteur, reliés par un
-  canal), puis copier l'adresse gRPC, le certificat TLS et le macaron admin (base64 ou hexa).
+### Faire une vraie vente
 
-Au premier `pnpm infra:up`, PostgreSQL charge le schéma et crée les comptes locaux de l'API
-et du service de paiements. Créez ensuite les comptes de démonstration :
+1. **Clés** : dans `.env`, remplir `CODE_HMAC_KEY`, `PHONE_HMAC_KEY`, `PIN_PEPPER`,
+   `PII_KEY` et `PREIMAGE_KEYS` avec des clés au hasard (la commande est indiquée dans le
+   fichier).
+2. **Lightning** : dans Polar, créer deux nœuds LND (`woor` et `acheteur`), les approvisionner,
+   ouvrir un canal de `acheteur` vers `woor`. Copier l'adresse gRPC, le certificat TLS et le
+   macaron admin du nœud `woor` dans `LND_SOCKET`, `LND_CERT_BASE64` et `LND_MACAROON`.
+3. **Base et comptes de démonstration** :
+   ```bash
+   pnpm infra:up
+   pnpm --filter @woor/api seed:demo
+   ```
+4. **Lancer** web, API et service de paiements : `pnpm dev`.
+5. **Vendre** : http://localhost:5173/connexion, bouton « Vendeuse » des comptes de
+   démonstration, puis « Nouvelle commande ». Ouvrir le lien obtenu dans une autre fenêtre,
+   payer les deux factures depuis le nœud `acheteur` de Polar, afficher le code.
+6. **Livrer** : se connecter en « Livreur », « J'ai récupéré le colis », saisir le code.
 
-```bash
-pnpm --filter @woor/api seed:demo
-```
-
-| Compte   | Numéro       | PIN    | Espace                         |
-| -------- | ------------ | ------ | ------------------------------ |
-| Vendeuse | 77 000 00 01 | 111111 | http://localhost:5173/vendeuse |
-| Livreur  | 77 000 00 02 | 222222 | http://localhost:5173/livreur  |
-
-En développement, http://localhost:5173/apercu montre tous les écrans avec des données
-fictives, sans base ni Lightning.
+| Compte   | Numéro       | PIN    |
+| -------- | ------------ | ------ |
+| Vendeuse | 77 000 00 01 | 111111 |
+| Livreur  | 77 000 00 02 | 222222 |
 
 | Service  | Adresse                         |
 | -------- | ------------------------------- |
@@ -45,20 +86,31 @@ fictives, sans base ni Lightning.
 | Postgres | localhost:5433                  |
 | Valkey   | localhost:6379                  |
 
-## Organisation
+## Architecture
+
+Monorepo TypeScript, architecture en couches : le métier ne connaît ni PostgreSQL, ni LND,
+ni HTTP. Détails dans [docs/architecture.md](docs/architecture.md).
 
 ```
-apps/web        application React (React Router v7, rendu serveur)
-apps/api        API HTTP (Fastify, Zod)
-apps/worker     service de paiements et planificateur
-packages/core   rôles, états, machine à états des commandes
-packages/ln     interface LightningProvider et adaptateurs
-packages/db     accès PostgreSQL et migrations SQL
-infra/          Docker Compose
+apps/web        React Router v7, rendu serveur, formulaires utilisables sans JavaScript
+apps/api        Fastify et Zod : cas d'usage, ports, adaptateurs PostgreSQL et crypto
+apps/worker     service de paiements : factures, encaissement, annulation, échéances
+packages/core   domaine : rôles, machine à états, montants, cours FCFA/sats
+packages/ln     interface LightningProvider et adaptateur LND
+packages/db     accès PostgreSQL et schéma SQL (fonctions, droits, RLS)
+infra/          Docker Compose : PostgreSQL 16 et Valkey
 ```
 
-Les packages exposent directement leur source TypeScript : aucune étape de build
-n'est nécessaire pour les utiliser depuis les applications.
+## État du pilote
+
+**Fait** : création de commande et lien, paiement en deux hold invoices, blocage, code de
+remise, ramassage et saisie du code, encaissement, annulations et échéances automatiques,
+connexion par numéro et PIN, tableaux de bord de la vendeuse et du livreur, tous les écrans
+de la maquette.
+
+**Prochaines étapes** : versement Lightning automatique vers le wallet de la vendeuse et du
+livreur, litiges et arbitrage côté API, inscription sur invitation et passkeys, QR de
+ramassage signé, preuve de position à l'arrivée, mise en ligne.
 
 ## Commandes
 
@@ -68,7 +120,7 @@ n'est nécessaire pour les utiliser depuis les applications.
 | `pnpm typecheck`   | Vérifie les types de tout le dépôt     |
 | `pnpm lint`        | ESLint sur tout le dépôt               |
 | `pnpm format`      | Formate avec Prettier                  |
-| `pnpm infra:up`    | Démarre Postgres et Valkey             |
+| `pnpm infra:up`    | Démarre PostgreSQL et Valkey           |
 | `pnpm infra:reset` | Recrée les services avec une base vide |
 
 ## Licence
