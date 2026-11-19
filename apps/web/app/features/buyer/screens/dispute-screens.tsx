@@ -17,7 +17,7 @@ interface DisputeScreenProps {
   context: BuyerPageContext;
 }
 
-/** B8 : le livreur dit que l'acheteur refuse le colis. L'acheteur confirme ou conteste. */
+/** B8 : le livreur dit que l’acheteur refuse le colis. L’acheteur confirme ou conteste. */
 export function RefusalDeclaredScreen({ view, context }: DisputeScreenProps) {
   const minutesLeft = view.contestDeadline ? minutesUntil(view.contestDeadline, context.now) : 0;
 
@@ -27,12 +27,12 @@ export function RefusalDeclaredScreen({ view, context }: DisputeScreenProps) {
       footer={
         <>
           <IntentButton intent="contest" pendingLabel="Envoi…">
-            Ce n'est pas vrai, je conteste
+            Ce n’est pas vrai, je conteste
           </IntentButton>
           <IntentButton
             intent="confirm-refusal"
             className="btn btn-secondary"
-            confirm="Confirmer le refus ? Vous payez la livraison, l'article vous est rendu."
+            confirm="Confirmer le refus ? Vous payez la livraison, l’article vous est rendu."
           >
             Je confirme mon refus
           </IntentButton>
@@ -42,8 +42,8 @@ export function RefusalDeclaredScreen({ view, context }: DisputeScreenProps) {
       <OrderProgress state={view.state} />
       {context.error && <Banner tone="danger">{context.error}</Banner>}
       <Banner tone="warn" icon="alert">
-        Le livreur indique que vous refusez le colis. Si c'est vrai, vous payez seulement la
-        livraison ({formatXof(view.deliveryFeeXof)}). L'article ({formatXof(view.itemPriceXof)})
+        Le livreur indique que vous refusez le colis. Si c’est vrai, vous payez seulement la
+        livraison ({formatXof(view.deliveryFeeXof)}). L’article ({formatXof(view.itemPriceXof)})
         reste dans votre wallet.
       </Banner>
       <Banner tone="info" icon="clock">
@@ -71,13 +71,13 @@ export function RefusalDeclaredScreen({ view, context }: DisputeScreenProps) {
 }
 
 const REPORT_REASONS = [
-  { value: "not_as_described", label: "L'article ne correspond pas à l'annonce" },
-  { value: "courier_no_show", label: "Le livreur n'est pas venu" },
-  { value: "code_lost", label: "J'ai perdu mon code" },
+  { value: "not_as_described", label: "L’article ne correspond pas à l’annonce" },
+  { value: "courier_no_show", label: "Le livreur n’est pas venu" },
+  { value: "code_lost", label: "J’ai perdu mon code" },
   { value: "other", label: "Autre chose" },
 ];
 
-/** B9 : l'acheteur signale un problème. L'argent reste bloqué pendant l'examen. */
+/** B9 : l’acheteur signale un problème. L’argent reste bloqué pendant l’examen. */
 export function ReportProblemScreen({ context }: DisputeScreenProps) {
   const navigation = useNavigation();
   const pending = navigation.state === "submitting";
@@ -110,7 +110,7 @@ export function ReportProblemScreen({ context }: DisputeScreenProps) {
         </div>
       </ValidatedForm>
       <Banner tone="info" icon="lock">
-        Votre argent reste bloqué pendant l'examen. Réponse en 2 h au plus.
+        Votre argent reste bloqué pendant l’examen. Réponse en 2 h au plus.
       </Banner>
     </Screen>
   );

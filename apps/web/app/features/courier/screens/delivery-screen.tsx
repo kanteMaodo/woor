@@ -34,7 +34,7 @@ export function DeliveryScreen({ profile, delivery, error }: DeliveryScreenProps
         step === "pickup" && (
           <ActionButton intent="pickup" pendingLabel="Confirmation…">
             <Icon name="box" />
-            J'ai récupéré le colis
+            J’ai récupéré le colis
           </ActionButton>
         )
       }
@@ -45,7 +45,7 @@ export function DeliveryScreen({ profile, delivery, error }: DeliveryScreenProps
         <div className="split-main">
           {step === "pickup" && (
             <Banner tone="info">
-              L'acheteur a payé : l'argent est bloqué. Récupérez le colis chez {delivery.sellerName}
+              L’acheteur a payé : l’argent est bloqué. Récupérez le colis chez {delivery.sellerName}
               {delivery.pickupDeadline ? ` avant ${formatTime(delivery.pickupDeadline)}` : ""}.
             </Banner>
           )}
@@ -87,7 +87,7 @@ export function DeliveryScreen({ profile, delivery, error }: DeliveryScreenProps
   );
 }
 
-/** C4 : le code lu sur le téléphone de l'acheteur. */
+/** C4 : le code lu sur le téléphone de l’acheteur. */
 function CodeForm({ delivery }: { delivery: Delivery }) {
   const navigation = useNavigation();
   const pending = navigation.state === "submitting";
@@ -102,9 +102,9 @@ function CodeForm({ delivery }: { delivery: Delivery }) {
 
   return (
     <section className="panel code-panel">
-      <h2>Code de l'acheteur</h2>
+      <h2>Code de l’acheteur</h2>
       <p className="muted">
-        Il le lit sur son téléphone. Ne remettez le colis qu'après validation.
+        Il le lit sur son téléphone. Ne remettez le colis qu’après validation.
       </p>
       <ValidatedForm method="post" schema={DeliveryCodeFormSchema} className="stack">
         <input type="hidden" name="intent" value="code" />

@@ -108,7 +108,7 @@ export async function action({ request, params }: Route.ActionArgs) {
       case "confirm-refusal":
       case "contest":
       case "report":
-        // Écrans prêts ; les appels à l'API arrivent avec les litiges.
+        // Écrans prêts ; les appels à l’API arrivent avec les litiges.
         return { revealedCode: null, error: "Cette action sera disponible très bientôt." };
     }
   } catch (error) {
@@ -136,7 +136,7 @@ export default function BuyerOrderRoute({ loaderData, actionData }: Route.Compon
   return <BuyerOrderPage screen={screen} context={context} />;
 }
 
-/** Jeton inconnu ou mal formé : la page d'erreur 404 de l'application. */
+/** Jeton inconnu ou mal formé : la page d’erreur 404 de l’application. */
 async function loadPublicSummary(token: string, cookieHeader: string | null) {
   try {
     return await buyerApi.getPublicOrder(token, cookieHeader);

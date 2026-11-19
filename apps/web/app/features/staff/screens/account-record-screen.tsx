@@ -8,10 +8,10 @@ interface AccountRecordScreenProps {
   record: AccountRecordView;
 }
 
-/** A4 : l'historique d'un compte, pour juger une absence déclarée ou un abus. */
+/** A4 : l’historique d’un compte, pour juger une absence déclarée ou un abus. */
 export function AccountRecordScreen({ profile, record }: AccountRecordScreenProps) {
   return (
-    <AccountScreen profile={profile} backTo="/arbitre" title="Fiche d'un compte">
+    <AccountScreen profile={profile} backTo="/arbitre" title="Fiche d’un compte">
       <section className="panel account-hero">
         <span className="initial big" aria-hidden="true">
           {record.displayName.charAt(0)}

@@ -15,7 +15,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function CourierDeliveriesRoute({ loaderData }: Route.ComponentProps) {
-  // Une course apparaît dès que l'acheteur a payé.
+  // Une course apparaît dès que l’acheteur a payé.
   usePolling(5_000, true);
   return <DeliveriesScreen {...loaderData} />;
 }

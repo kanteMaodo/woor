@@ -23,7 +23,7 @@ import { KillSwitchScreen } from "../staff/screens/kill-switch-screen";
 import { SettingsScreen } from "../staff/screens/settings-screen";
 
 /**
- * Écrans fictifs des comptes (vendeuse, livreur, équipe), pour l'aperçu en développement.
+ * Écrans fictifs des comptes (vendeuse, livreur, équipe), pour l’aperçu en développement.
  * Les dates sont fixes : le rendu est identique sur le serveur et dans le navigateur.
  */
 export interface PreviewExtras {
@@ -215,7 +215,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
   },
   {
     slug: "vendeuse-commande",
-    label: "S5 · Détail d'une commande",
+    label: "S5 · Détail d’une commande",
     render: () => <SellerOrderScreen profile={SELLER} order={IN_TRANSIT} error={null} />,
   },
   {
@@ -239,7 +239,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
             label: "Sandales 39",
             amountXof: 8_000,
             status: "received",
-            when: "Aujourd'hui 12:05",
+            when: "Aujourd’hui 12:05",
           },
           {
             id: "p2",
@@ -278,7 +278,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
             displayName: "Abdou",
             phoneLast2: "63",
             status: "to_verify",
-            detail: "Identité à vérifier par l'équipe",
+            detail: "Identité à vérifier par l’équipe",
           },
           {
             id: "c3",
@@ -384,7 +384,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
             label: "Course · Sandales 39",
             amountXof: 1_500,
             status: "received",
-            when: "Aujourd'hui 12:05",
+            when: "Aujourd’hui 12:05",
           },
           {
             id: "p2",
@@ -405,7 +405,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
             label: "Dédommagement · Montre",
             amountXof: 2_000,
             status: "received",
-            when: "Décision de l'arbitre",
+            when: "Décision de l’arbitre",
           },
         ]}
       />
@@ -443,7 +443,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
           {
             id: "w1",
             kind: "payout",
-            title: "Versement en attente d'adresse",
+            title: "Versement en attente d’adresse",
             detail: "Abdou · course de 1 500 F",
           },
         ]}
@@ -467,7 +467,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
             { at: "14:32", label: "Arrivée, position edkm7b" },
             { at: "14:40", label: "5 codes faux en 7 min" },
           ],
-          contacts: [{ label: "L'acheteur" }, { label: "Moussa" }, { label: "Awa" }],
+          contacts: [{ label: "L’acheteur" }, { label: "Moussa" }, { label: "Awa" }],
         }}
       />
     ),
@@ -491,7 +491,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
   },
   {
     slug: "arbitre-fiche",
-    label: "A4 · Fiche d'un compte",
+    label: "A4 · Fiche d’un compte",
     render: () => (
       <AccountRecordScreen
         profile={ARBITER}
@@ -533,7 +533,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
           {
             id: "u3",
             displayName: "Abdou",
-            detail: "Livreur d'Awa · invité hier",
+            detail: "Livreur d’Awa · invité hier",
             status: "to_verify",
           },
           { id: "u4", displayName: "Ibrahima Sarr", detail: "Arbitre", status: "staff" },
@@ -550,14 +550,14 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
         settings={[
           {
             key: "max_order_xof",
-            label: "Prix maximum d'un article",
+            label: "Prix maximum d’un article",
             range: "de 1 000 à 50 000 F",
             value: "50 000 F",
           },
           {
             key: "max_total_locked_xof",
             label: "Total bloqué maximum",
-            range: "jusqu'à 1 000 000 F",
+            range: "jusqu’à 1 000 000 F",
             value: "300 000 F",
           },
           {
@@ -575,7 +575,7 @@ export const ACCOUNT_CATALOG: CatalogEntry[] = [
           {
             key: "new_seller_payout_delay_sec",
             label: "Versement différé",
-            range: "jusqu'à 24 h",
+            range: "jusqu’à 24 h",
             value: "2 h",
           },
         ]}

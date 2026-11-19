@@ -6,7 +6,7 @@ import { AccountScreen } from "../../account/account-screen";
 interface PickupQrScreenProps {
   profile: Profile;
   order: SellerOrder;
-  /** QR signé par l'API, fabriqué en SVG par le serveur web. */
+  /** QR signé par l’API, fabriqué en SVG par le serveur web. */
   qrSvg: string;
   validUntil: string;
 }
@@ -27,7 +27,7 @@ export function PickupQrScreen({ profile, order, qrSvg, validUntil }: PickupQrSc
         <aside className="split-side">
           <section className="panel summary">
             <div className="row">
-              <span className="muted">Valable jusqu'à</span>
+              <span className="muted">Valable jusqu’à</span>
               <span className="v">{formatTime(validUntil)}</span>
             </div>
             <div className="row">

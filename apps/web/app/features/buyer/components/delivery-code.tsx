@@ -7,15 +7,15 @@ import { IntentButton } from "./intent-button";
 
 interface DeliveryCodeProps {
   orderToken: string;
-  /** Le code a déjà été donné à ce téléphone, lors d'une visite précédente. */
+  /** Le code a déjà été donné à ce téléphone, lors d’une visite précédente. */
   codeIssued: boolean;
-  /** Code reçu à l'instant du serveur, une seule fois. */
+  /** Code reçu à l’instant du serveur, une seule fois. */
   revealedCode: string | null;
 }
 
 /**
- * Le code de remise. Le serveur ne le donne qu'une fois : il est alors gardé sur ce téléphone
- * et ne quitte plus l'appareil. Masqué par défaut, il ne s'affiche que sur demande.
+ * Le code de remise. Le serveur ne le donne qu’une fois : il est alors gardé sur ce téléphone
+ * et ne quitte plus l’appareil. Masqué par défaut, il ne s’affiche que sur demande.
  */
 export function DeliveryCode({ orderToken, codeIssued, revealedCode }: DeliveryCodeProps) {
   const storageKey = `woor:code:${orderToken}`;

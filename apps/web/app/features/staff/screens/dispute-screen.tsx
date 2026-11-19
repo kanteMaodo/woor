@@ -9,7 +9,7 @@ import type { DisputeView } from "../staff-views";
 
 const DECISIONS = [
   { value: "pay_both", label: "Payer les deux : colis remis" },
-  { value: "refund_all", label: "Tout rendre à l'acheteur" },
+  { value: "refund_all", label: "Tout rendre à l’acheteur" },
   { value: "new_code", label: "Nouveau code, dicté au téléphone" },
 ];
 
@@ -18,7 +18,7 @@ interface DisputeScreenProps {
   dispute: DisputeView;
 }
 
-/** A2 : l'arbitre lit la chronologie, appelle les parties, puis tranche avec sa passkey. */
+/** A2 : l’arbitre lit la chronologie, appelle les parties, puis tranche avec sa passkey. */
 export function DisputeScreen({ profile, dispute }: DisputeScreenProps) {
   return (
     <AccountScreen

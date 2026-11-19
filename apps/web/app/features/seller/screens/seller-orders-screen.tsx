@@ -5,7 +5,9 @@ import { Icon } from "../../../components/ui/icon";
 import { StatCard } from "../../../components/ui/stat-card";
 import type { Profile, SellerOrder } from "../../../lib/api/account-schemas";
 import { formatTime, formatXof } from "../../../lib/format";
+import { EmptyParcelScene, SellerScene } from "../../../components/illustrations/scenes";
 import { AccountScreen } from "../../account/account-screen";
+import { WelcomeBanner } from "../../account/welcome-banner";
 import {
   countByFilter,
   filterSellerOrders,
@@ -32,12 +34,27 @@ export function SellerOrdersScreen({ profile, orders, filter }: SellerOrdersScre
     <AccountScreen
       profile={profile}
       title="Tableau de bord"
-      subtitle={`Nanga def, ${firstName} ? Voici où en sont vos ventes.`}
-      actions={
-        <Link to="/vendeuse/nouvelle" className="btn btn-primary">
-          <Icon name="plus" />
-          Nouvelle commande
-        </Link>
+      banner={
+        <WelcomeBanner
+          eyebrow="Espace vendeuse"
+          title={
+            <>
+              Bonjour {firstName}, <em>vos ventes</em> en un coup d’œil.
+            </>
+          }
+          description={
+            kpis.pendingCount > 0
+              ? `${kpis.pendingCount} commande${plural(kpis.pendingCount)} déjà payée${plural(kpis.pendingCount)} et bloquée${plural(kpis.pendingCount)} chez vos acheteurs. L’argent vous revient à la remise du colis.`
+              : "Créez un lien de commande et envoyez-le à votre client : il paie, l’argent reste bloqué jusqu’à la remise."
+          }
+          illustration={<SellerScene />}
+          actions={
+            <Link to="/vendeuse/nouvelle" className="btn btn-lime">
+              <Icon name="plus" />
+              Nouvelle commande
+            </Link>
+          }
+        />
       }
     >
       <section className="stat-grid" aria-label="Chiffres clés">
@@ -88,8 +105,8 @@ export function SellerOrdersScreen({ profile, orders, filter }: SellerOrdersScre
 
         {shown.length === 0 ? (
           <div className="empty-state">
-            <Icon name="box" size="lg" />
-            <p>Aucune commande ici pour l'instant.</p>
+            <EmptyParcelScene className="empty-art" />
+            <p>Aucune commande ici pour l’instant.</p>
             <Link to="/vendeuse/nouvelle" className="btn-link">
               Créer une commande
             </Link>

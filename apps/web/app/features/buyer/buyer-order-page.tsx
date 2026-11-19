@@ -17,7 +17,7 @@ interface BuyerOrderPageProps {
   context: BuyerPageContext;
 }
 
-/** Affiche l'écran choisi par selectBuyerScreen. Aucune règle ici, seulement l'aiguillage. */
+/** Affiche l’écran choisi par selectBuyerScreen. Aucune règle ici, seulement l’aiguillage. */
 export function BuyerOrderPage({ screen, context }: BuyerOrderPageProps) {
   switch (screen.kind) {
     case "summary":

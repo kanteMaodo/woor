@@ -19,16 +19,16 @@ interface ShareLinkScreenProps {
   order: SharedOrder;
 }
 
-/** Message envoyé à l'acheteur, tel qu'il apparaîtra dans WhatsApp. */
+/** Message envoyé à l’acheteur, tel qu’il apparaîtra dans WhatsApp. */
 export function shareMessage(order: SharedOrder): string {
   return (
     `Bonjour ! Voici votre commande ${order.itemLabel} : ${formatXof(order.totalXof)} livraison comprise. ` +
-    `Payez en toute sécurité : votre argent reste bloqué jusqu'à la remise du colis.\n${order.link}`
+    `Payez en toute sécurité : votre argent reste bloqué jusqu’à la remise du colis.\n${order.link}`
   );
 }
 
 /**
- * S3 : le lien est prêt. Il n'est montré qu'ici : la base n'en garde que l'empreinte,
+ * S3 : le lien est prêt. Il n’est montré qu’ici : la base n’en garde que l’empreinte,
  * personne ne pourra le retrouver depuis la base.
  */
 export function ShareLinkScreen({ profile, order }: ShareLinkScreenProps) {
@@ -38,7 +38,7 @@ export function ShareLinkScreen({ profile, order }: ShareLinkScreenProps) {
     <AccountScreen
       profile={profile}
       title="Lien prêt"
-      subtitle="Envoyez-le dans votre discussion avec l'acheteur."
+      subtitle="Envoyez-le dans votre discussion avec l’acheteur."
     >
       <div className="split">
         <div className="split-main">
@@ -46,7 +46,7 @@ export function ShareLinkScreen({ profile, order }: ShareLinkScreenProps) {
             <h2>Aperçu du message</h2>
             <div className="bubble">
               Bonjour ! Voici votre commande <b>{order.itemLabel}</b> : {formatXof(order.totalXof)}{" "}
-              livraison comprise. Payez en toute sécurité : votre argent reste bloqué jusqu'à la
+              livraison comprise. Payez en toute sécurité : votre argent reste bloqué jusqu’à la
               remise du colis.
               <div className="linkcard">
                 <span className="lc-ic">
@@ -63,7 +63,7 @@ export function ShareLinkScreen({ profile, order }: ShareLinkScreenProps) {
             </div>
           </section>
           <Banner tone="warn" icon="clock">
-            Gardez ce message : le lien n'est affiché qu'une fois. Un seul téléphone pourra
+            Gardez ce message : le lien n’est affiché qu’une fois. Un seul téléphone pourra
             commander.
           </Banner>
         </div>

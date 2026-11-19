@@ -10,7 +10,7 @@ interface SummaryScreenProps {
   error: string | null;
 }
 
-/** B1 : l'acheteur vérifie la vendeuse et les montants avant de s'engager. */
+/** B1 : l’acheteur vérifie la vendeuse et les montants avant de s’engager. */
 export function SummaryScreen({ summary, error }: SummaryScreenProps) {
   return (
     <Screen
@@ -20,7 +20,7 @@ export function SummaryScreen({ summary, error }: SummaryScreenProps) {
           <IntentButton intent="claim" pendingLabel="Préparation du paiement…">
             Je commande
           </IntentButton>
-          <p className="note">Remboursé automatiquement si rien n'arrive.</p>
+          <p className="note">Remboursé automatiquement si rien n’arrive.</p>
         </>
       }
     >
@@ -46,7 +46,7 @@ export function SummaryScreen({ summary, error }: SummaryScreenProps) {
           <span className="ic">
             <Icon name="lock" />
           </span>
-          Vous bloquez l'argent dans votre wallet
+          Vous bloquez l’argent dans votre wallet
         </li>
         <li>
           <span className="ic">
