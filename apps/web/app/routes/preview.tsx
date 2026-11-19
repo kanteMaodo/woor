@@ -1,5 +1,5 @@
 import type { InvoiceKind } from "@woor/core";
-import { data, Link } from "react-router";
+import { data, Link, useSearchParams } from "react-router";
 
 import { BuyerOrderPage } from "../features/buyer/buyer-order-page";
 import type { BuyerPageContext } from "../features/buyer/buyer-page-context";
@@ -64,6 +64,7 @@ async function buyerContext(preview: BuyerPreview, request: Request) {
 
 export default function PreviewRoute({ loaderData }: Route.ComponentProps) {
   const { index, current } = loaderData;
+  const [searchParams] = useSearchParams();
 
   if (!current) {
     return (
@@ -81,17 +82,21 @@ export default function PreviewRoute({ loaderData }: Route.ComponentProps) {
     );
   }
 
+  // ?capture : écran seul, sans la barre de la galerie, pour les captures de la vidéo.
+  const capture = searchParams.has("capture");
   const position = index.findIndex((entry) => entry.slug === current.slug);
   const previous = index[position - 1];
   const next = index[position + 1];
 
   return (
     <>
-      <nav className="preview-nav small">
-        {previous ? <Link to={`/apercu/${previous.slug}`}>‹ Précédent</Link> : <span />}
-        <Link to="/apercu">{current.label}</Link>
-        {next ? <Link to={`/apercu/${next.slug}`}>Suivant ›</Link> : <span />}
-      </nav>
+      {!capture && (
+        <nav className="preview-nav small">
+          {previous ? <Link to={`/apercu/${previous.slug}`}>‹ Précédent</Link> : <span />}
+          <Link to="/apercu">{current.label}</Link>
+          {next ? <Link to={`/apercu/${next.slug}`}>Suivant ›</Link> : <span />}
+        </nav>
+      )}
       {current.type === "account" ? (
         ACCOUNT_CATALOG.find((entry) => entry.slug === current.slug)?.render({
           qrSvg: current.qrSvg,
