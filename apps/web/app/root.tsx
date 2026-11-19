@@ -9,6 +9,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import { findProfile, HOME_BY_ROLE } from "./lib/session.server";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/components.css";
@@ -16,6 +17,16 @@ import "./styles/landing.css";
 import "./styles/auth.css";
 import "./styles/app.css";
 import "./styles/identity.css";
+
+export async function loader({ request }: Route.LoaderArgs) {
+  // A visitor without an account cookie never needs the API to read the public site.
+  const hasSession = request.headers
+    .get("cookie")
+    ?.split(";")
+    .some((part) => /^woor_session=.+/.test(part.trim()));
+  const profile = hasSession ? await findProfile(request).catch(() => null) : null;
+  return { accountHome: profile ? HOME_BY_ROLE[profile.role] : null };
+}
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

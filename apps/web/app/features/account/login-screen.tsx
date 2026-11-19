@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Form, Link, useNavigation } from "react-router";
 
 import { Banner } from "../../components/ui/banner";
 import { Icon } from "../../components/ui/icon";
+import { WoorBrand } from "../home/marketing-layout";
 
 /** Compte de démonstration proposé sur la page de connexion, hors production. */
 export interface DemoAccount {
@@ -19,25 +21,32 @@ interface LoginScreenProps {
 }
 
 const PROMISES = [
-  "L'argent est bloqué avant que le colis parte.",
-  "Le code à 6 chiffres débloque le paiement à la remise.",
-  "Sans remise, l'acheteur est remboursé tout seul.",
+  "Une commande claire, du premier message à la remise.",
+  "Un paiement protégé, avant de prendre la route.",
+  "Un code à six chiffres pour confirmer la livraison.",
 ];
 
 /** O2 : connexion des vendeuses et livreurs par numéro et PIN. */
 export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
   const navigation = useNavigation();
   const pending = navigation.state === "submitting";
+  const [showPin, setShowPin] = useState(false);
 
   return (
     <div className="auth">
       <aside className="auth-side">
-        <Link to="/" className="brand auth-brand">
-          <Icon name="bolt" />
-          Wóor
-        </Link>
+        <WoorBrand light />
         <div className="auth-side-body">
-          <h2>Vendez sans risque. Livrez sans billets.</h2>
+          <p className="auth-eyebrow">LE COMMERCE, EN CONFIANCE.</p>
+          <h2>
+            Vos commandes.
+            <br />
+            <em>Vos livraisons.</em>
+          </h2>
+          <p className="auth-side-intro">
+            Retrouvez vos commandes, vos livraisons et les informations qui font avancer votre
+            activité.
+          </p>
           <ul>
             {PROMISES.map((promise) => (
               <li key={promise}>
@@ -47,27 +56,36 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
             ))}
           </ul>
         </div>
+        <div className="auth-proof">
+          <span>
+            <Icon name="lock" />
+          </span>
+          <div>
+            <strong>Le code confirme la remise.</strong>
+            <p>Protégé avant le départ. Débloqué à la remise.</p>
+          </div>
+        </div>
         <p className="auth-side-foot">
-          <Icon name="lock" size="sm" /> Paiements protégés par le réseau Lightning
+          <Icon name="pin" size="sm" /> Né à Dakar · Propulsé par Bitcoin Lightning
         </p>
       </aside>
 
       <main className="auth-main">
         <div className="auth-card">
           <Link to="/" className="back-link auth-back">
-            <Icon name="arrow-left" size="sm" /> Accueil
+            Retour au site
           </Link>
-          <Link to="/" className="brand auth-brand-mobile">
-            <Icon name="bolt" />
-            Wóor
-          </Link>
+          <div className="auth-brand-mobile">
+            <WoorBrand />
+          </div>
 
-          <h1>Se connecter</h1>
-          <p className="auth-sub">Espace des vendeuses et des livreurs.</p>
+          <span className="auth-welcome">VOTRE ESPACE WÓOR</span>
+          <h1>Content de vous retrouver.</h1>
+          <p className="auth-sub">Connectez-vous pour retrouver vos commandes et vos courses.</p>
 
           {error && <Banner tone="danger">{error}</Banner>}
 
-          <Form method="post" className="stack">
+          <Form method="post" className="stack" aria-busy={pending}>
             <div className="field">
               <label htmlFor="phone">Numéro de téléphone</label>
               <div className="auth-phone">
@@ -86,23 +104,37 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
               </div>
             </div>
             <div className="field">
-              <label htmlFor="pin">PIN à 6 chiffres</label>
-              <input
-                id="pin"
-                name="pin"
-                className="input auth-pin"
-                type="password"
-                inputMode="numeric"
-                autoComplete="current-password"
-                pattern="\d{6}"
-                maxLength={6}
-                placeholder="••••••"
-                required
-              />
+              <div className="auth-field-heading">
+                <label htmlFor="pin">Votre PIN à 6 chiffres</label>
+                <Link to="/contact">Besoin d’aide ?</Link>
+              </div>
+              <div className="auth-pin-field">
+                <input
+                  id="pin"
+                  name="pin"
+                  className="input auth-pin"
+                  type={showPin ? "text" : "password"}
+                  inputMode="numeric"
+                  autoComplete="current-password"
+                  pattern="\d{6}"
+                  maxLength={6}
+                  placeholder="••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  className="auth-pin-toggle"
+                  aria-label={showPin ? "Masquer le PIN" : "Afficher le PIN"}
+                  aria-pressed={showPin}
+                  onClick={() => setShowPin(!showPin)}
+                >
+                  <Icon name={showPin ? "eye-off" : "eye"} />
+                </button>
+              </div>
               <span className="hint">5 essais, puis le PIN est bloqué 15 minutes.</span>
             </div>
             <button type="submit" className="btn btn-primary" disabled={pending}>
-              {pending ? "Connexion…" : "Se connecter"}
+              {pending ? "Connexion en cours…" : "Accéder à mon espace"}
             </button>
           </Form>
 
@@ -122,7 +154,7 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
                   </Form>
                 ))}
               </div>
-              <p className="hint">
+              <p className="hint auth-demo-credentials">
                 {demoAccounts
                   .map((account) => `${account.label} : ${account.phone}, PIN ${account.pin}`)
                   .join(" · ")}
@@ -130,7 +162,16 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
             </section>
           )}
 
-          <p className="note">Pas de compte ? L'accès se fait sur invitation.</p>
+          <p className="auth-invitation">
+            Vous souhaitez rejoindre Wóor ?<br />
+            <Link to="/contact">Parlez-nous de votre activité.</Link>
+            <span>L’accès vendeur et livreur se fait sur invitation.</span>
+          </p>
+          <div className="auth-bottom-links">
+            <Link to="/aide">Centre d’aide</Link>
+            <span>·</span>
+            <Link to="/securite">Protection des données</Link>
+          </div>
         </div>
       </main>
     </div>

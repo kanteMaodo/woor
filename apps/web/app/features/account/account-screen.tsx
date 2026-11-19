@@ -109,7 +109,6 @@ export function AccountScreen({
     <div className={`dash${items.length > 1 ? " has-tabs" : ""}`}>
       <aside className="dash-side" aria-label="Navigation">
         <Link to={items[0]?.to ?? "/"} className="brand dash-brand">
-          <Icon name="bolt" />
           Wóor
         </Link>
         <nav className="dash-nav">
@@ -139,7 +138,6 @@ export function AccountScreen({
 
       <header className="dash-top">
         <Link to={items[0]?.to ?? "/"} className="brand">
-          <Icon name="bolt" />
           Wóor
         </Link>
         <div className="dash-top-user">
