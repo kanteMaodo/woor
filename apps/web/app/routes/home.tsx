@@ -7,7 +7,7 @@ export function meta(_: Route.MetaArgs) {
     {
       name: "description",
       content:
-        "Votre argent est bloqué, pas encaissé, jusqu'à la remise du colis. Paiement Lightning protégé pour la vente sur WhatsApp à Dakar.",
+        "Votre argent est bloqué, pas encaissé, jusqu’à la remise du colis. Paiement Lightning protégé pour la vente sur WhatsApp à Dakar.",
     },
   ];
 }

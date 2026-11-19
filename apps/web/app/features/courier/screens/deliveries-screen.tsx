@@ -5,7 +5,9 @@ import { Icon } from "../../../components/ui/icon";
 import { StatCard } from "../../../components/ui/stat-card";
 import type { Delivery, Profile } from "../../../lib/api/account-schemas";
 import { formatTime, formatXof } from "../../../lib/format";
+import { CourierScene, EmptyParcelScene } from "../../../components/illustrations/scenes";
 import { AccountScreen } from "../../account/account-screen";
+import { WelcomeBanner } from "../../account/welcome-banner";
 import { COURIER_STATUS, courierKpis, isActiveDelivery } from "../deliveries";
 
 interface DeliveriesScreenProps {
@@ -22,7 +24,18 @@ export function DeliveriesScreen({ profile, deliveries }: DeliveriesScreenProps)
     <AccountScreen
       profile={profile}
       title="Mes courses"
-      subtitle={`Nanga def, ${firstName} ? Une course apparaît dès que l'acheteur a payé.`}
+      banner={
+        <WelcomeBanner
+          eyebrow="Espace livreur"
+          title={
+            <>
+              Bonjour {firstName}, <em>vos courses</em> du jour.
+            </>
+          }
+          description="Une course apparaît ici dès que l’acheteur a payé. Vous partez en sachant que l’argent est là, et le code confirme la remise."
+          illustration={<CourierScene />}
+        />
+      }
     >
       <section className="stat-grid" aria-label="Chiffres clés">
         <StatCard
@@ -60,8 +73,8 @@ export function DeliveriesScreen({ profile, deliveries }: DeliveriesScreenProps)
 
         {deliveries.length === 0 ? (
           <div className="empty-state">
-            <Icon name="moto" size="lg" />
-            <p>Aucune course pour l'instant.</p>
+            <EmptyParcelScene className="empty-art" />
+            <p>Aucune course pour l’instant.</p>
           </div>
         ) : (
           <div className="data-table courier" role="table" aria-label="Courses">

@@ -16,7 +16,7 @@ interface NewOrderScreenProps {
   error: string | null;
 }
 
-/** S2 : la vendeuse décrit la commande ; le lien est créé à l'envoi. */
+/** S2 : la vendeuse décrit la commande ; le lien est créé à l’envoi. */
 export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps) {
   const navigation = useNavigation();
   const pending = navigation.state === "submitting";
@@ -31,10 +31,10 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
       profile={profile}
       backTo="/vendeuse"
       title="Nouvelle commande"
-      subtitle="Décrivez la vente : l'acheteur recevra un lien de paiement protégé."
+      subtitle="Décrivez la vente : l’acheteur recevra un lien de paiement protégé."
     >
       {couriers.length === 0 && (
-        <Banner tone="warn">Aucun livreur n'est encore lié à votre compte.</Banner>
+        <Banner tone="warn">Aucun livreur n’est encore lié à votre compte.</Banner>
       )}
       {error && <Banner tone="danger">{error}</Banner>}
 
@@ -42,7 +42,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
         <div className="split-main">
           <section className="panel form-panel">
             <h2>
-              <Icon name="box" /> L'article
+              <Icon name="box" /> L’article
             </h2>
             <div className="field">
               <label htmlFor="itemLabel">Description</label>
@@ -59,7 +59,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
             </div>
             <div className="grid2">
               <div className="field">
-                <label htmlFor="itemPriceXof">Prix de l'article (F)</label>
+                <label htmlFor="itemPriceXof">Prix de l’article (F)</label>
                 <input
                   id="itemPriceXof"
                   name="itemPriceXof"
@@ -147,7 +147,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
               <span>{formatXof(feeXof)}</span>
             </div>
             <div className="row total">
-              <span>L'acheteur paiera</span>
+              <span>L’acheteur paiera</span>
               <span>{formatXof(priceXof + feeXof)}</span>
             </div>
             <button
@@ -160,7 +160,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
             </button>
             <p className="hint">
               Plafond du pilote : {formatXof(itemPriceXof.max)} par article. Le lien expire dans 24
-              h s'il n'est pas payé.
+              h s’il n’est pas payé.
             </p>
           </section>
         </aside>

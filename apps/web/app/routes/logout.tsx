@@ -4,7 +4,7 @@ import { authApi } from "../lib/api/account-api.server";
 import { assertSameOrigin } from "../lib/security.server";
 import type { Route } from "./+types/logout";
 
-/** Déconnexion par POST seulement : un lien piégé ne peut pas déconnecter quelqu'un. */
+/** Déconnexion par POST seulement : un lien piégé ne peut pas déconnecter quelqu’un. */
 export function loader() {
   return redirect("/connexion");
 }

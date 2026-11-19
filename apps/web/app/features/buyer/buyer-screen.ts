@@ -18,18 +18,18 @@ export type BuyerScreen =
   | { kind: "closed"; view: BuyerOrderView };
 
 interface ScreenInput {
-  /** Commande vue par ce téléphone, s'il y est lié. */
+  /** Commande vue par ce téléphone, s’il y est lié. */
   view: BuyerOrderView | null;
-  /** Résumé public, quand le téléphone n'est pas lié. */
+  /** Résumé public, quand le téléphone n’est pas lié. */
   summary: PublicOrderSummary | null;
   inAppBrowser: boolean;
-  /** L'acheteur a ouvert « Signaler un problème » (?signaler dans l'adresse). */
+  /** L’acheteur a ouvert « Signaler un problème » (?signaler dans l’adresse). */
   reporting?: boolean;
 }
 
 /**
- * Choisit l'écran de l'acheteur. Fonction pure : tout se décide à partir des données,
- * l'écran ne contient aucune règle.
+ * Choisit l’écran de l’acheteur. Fonction pure : tout se décide à partir des données,
+ * l’écran ne contient aucune règle.
  */
 export function selectBuyerScreen({
   view,
@@ -44,7 +44,7 @@ export function selectBuyerScreen({
     if (summary.claimed) {
       return { kind: "unavailable", reason: "claimed-elsewhere" };
     }
-    // Le navigateur d'Instagram ou de TikTok peut effacer le code : on passe d'abord par Chrome.
+    // Le navigateur d’Instagram ou de TikTok peut effacer le code : on passe d’abord par Chrome.
     return inAppBrowser ? { kind: "open-in-browser" } : { kind: "summary", summary };
   }
 
@@ -59,7 +59,7 @@ export function selectBuyerScreen({
     case "locked":
       return { kind: "locked", view };
     case "in_transit":
-      // Refus déclaré à la porte : l'acheteur a quelques minutes pour confirmer ou contester.
+      // Refus déclaré à la porte : l’acheteur a quelques minutes pour confirmer ou contester.
       return view.refusalDeclaredAt
         ? { kind: "refusal-declared", view }
         : { kind: "tracking", view };
@@ -75,7 +75,7 @@ export function selectBuyerScreen({
   }
 }
 
-/** Les deux factures se paient l'une après l'autre : la course d'abord, puis l'article. */
+/** Les deux factures se paient l’une après l’autre : la course d’abord, puis l’article. */
 function paymentScreen(view: BuyerOrderView): BuyerScreen {
   const fee = view.invoices.find((invoice) => invoice.kind === "delivery_fee");
   const item = view.invoices.find((invoice) => invoice.kind === "item");

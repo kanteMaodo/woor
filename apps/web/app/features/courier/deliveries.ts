@@ -3,7 +3,7 @@ import type { OrderState } from "@woor/core";
 import type { ChipProps } from "../../components/ui/chip";
 import type { Delivery } from "../../lib/api/account-schemas";
 
-/** État d'une course, dit avec les mots du livreur. */
+/** État d’une course, dit avec les mots du livreur. */
 export const COURIER_STATUS: Record<OrderState, ChipProps> = {
   awaiting_payment: { tone: "wait", icon: "clock", label: "Pas encore payée" },
   locked: { tone: "locked", icon: "lock", label: "À ramasser" },
@@ -45,7 +45,7 @@ export function courierKpis(deliveries: Delivery[]): CourierKpis {
   };
 }
 
-/** Ce que l'écran d'une course doit montrer, selon son état. */
+/** Ce que l’écran d’une course doit montrer, selon son état. */
 export type DeliveryStep = "pickup" | "handover" | "paid" | "closed";
 
 export function deliveryStep(delivery: Delivery): DeliveryStep {

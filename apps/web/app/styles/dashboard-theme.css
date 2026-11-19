@@ -1,0 +1,211 @@
+/*
+ * Les espaces connectés reprennent la palette du site public : vert profond, vert citron,
+ * surfaces blanches et vert très pâle, titres fins avec un mot en italique.
+ * Importé en dernier : il ne fait qu'ajuster couleurs, rayons et typographie.
+ */
+.dash {
+  --dash-ink: #102c24;
+  --t-ink: #142c26;
+  --t-green: #0b6e4f;
+  --t-muted: #61716b;
+  --t-line: #dfe6e1;
+  --t-soft: #f2f6f3;
+  --t-lime: #d7f58a;
+  /* Motif wax plus discret sur le vert profond. */
+  --t-wax: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.035' stroke-width='2'%3E%3Ccircle cx='32' cy='32' r='12'/%3E%3Ccircle cx='32' cy='32' r='5'/%3E%3Cpath d='M0 32 32 0l32 32-32 32z'/%3E%3C/g%3E%3C/svg%3E");
+  background: var(--t-soft);
+  color: var(--t-ink);
+}
+
+/* Barre latérale : vert profond, lien actif en citron. */
+@media (min-width: 1024px) {
+  .dash-side {
+    background: var(--t-wax), var(--dash-ink);
+  }
+}
+
+.dash-nav a.active {
+  background: var(--t-lime);
+  color: var(--dash-ink);
+  box-shadow: none;
+}
+
+.dash-nav a.active .i {
+  color: var(--dash-ink);
+}
+
+.dash-avatar {
+  background: var(--t-lime);
+  color: var(--dash-ink);
+}
+
+.dash-top {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom-color: var(--t-line);
+}
+
+.dash-tabs {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: var(--t-line);
+}
+
+.dash-tabs a.active {
+  color: var(--t-green);
+}
+
+/* Titres : fins, serrés, un mot en italique. */
+.dash-head {
+  border-bottom-color: var(--t-line);
+}
+
+.dash-head::after {
+  background: linear-gradient(90deg, var(--t-green) 0 70%, var(--t-lime) 70%);
+}
+
+.dash-head h1,
+.welcome h1 {
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+
+.dash-head h1 em,
+.welcome h1 em {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.dash-subtitle {
+  color: var(--t-muted);
+}
+
+/* Panneaux et cartes : blanc, filet vert pâle, rayon sobre. */
+.dash .panel,
+.dash .stat-card {
+  border-color: var(--t-line);
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.dash .stat-icon {
+  background: var(--t-soft);
+  color: var(--t-green);
+}
+
+.dash .stat-card.primary {
+  background: var(--t-wax), var(--dash-ink);
+}
+
+.dash .stat-card.primary .stat-value {
+  color: var(--t-lime);
+}
+
+.dash .stat-card.primary .stat-icon {
+  background: rgba(215, 245, 138, 0.16);
+  color: var(--t-lime);
+}
+
+.dash .tabs a[aria-current="page"] {
+  background: var(--dash-ink);
+}
+
+.dash .dt-row:not(.dt-head):hover {
+  background: var(--t-soft);
+}
+
+/* Boutons : rayon sobre, comme le site public. */
+.dash .btn {
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn-lime {
+  background: var(--t-lime, #d7f58a);
+  color: var(--dash-ink, #102c24);
+}
+
+.btn-lime:hover {
+  background: #e2ffa4;
+}
+
+/* Bandeau d'accueil : la même scène que le haut du site public. */
+.welcome {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  overflow: hidden;
+  padding: 24px 22px 0;
+  border-radius: 16px;
+  background:
+    var(--t-wax),
+    radial-gradient(420px 260px at 100% 0%, rgba(215, 245, 138, 0.18), transparent 70%),
+    var(--dash-ink);
+  color: #fff;
+}
+
+.welcome-eyebrow {
+  margin: 0 0 8px !important;
+  color: var(--t-lime);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.welcome h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  line-height: 1.15;
+}
+
+.welcome h1 em {
+  color: var(--t-lime);
+}
+
+.welcome-text {
+  max-width: 34em;
+  margin: 0 !important;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+}
+
+.welcome-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.welcome-actions .btn {
+  width: auto;
+  padding: 0 22px;
+}
+
+.welcome-art {
+  display: flex;
+  justify-content: center;
+}
+
+.welcome-art svg {
+  width: min(100%, 300px);
+  height: auto;
+  margin-bottom: -6px;
+}
+
+.empty-art {
+  width: 150px;
+  height: auto;
+}
+
+@media (min-width: 720px) {
+  .welcome {
+    grid-template-columns: 1.3fr 1fr;
+    align-items: center;
+    padding: 32px 36px;
+  }
+
+  .welcome-art svg {
+    margin-bottom: 0;
+  }
+}

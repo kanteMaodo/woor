@@ -16,7 +16,7 @@ export function meta(_: Route.MetaArgs) {
   return [{ title: "Aperçu des écrans · Wóor" }, { name: "robots", content: "noindex, nofollow" }];
 }
 
-/** Galerie des écrans avec des données fictives. N'existe pas en production. */
+/** Galerie des écrans avec des données fictives. N’existe pas en production. */
 export async function loader({ params, request }: Route.LoaderArgs) {
   if (import.meta.env.PROD) {
     throw data("Introuvable", { status: 404 });

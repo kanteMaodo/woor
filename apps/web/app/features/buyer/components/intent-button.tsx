@@ -5,7 +5,7 @@ interface IntentButtonProps extends ActionButtonProps {
   intent: BuyerIntent;
 }
 
-/** Bouton d'action de l'acheteur : seules ses actions connues sont acceptées. */
+/** Bouton d’action de l’acheteur : seules ses actions connues sont acceptées. */
 export function IntentButton(props: IntentButtonProps) {
   return <ActionButton {...props} />;
 }

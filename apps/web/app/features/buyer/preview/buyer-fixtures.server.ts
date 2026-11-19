@@ -5,8 +5,8 @@ import type {
 } from "../../../lib/api/buyer-schemas";
 
 /**
- * Commandes fictives pour l'aperçu des écrans, en développement seulement.
- * Chaque cas passe par le vrai selectBuyerScreen : l'aperçu montre ce que l'acheteur verrait.
+ * Commandes fictives pour l’aperçu des écrans, en développement seulement.
+ * Chaque cas passe par le vrai selectBuyerScreen : l’aperçu montre ce que l’acheteur verrait.
  */
 export interface BuyerPreview {
   slug: string;
@@ -113,7 +113,7 @@ export function buildBuyerPreviews(now: Date): BuyerPreview[] {
       ...base,
       invoices: [invoice("delivery_fee", "open"), invoice("item", "open")],
     }),
-    preview("paiement-article", "B4 · Paiement de l'article", {
+    preview("paiement-article", "B4 · Paiement de l’article", {
       ...base,
       invoices: [invoice("delivery_fee", "accepted"), invoice("item", "open")],
     }),

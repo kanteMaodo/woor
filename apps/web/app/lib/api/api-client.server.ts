@@ -3,7 +3,7 @@ import { z } from "zod";
 const API_URL = z.url().parse(process.env.API_URL ?? "http://127.0.0.1:3000");
 
 /**
- * Seuls cookies transmis à l'API : le téléphone de l'acheteur et la session des comptes.
+ * Seuls cookies transmis à l’API : le téléphone de l’acheteur et la session des comptes.
  * Tout autre cookie du navigateur reste sur le serveur web.
  */
 const FORWARDED_COOKIES = ["woor_device", "woor_session"] as const;
@@ -14,7 +14,7 @@ const ProblemSchema = z.object({
   code: z.string().optional(),
 });
 
-/** Erreur renvoyée par l'API, au format problem+json. */
+/** Erreur renvoyée par l’API, au format problem+json. */
 export class ApiError extends Error {
   override readonly name = "ApiError";
 
@@ -42,7 +42,7 @@ export class ApiError extends Error {
 
 export interface ApiResponse<T> {
   body: T;
-  /** Cookies posés par l'API, à relayer tels quels vers le navigateur. */
+  /** Cookies posés par l’API, à relayer tels quels vers le navigateur. */
   setCookies: string[];
 }
 
@@ -57,7 +57,7 @@ interface ApiRequest<T> {
 }
 
 /**
- * Appelle l'API depuis le serveur web. Le navigateur ne parle jamais directement à l'API :
+ * Appelle l’API depuis le serveur web. Le navigateur ne parle jamais directement à l’API :
  * les formulaires restent utilisables sans JavaScript, et la réponse est validée ici.
  */
 export async function callApi<T>({
@@ -87,7 +87,7 @@ export async function callApi<T>({
   return { body: schema.parse(raw), setCookies: response.headers.getSetCookie() };
 }
 
-/** API injoignable ou trop lente : une erreur 503 lisible plutôt qu'une page cassée. */
+/** API injoignable ou trop lente : une erreur 503 lisible plutôt qu’une page cassée. */
 async function fetchApi(url: URL, init: RequestInit): Promise<Response> {
   try {
     return await fetch(url, init);
@@ -96,7 +96,7 @@ async function fetchApi(url: URL, init: RequestInit): Promise<Response> {
   }
 }
 
-/** Transforme les cookies posés par l'API en en-tête Cookie, pour un appel suivant. */
+/** Transforme les cookies posés par l’API en en-tête Cookie, pour un appel suivant. */
 export function cookieHeaderFrom(setCookies: readonly string[]): string {
   return setCookies.map((cookie) => cookie.split(";")[0]).join("; ");
 }
@@ -120,8 +120,8 @@ function forwardedCookies(header: string | null): string | null {
 }
 
 /**
- * Message à montrer quand l'API refuse une saisie ou une règle métier.
- * Toute autre erreur remonte telle quelle vers la page d'erreur.
+ * Message à montrer quand l’API refuse une saisie ou une règle métier.
+ * Toute autre erreur remonte telle quelle vers la page d’erreur.
  */
 export function userMessageOrThrow(error: unknown): string {
   if (error instanceof ApiError && error.isUserFacing) {

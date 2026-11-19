@@ -34,12 +34,12 @@ const CLOSED_TEXT: Record<ClosedState, { title: string; detail: string }> = {
   },
   expired: {
     title: "Commande expirée",
-    detail: "Le paiement n'a pas été terminé à temps. Rien n'a été prélevé.",
+    detail: "Le paiement n’a pas été terminé à temps. Rien n’a été prélevé.",
   },
   courier_paid: {
     title: "Livraison payée, article rendu",
     detail:
-      "Vous avez payé la course du livreur. Le prix de l'article est resté dans votre wallet.",
+      "Vous avez payé la course du livreur. Le prix de l’article est resté dans votre wallet.",
   },
 };
 
@@ -86,7 +86,7 @@ export function ClosedScreen({ view }: { view: BuyerOrderView }) {
 
       {!courierPaid && (
         <p className="small muted center">
-          L'argent n'a jamais quitté votre wallet : le paiement bloqué a été annulé.
+          L’argent n’a jamais quitté votre wallet : le paiement bloqué a été annulé.
         </p>
       )}
     </Screen>

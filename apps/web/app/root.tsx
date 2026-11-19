@@ -17,6 +17,7 @@ import "./styles/landing.css";
 import "./styles/auth.css";
 import "./styles/app.css";
 import "./styles/identity.css";
+import "./styles/dashboard-theme.css";
 
 export async function loader({ request }: Route.LoaderArgs) {
   // A visitor without an account cookie never needs the API to read the public site.

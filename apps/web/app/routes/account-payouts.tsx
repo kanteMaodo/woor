@@ -7,8 +7,8 @@ export function meta(_: Route.MetaArgs) {
 }
 
 /**
- * Versements de la vendeuse ou du livreur, selon l'adresse.
- * Pilote : aucun versement n'est encore parti, la liste est donc vide.
+ * Versements de la vendeuse ou du livreur, selon l’adresse.
+ * Pilote : aucun versement n’est encore parti, la liste est donc vide.
  */
 export async function loader({ request }: Route.LoaderArgs) {
   const role = new URL(request.url).pathname.startsWith("/livreur") ? "courier" : "seller";

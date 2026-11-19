@@ -29,7 +29,7 @@ export function SellerOrderScreen({ profile, order, error }: SellerOrderScreenPr
           <ActionButton
             intent="cancel"
             className="btn btn-secondary btn-danger"
-            confirm="Annuler la commande ? L'acheteur sera remboursé en entier."
+            confirm="Annuler la commande ? L’acheteur sera remboursé en entier."
           >
             <Icon name="x" />
             Annuler la commande
@@ -43,7 +43,7 @@ export function SellerOrderScreen({ profile, order, error }: SellerOrderScreenPr
         <OrderProgress state={order.state} />
         {order.state === "locked" && (
           <Banner tone="info">
-            L'acheteur a payé : l'argent est bloqué. Remettez le colis à {order.courierName}.
+            L’acheteur a payé : l’argent est bloqué. Remettez le colis à {order.courierName}.
           </Banner>
         )}
       </section>
@@ -73,7 +73,7 @@ export function SellerOrderScreen({ profile, order, error }: SellerOrderScreenPr
               <span>{formatXof(order.deliveryFeeXof)}</span>
             </div>
             <div className="row total">
-              <span>Payé par l'acheteur</span>
+              <span>Payé par l’acheteur</span>
               <span>{formatXof(order.totalXof)}</span>
             </div>
           </section>

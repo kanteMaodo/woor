@@ -9,8 +9,10 @@ interface AccountScreenProps {
   profile: Profile;
   /** Titre de la page, en haut du contenu. */
   title: ReactNode;
+  /** Bandeau d’accueil : remplace l’en-tête de page sur les tableaux de bord. */
+  banner?: ReactNode;
   subtitle?: ReactNode;
-  /** Boutons d'action, à droite du titre sur ordinateur, sous le titre sur téléphone. */
+  /** Boutons d’action, à droite du titre sur ordinateur, sous le titre sur téléphone. */
   actions?: ReactNode;
   /** Lien de retour, sur les écrans de détail. */
   backTo?: string;
@@ -20,7 +22,7 @@ interface AccountScreenProps {
 interface MenuItem {
   to: string;
   label: string;
-  /** Libellé court, pour la barre d'onglets du téléphone. */
+  /** Libellé court, pour la barre d’onglets du téléphone. */
   short: string;
   icon: IconName;
 }
@@ -92,7 +94,7 @@ const ROLE_LABEL: Record<Profile["role"], string> = {
 /**
  * Gabarit des espaces vendeuse et livreur.
  * Ordinateur : barre latérale sombre, titre de page et actions en haut du contenu.
- * Téléphone : barre du haut, et barre d'onglets en bas quand il y a plusieurs pages.
+ * Téléphone : barre du haut, et barre d’onglets en bas quand il y a plusieurs pages.
  */
 export function AccountScreen({
   profile,
@@ -100,6 +102,7 @@ export function AccountScreen({
   subtitle,
   actions,
   backTo,
+  banner,
   children,
 }: AccountScreenProps) {
   const sections = MENU[profile.role];
@@ -156,13 +159,15 @@ export function AccountScreen({
               <Icon name="arrow-left" size="sm" /> Retour
             </Link>
           )}
-          <div className="dash-head">
-            <div>
-              <h1>{title}</h1>
-              {subtitle && <p className="dash-subtitle">{subtitle}</p>}
+          {banner ?? (
+            <div className="dash-head">
+              <div>
+                <h1>{title}</h1>
+                {subtitle && <p className="dash-subtitle">{subtitle}</p>}
+              </div>
+              {actions && <div className="dash-actions">{actions}</div>}
             </div>
-            {actions && <div className="dash-actions">{actions}</div>}
-          </div>
+          )}
           {children}
         </div>
       </main>
