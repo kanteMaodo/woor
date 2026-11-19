@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 import { Icon } from "../../components/ui/icon";
-import { Logo } from "../../components/ui/logo";
+import { WoorBrand } from "../home/marketing-layout";
 
 interface InvitationScreenProps {
   invitedBy: string;
@@ -14,11 +14,14 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
   return (
     <div className="auth">
       <aside className="auth-side">
-        <Link to="/" className="brand auth-brand">
-          <Logo />
-        </Link>
+        <WoorBrand light />
         <div className="auth-side-body">
-          <h2>Dalal ak jàmm. Bienvenue chez Wóor.</h2>
+          <p className="auth-eyebrow">VOTRE ACTIVITÉ, EN CONFIANCE.</p>
+          <h2>
+            Dalal ak jàmm.
+            <br />
+            <em>Bienvenue chez Wóor.</em>
+          </h2>
           <ul>
             <li>
               <Icon name="check-circle" />
@@ -30,7 +33,7 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
             </li>
             <li>
               <Icon name="check-circle" />
-              Votre argent est débloqué dès la remise du colis.
+              Votre argent arrive directement dans votre wallet.
             </li>
           </ul>
         </div>
@@ -41,9 +44,13 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
 
       <main className="auth-main">
         <form className="auth-card">
-          <Link to="/" className="brand auth-brand-mobile">
-            <Logo />
+          <Link to="/" className="auth-back">
+            Retour au site
           </Link>
+          <div className="auth-brand-mobile">
+            <WoorBrand />
+          </div>
+          <span className="auth-welcome">UNE NOUVELLE HISTOIRE COMMENCE</span>
           <h1>Bienvenue sur Wóor</h1>
           <p className="auth-sub">
             {invitedBy} vous invite comme {roleLabel.toLowerCase()}.
@@ -81,6 +88,11 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
           <button type="button" className="btn btn-link" disabled>
             Choisir un PIN à la place
           </button>
+          <div className="auth-bottom-links">
+            <Link to="/aide">Centre d’aide</Link>
+            <span>·</span>
+            <Link to="/contact">Contacter Wóor</Link>
+          </div>
         </form>
       </main>
     </div>

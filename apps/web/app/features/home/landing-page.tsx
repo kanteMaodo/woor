@@ -2,329 +2,331 @@ import { Link } from "react-router";
 
 import { Icon } from "../../components/ui/icon";
 import { EscrowDiagram } from "./escrow-diagram";
-import { AUDIENCES, COMPARISON, FACTS, FAQ, GUARANTEES } from "./landing-content";
-import { LockedMock, PaidMock, SellerListMock, ShareMock } from "./mockup-screens";
-import { Logo } from "../../components/ui/logo";
+import { HELP_QUESTIONS, IMAGES, SOLUTIONS } from "./marketing-content";
+import { MarketingHero, MarketingLayout, SectionHeading } from "./marketing-layout";
+import { ProductJourney } from "./product-journey";
 
-const SOURCE_URL = "https://github.com/kanteMaodo/woor";
-
-const AUDIENCE_MOCKS = {
-  acheteur: LockedMock,
-  vendeuse: ShareMock,
-  livreur: PaidMock,
-} as const;
-
-/**
- * Page d'accueil. Structure inspirée des meilleures pages fintech : promesse et produit
- * en tête, chiffres concrets, un chemin par public, preuve de sécurité, FAQ avant l'appel final.
- */
 export function LandingPage() {
   return (
-    <div className="landing">
-      <LandingNav />
-      <Hero />
-      <FactsBand />
-      <ProblemSection />
-      <AudienceSection />
-      <SecuritySection />
-      <ComparisonSection />
-      <FaqSection />
-      <FinalCta />
-      <LandingFooter />
-    </div>
-  );
-}
-
-function LandingNav() {
-  return (
-    <header className="l-nav">
-      <div className="l-container l-nav-inner">
-        <Link to="/" className="brand l-brand">
-          <Logo />
-        </Link>
-        <nav className="l-nav-links" aria-label="Sections">
-          <a href="#comment">Comment ça marche</a>
-          <a href="#securite">Sécurité</a>
-          <a href="#questions">Questions</a>
-        </nav>
-        <Link to="/connexion" className="l-nav-cta">
-          Se connecter
-        </Link>
+    <MarketingLayout>
+      <MarketingHero
+        home
+        eyebrow="Le paiement protégé, pour le commerce en ligne à Dakar"
+        title={
+          <>
+            Vendez en ligne.
+            <br />
+            <em>La confiance en plus.</em>
+          </>
+        }
+        description="Wóor relie vendeurs, acheteurs et livreurs autour d’une commande protégée. L’argent est bloqué avant le départ. Il est débloqué par un code, à la remise du colis."
+        tag="Un lien à partager. Aucun compte à créer pour l’acheteur."
+      />
+      <div className="m-trust-strip">
+        <div className="m-container">
+          <span>
+            <Icon name="send" /> Un lien dans votre conversation
+          </span>
+          <span>
+            <Icon name="lock" /> Un paiement bloqué
+          </span>
+          <span>
+            <Icon name="box" /> Un colis remis en confiance
+          </span>
+          <span>
+            <Icon name="bolt" /> Propulsé par Lightning
+          </span>
+        </div>
       </div>
-    </header>
-  );
-}
 
-function Hero() {
-  return (
-    <section className="l-hero">
-      <div className="l-container l-hero-grid">
-        <div className="l-hero-text">
-          <p className="l-eyebrow">
-            <Icon name="bolt" size="sm" />
-            Paiement protégé sur Bitcoin Lightning
-          </p>
-          <h1>
-            Vendez en ligne à Dakar. <span>Sans risque pour personne.</span>
-          </h1>
-          <p className="l-lead">
-            L'argent de l'acheteur est bloqué, pas encaissé, jusqu'à la remise du colis. Un code à 6
-            chiffres le débloque. Sinon, il revient tout seul.
-          </p>
-          <div className="l-actions">
-            <Link to="/connexion" className="btn btn-primary l-btn">
-              Espace vendeuse et livreur
-              <Icon name="chev" />
+      <section className="m-section">
+        <div className="m-container">
+          <SectionHeading
+            eyebrow="Suivre une commande"
+            title="Du premier message au colis en main."
+          >
+            <p>
+              Vous avez déjà le produit et la conversation. Wóor s’occupe du lien de confiance entre
+              le paiement et la remise.
+            </p>
+            <Link className="m-text-link" to="/fonctionnement">
+              Explorer le fonctionnement
             </Link>
-            <a href="#comment" className="btn l-btn l-btn-ghost">
-              Voir comment ça marche
-            </a>
-          </div>
-          <ul className="l-pills">
-            <li>
-              <Icon name="check" size="sm" /> Sans compte pour l'acheteur
-            </li>
-            <li>
-              <Icon name="check" size="sm" /> Remboursement automatique
-            </li>
-            <li>
-              <Icon name="check" size="sm" /> Pensé pour WhatsApp
-            </li>
-          </ul>
+          </SectionHeading>
+          <ProductJourney />
         </div>
+      </section>
 
-        <div className="l-hero-visual">
-          <SellerListMock className="l-phone-back" />
-          <LockedMock className="l-phone-front" />
-          <div className="l-float l-float-top" aria-hidden="true">
-            <span className="l-float-icon ok">
-              <Icon name="lock" />
-            </span>
-            <div>
-              <b>Paiement bloqué</b>
-              <span>13 500 F · Robe en wax</span>
-            </div>
-          </div>
-          <div className="l-float l-float-bottom" aria-hidden="true">
-            <span className="l-float-icon btc">
-              <Icon name="bolt" />
-            </span>
-            <div>
-              <b>Code juste, argent débloqué</b>
-              <span>Vendeuse et livreur débloqués</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FactsBand() {
-  return (
-    <section className="l-facts" aria-label="Les règles du pilote en chiffres">
-      <div className="l-container l-facts-grid">
-        {FACTS.map((fact) => (
-          <div key={fact.value} className="l-fact">
-            <b>{fact.value}</b>
-            <span>{fact.label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ProblemSection() {
-  return (
-    <section className="l-section">
-      <div className="l-container">
-        <p className="l-kicker">Le problème</p>
-        <h2>À Dakar, la vente en ligne repose sur la confiance. Et la confiance se perd vite.</h2>
-        <div className="l-grid two">
-          <article className="l-card l-card-problem">
-            <Icon name="wallet" size="lg" />
-            <h3>Payer d'avance ? L'acheteur hésite.</h3>
+      <section className="m-section m-soft">
+        <div className="m-container">
+          <SectionHeading
+            eyebrow="Vendeurs, acheteurs, livreurs"
+            title="Un espace adapté à chaque rôle."
+          >
             <p>
-              Il a vu trop de vendeurs disparaître après le virement. Il préfère ne pas commander.
+              Chaque personne retrouve les informations et les actions qui la concernent, dans son
+              propre espace.
             </p>
-          </article>
-          <article className="l-card l-card-problem">
-            <Icon name="moto" size="lg" />
-            <h3>Payer à la livraison ? La vendeuse perd.</h3>
-            <p>
-              Le client refuse à la porte ou ne répond plus. La course est perdue, le livreur rentre
-              avec le colis et des billets en poche.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function AudienceSection() {
-  return (
-    <section className="l-section l-tinted" id="comment">
-      <div className="l-container">
-        <p className="l-kicker">Comment ça marche</p>
-        <h2>Un lien, un paiement bloqué, un code. Chacun y gagne.</h2>
-        <div className="l-rows">
-          {AUDIENCES.map((audience, index) => {
-            const Mock = AUDIENCE_MOCKS[audience.key as keyof typeof AUDIENCE_MOCKS];
-            return (
-              <article key={audience.key} className={`l-row${index % 2 ? " reverse" : ""}`}>
-                <div className="l-row-text">
-                  <span className="l-row-icon">
-                    <Icon name={audience.icon} size="lg" />
-                  </span>
-                  <p className="l-row-title">{audience.title}</p>
-                  <h3>{audience.promise}</h3>
-                  <ul className="l-checks">
-                    {audience.points.map((point) => (
-                      <li key={point}>
-                        <Icon name="check-circle" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
+          </SectionHeading>
+          <div className="m-audience-grid">
+            {SOLUTIONS.map((solution, index) => (
+              <Link
+                to={`/solutions/${solution.slug}`}
+                key={solution.slug}
+                className={`m-audience-card m-audience-${solution.slug}`}
+              >
+                <span className="m-audience-symbol">
+                  <Icon name={solution.icon} size="lg" />
+                </span>
+                <p>{solution.title}</p>
+                <h3>{solution.short}.</h3>
+                <p>{solution.description}</p>
+                <div className="m-audience-detail">
+                  {index === 0 ? (
+                    <>
+                      <span className="m-mini-label">COMMANDE CRÉÉE</span>
+                      <strong>Le lien est prêt.</strong>
+                      <span className="m-mini-url">
+                        <Icon name="lock" size="sm" /> woor · Votre commande
+                      </span>
+                    </>
+                  ) : index === 1 ? (
+                    <>
+                      <span className="m-mini-label">PAIEMENT PROTÉGÉ</span>
+                      <strong>Vous gardez le code.</strong>
+                      <span className="m-mini-code">4 8 2 &nbsp; 9 1 3</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="m-mini-label">LIVRAISON CONFIRMÉE</span>
+                      <strong>Votre course est réglée.</strong>
+                      <span className="m-mini-paid">
+                        <Icon name="check-circle" /> Paiement confirmé
+                      </span>
+                    </>
+                  )}
                 </div>
-                <div className="l-row-visual">
-                  <Mock />
+                <span className="m-card-link">Découvrir mon parcours</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="m-section">
+        <div className="m-container m-editorial">
+          <div className="m-editorial-photo">
+            <img
+              src={IMAGES.atelier}
+              alt="Illustration d’une commerçante consultant une commande dans son atelier à Dakar"
+              loading="lazy"
+              width="1672"
+              height="941"
+            />
+            <div className="m-photo-caption">
+              <Icon name="pin" size="sm" />
+              <span>Ancré dans les échanges du quotidien.</span>
+            </div>
+          </div>
+          <div className="m-editorial-copy">
+            <p className="m-eyebrow">Vendre sur vos réseaux</p>
+            <h2>Votre boutique est déjà là où l’on vous écrit.</h2>
+            <p>
+              Une robe sur Instagram. Un prix négocié sur WhatsApp. Une livraison à Sacré-Cœur. Wóor
+              s’intègre à cette réalité, sans vous demander de changer votre façon de vendre.
+            </p>
+            <ul className="m-checklist">
+              <li>
+                <Icon name="check-circle" />
+                Partagez le lien dans la conversation de votre choix.
+              </li>
+              <li>
+                <Icon name="check-circle" />
+                Retrouvez l’article, le montant et la livraison au même endroit.
+              </li>
+              <li>
+                <Icon name="check-circle" />
+                Préparez le colis quand le paiement est bloqué.
+              </li>
+            </ul>
+            <Link to="/solutions/vendeurs" className="m-button m-button-ink">
+              Découvrir Wóor pour ma boutique
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="m-section m-dark">
+        <div className="m-container">
+          <SectionHeading
+            eyebrow="Comprendre le paiement"
+            title="Le code confirme la remise et libère le paiement."
+          >
+            <p>
+              Le prix de l’article et celui de la course sont bloqués séparément. Le code de remise
+              fait le lien entre le colis reçu et le paiement libéré.
+            </p>
+            <Link to="/securite" className="m-text-link">
+              Comprendre la protection
+            </Link>
+          </SectionHeading>
+          <div className="m-security-layout">
+            <EscrowDiagram />
+            <div className="m-security-notes">
+              <article>
+                <Icon name="lock" />
+                <div>
+                  <h3>Avant la remise : bloqué.</h3>
+                  <p>Le vendeur sait que le paiement est prévu, sans l’encaisser d’avance.</p>
                 </div>
               </article>
-            );
-          })}
+              <article>
+                <Icon name="key" />
+                <div>
+                  <h3>À la remise : confirmé.</h3>
+                  <p>Le code à six chiffres de l’acheteur déclenche le déblocage.</p>
+                </div>
+              </article>
+              <article>
+                <Icon name="undo" />
+                <div>
+                  <h3>Sans remise : annulé.</h3>
+                  <p>
+                    Le paiement bloqué est annulé à l’échéance, selon les règles de la commande.
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-function SecuritySection() {
-  return (
-    <section className="l-section l-dark" id="securite">
-      <div className="l-container">
-        <p className="l-kicker">Sécurité</p>
-        <h2>Sûr par construction, pas par promesse.</h2>
-        <p className="l-section-lead">
-          Wóor ne garde jamais l'argent : il reste bloqué sur le réseau Lightning jusqu'au code.
-        </p>
-        <EscrowDiagram />
-        <div className="l-grid four">
-          {GUARANTEES.map((item) => (
-            <article key={item.title} className="l-card l-card-dark">
-              <Icon name={item.icon} size="lg" />
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))}
+      <section className="m-section">
+        <div className="m-container m-conversation-section">
+          <div>
+            <p className="m-eyebrow">Moins de flou, plus de visibilité</p>
+            <h2>
+              « C’est payé ? »<br />
+              La réponse est dans la commande.
+            </h2>
+            <p>
+              Le vendeur prépare, l’acheteur suit, le livreur confirme. Le même statut permet à
+              chacun de savoir où en est l’échange.
+            </p>
+            <Link to="/fonctionnement" className="m-text-link">
+              Découvrir le suivi d’une commande
+            </Link>
+            <div className="m-channel-list">
+              <span>WhatsApp</span>
+              <span>Instagram</span>
+              <span>TikTok</span>
+              <span>Un simple lien</span>
+            </div>
+          </div>
+          <div className="m-message-demo">
+            <div className="m-message-header">
+              <span className="m-shop-avatar">AC</span>
+              <div>
+                <strong>Awa Couture</strong>
+                <span>Une conversation, pour l’exemple</span>
+              </div>
+              <Icon name="phone" />
+            </div>
+            <div className="m-message-bubble">
+              Bonjour ! Votre robe est prête. Voici le lien pour confirmer la commande.
+              <div className="m-link-preview">
+                <Icon name="shield" />
+                <div>
+                  <strong>Votre commande Wóor</strong>
+                  <span>Robe en wax · Livraison à Dakar</span>
+                  <b>Paiement protégé jusqu’à la remise</b>
+                </div>
+              </div>
+              <small>10:42</small>
+            </div>
+            <div className="m-message-status">
+              <Icon name="lock" />
+              <div>
+                <strong>Paiement bloqué</strong>
+                <span>Le colis peut maintenant être préparé.</span>
+              </div>
+              <Icon name="check-circle" />
+            </div>
+            <p className="m-demo-note">
+              Démonstration illustrative. Wóor n’est pas affilié aux messageries citées.
+            </p>
+          </div>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
 
-function ComparisonSection() {
-  return (
-    <section className="l-section">
-      <div className="l-container">
-        <p className="l-kicker">Pourquoi Wóor</p>
-        <h2>Le meilleur des deux façons de payer, sans leurs risques.</h2>
-        <div className="l-table-wrap">
-          <table className="l-table">
-            <thead>
-              <tr>
-                <th scope="col">
-                  <span className="sr-only">Critère</span>
-                </th>
-                {COMPARISON.columns.map((column) => (
-                  <th key={column} scope="col" className={column === "Wóor" ? "hl" : undefined}>
-                    {column}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {COMPARISON.rows.map((row) => (
-                <tr key={row.label}>
-                  <th scope="row">{row.label}</th>
-                  {row.values.map((value, index) => (
-                    <td key={COMPARISON.columns[index]} className={index === 2 ? "hl" : undefined}>
-                      {value ? (
-                        <span className="yes">
-                          <Icon name="check" size="sm" />
-                          <span className="sr-only">Oui</span>
-                        </span>
-                      ) : (
-                        <span className="no">
-                          <Icon name="x" size="sm" />
-                          <span className="sr-only">Non</span>
-                        </span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
+      <section className="m-pilot">
+        <div className="m-container">
+          <div>
+            <p className="m-eyebrow">Un pilote, des règles claires</p>
+            <h2>
+              Les montants et les délais
+              <br />à connaître avant de commencer.
+            </h2>
+            <Link to="/aide" className="m-text-link">
+              Consulter les conditions du pilote
+            </Link>
+          </div>
+          <div className="m-pilot-facts">
+            <div>
+              <strong>6 chiffres</strong>
+              <span>pour confirmer la remise</span>
+            </div>
+            <div>
+              <strong>50 000 F</strong>
+              <span>maximum par article</span>
+            </div>
+            <div>
+              <strong>18 heures</strong>
+              <span>durée maximale du blocage</span>
+            </div>
+            <div>
+              <strong>0 compte</strong>
+              <span>à créer pour l’acheteur</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="m-section">
+        <div className="m-container">
+          <SectionHeading eyebrow="Questions fréquentes" title="Avant votre première commande.">
+            <Link to="/aide" className="m-text-link">
+              Ouvrir le centre d’aide
+            </Link>
+          </SectionHeading>
+          <div className="m-home-help">
+            <div className="m-faq-list">
+              {HELP_QUESTIONS.filter((_, index) => [0, 3, 4].includes(index)).map((item) => (
+                <details key={item.question}>
+                  <summary>
+                    {item.question}
+                    <Icon name="plus" />
+                  </summary>
+                  <p>{item.answer}</p>
+                </details>
               ))}
-            </tbody>
-          </table>
+            </div>
+            <aside className="m-help-card">
+              <Icon name="users" size="lg" />
+              <h3>Un projet né à Dakar.</h3>
+              <p>
+                Nous construisons Wóor autour de celles et ceux qui font vivre le commerce local.
+              </p>
+              <Link to="/a-propos" className="m-text-link">
+                Rencontrer le projet
+              </Link>
+              <Link to="/contact" className="m-text-link">
+                Parler à l’équipe
+              </Link>
+            </aside>
+          </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function FaqSection() {
-  return (
-    <section className="l-section l-tinted" id="questions">
-      <div className="l-container l-faq-grid">
-        <div>
-          <p className="l-kicker">Questions</p>
-          <h2>Ce qu'on nous demande le plus.</h2>
-        </div>
-        <div className="l-faq">
-          {FAQ.map((item) => (
-            <details key={item.question}>
-              <summary>
-                {item.question}
-                <Icon name="plus" />
-              </summary>
-              <p>{item.answer}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FinalCta() {
-  return (
-    <section className="l-cta">
-      <div className="l-container l-cta-inner">
-        <h2>Votre prochaine vente, sans risque.</h2>
-        <p>Créez un lien protégé en moins d'une minute et envoyez-le sur WhatsApp.</p>
-        <Link to="/connexion" className="btn l-btn l-btn-light">
-          Accéder à mon espace
-          <Icon name="chev" />
-        </Link>
-      </div>
-    </section>
-  );
-}
-
-function LandingFooter() {
-  return (
-    <footer className="l-footer">
-      <div className="l-container l-footer-inner">
-        <span className="brand">
-          <Logo />
-        </span>
-        <span>Dakar Bitcoin Hack 2026 · Pilote à Dakar</span>
-        <a href={SOURCE_URL} target="_blank" rel="noreferrer">
-          Code source sur GitHub
-        </a>
-      </div>
-    </footer>
+      </section>
+    </MarketingLayout>
   );
 }
