@@ -2072,6 +2072,9 @@
   }
 }
 @media (max-width: 1000px) {
+  .m-nav-actions > .m-session-link {
+    display: none;
+  }
   .m-desktop-nav {
     display: none;
   }

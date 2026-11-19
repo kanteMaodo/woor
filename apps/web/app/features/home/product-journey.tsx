@@ -54,6 +54,7 @@ export function ProductJourney() {
   const [focused, setFocused] = useState(false);
   const [visible, setVisible] = useState(true);
   const container = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const running = playing && !reducedMotion && inView && !hovered && !focused && visible;
   const current = STAGES[stage] ?? STAGES[0];
 
@@ -69,7 +70,7 @@ export function ProductJourney() {
       ([entry]) => setInView(entry?.isIntersecting ?? false),
       { threshold: 0.25 },
     );
-    if (container.current) observer.observe(container.current);
+    if (panel.current) observer.observe(panel.current);
     return () => {
       media.removeEventListener("change", updateMotion);
       document.removeEventListener("visibilitychange", updateVisibility);
@@ -151,6 +152,7 @@ export function ProductJourney() {
       </div>
       <div
         className="m-product-window"
+        ref={panel}
         role="tabpanel"
         id="journey-panel"
         aria-labelledby={`journey-tab-${stage}`}

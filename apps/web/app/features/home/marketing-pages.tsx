@@ -1,9 +1,11 @@
 import { useState } from "react";
-import type { FormEvent } from "react";
 import { Link } from "react-router";
 
 import { Icon } from "../../components/ui/icon";
 import type { IconName } from "../../components/ui/icon";
+import { ValidatedForm } from "../../components/ui/validated-form";
+import { ContactFormSchema } from "../../lib/form-validation";
+import type { z } from "zod";
 import { EscrowDiagram } from "./escrow-diagram";
 import { CONTACT, HELP_QUESTIONS, IMAGES, PAGE_CONTENT, SOLUTIONS } from "./marketing-content";
 import type { MarketingPageKey } from "./marketing-content";
@@ -823,12 +825,10 @@ function ContactPage() {
   const [draft, setDraft] = useState<{ subject: string; body: string } | null>(null);
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
-  function prepareMessage(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const values = new FormData(event.currentTarget);
+  function prepareMessage(values: z.output<typeof ContactFormSchema>) {
     setDraft({
-      subject: `Wóor — ${String(values.get("subject"))}`,
-      body: `Bonjour l’équipe Wóor,\n\n${String(values.get("message"))}\n\n${String(values.get("name"))}\nAdresse de réponse : ${String(values.get("email"))}\nProfil : ${String(values.get("profile"))}`,
+      subject: `Wóor — ${values.subject}`,
+      body: `Bonjour l’équipe Wóor,\n\n${values.message}\n\n${values.name}\nAdresse de réponse : ${values.email}\nProfil : ${values.profile}`,
     });
     setCopied(false);
     setCopyError(false);
@@ -886,7 +886,13 @@ function ContactPage() {
             <p>
               Ce formulaire prépare un e-mail. Vous confirmez son envoi depuis votre messagerie.
             </p>
-            <form onSubmit={prepareMessage} className="m-contact-form">
+            <ValidatedForm
+              native
+              method="post"
+              schema={ContactFormSchema}
+              onValidated={prepareMessage}
+              className="m-contact-form"
+            >
               <div className="m-form-row">
                 <label>
                   Votre nom
@@ -906,7 +912,7 @@ function ContactPage() {
                     type="email"
                     autoComplete="email"
                     placeholder="vous@exemple.com"
-                    maxLength={200}
+                    maxLength={254}
                   />
                 </label>
               </div>
@@ -949,7 +955,7 @@ function ContactPage() {
               <button type="submit" className="m-button">
                 Préparer mon e-mail
               </button>
-            </form>
+            </ValidatedForm>
             {draft && (
               <div className="m-prepared-message" role="status">
                 <Icon name="check-circle" />

@@ -3,6 +3,8 @@ import { data } from "react-router";
 import { DeliveryScreen } from "../features/courier/screens/delivery-screen";
 import { courierApi } from "../lib/api/account-api.server";
 import { ApiError, userMessageOrThrow } from "../lib/api/api-client.server";
+import { readPlainForm } from "../lib/form-data.server";
+import { DeliveryCodeFormSchema, formValues } from "../lib/form-validation";
 import { assertSameOrigin } from "../lib/security.server";
 import { requireAccount } from "../lib/session.server";
 import type { Route } from "./+types/courier-delivery";
@@ -28,7 +30,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   assertSameOrigin(request);
   await requireAccount(request, "courier");
   const cookieHeader = request.headers.get("cookie");
-  const form = await request.formData();
+  const form = await readPlainForm(request);
 
   try {
     switch (form.get("intent")) {
@@ -36,11 +38,10 @@ export async function action({ request, params }: Route.ActionArgs) {
         await courierApi.confirmPickup(params.id, cookieHeader);
         return { error: null };
       case "code": {
-        const submission = await courierApi.submitCode(
-          params.id,
-          String(form.get("code") ?? ""),
-          cookieHeader,
-        );
+        const parsed = DeliveryCodeFormSchema.safeParse(formValues(form));
+        if (!parsed.success)
+          return { error: parsed.error.issues[0]?.message ?? "Vérifiez le code de remise." };
+        const submission = await courierApi.submitCode(params.id, parsed.data.code, cookieHeader);
         return submission.result === "ok"
           ? { error: null }
           : { error: `Code faux. Il reste ${submission.attemptsLeft} essai(s).` };

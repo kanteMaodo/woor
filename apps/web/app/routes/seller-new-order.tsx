@@ -2,6 +2,8 @@ import { NewOrderScreen } from "../features/seller/screens/new-order-screen";
 import { ShareLinkScreen } from "../features/seller/screens/share-link-screen";
 import { sellerApi } from "../lib/api/account-api.server";
 import { userMessageOrThrow } from "../lib/api/api-client.server";
+import { readPlainForm } from "../lib/form-data.server";
+import { formValues, NewOrderFormSchema } from "../lib/form-validation";
 import { assertSameOrigin } from "../lib/security.server";
 import { requireAccount } from "../lib/session.server";
 import type { Route } from "./+types/seller-new-order";
@@ -23,16 +25,13 @@ export async function loader({ request }: Route.LoaderArgs) {
 export async function action({ request }: Route.ActionArgs) {
   assertSameOrigin(request);
   await requireAccount(request, "seller");
-  const form = await request.formData();
-  const text = (name: string) => String(form.get(name) ?? "").trim();
-  const input = {
-    itemLabel: text("itemLabel"),
-    itemPriceXof: Number(text("itemPriceXof")),
-    deliveryFeeXof: Number(text("deliveryFeeXof")),
-    courierId: text("courierId"),
-    neighborhood: text("neighborhood"),
-    landmark: text("landmark"),
-  };
+  const parsed = NewOrderFormSchema.safeParse(formValues(await readPlainForm(request)));
+  if (!parsed.success)
+    return {
+      shared: null,
+      error: parsed.error.issues[0]?.message ?? "Vérifiez les informations de la commande.",
+    };
+  const input = parsed.data;
 
   try {
     const created = await sellerApi.create(input, request.headers.get("cookie"));

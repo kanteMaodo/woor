@@ -142,7 +142,7 @@ function MarketingNav() {
           </NavLink>
         </nav>
         <div className="m-nav-actions">
-          <Link className="m-button m-button-small" to={accountHome ?? "/connexion"}>
+          <Link className="m-button m-button-small m-session-link" to={accountHome ?? "/connexion"}>
             {accountHome ? "Mon espace" : "Se connecter"}
           </Link>
           <button

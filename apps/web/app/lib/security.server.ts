@@ -6,8 +6,7 @@ import { data } from "react-router";
  */
 export function assertSameOrigin(request: Request): void {
   const origin = request.headers.get("origin");
-  const host = request.headers.get("host") ?? new URL(request.url).host;
-  if (!origin || new URL(origin).host !== host) {
+  if (!origin || origin !== new URL(request.url).origin) {
     throw data("Origine refusée", { status: 403 });
   }
 }

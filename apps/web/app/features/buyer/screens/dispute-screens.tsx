@@ -1,9 +1,11 @@
-import { Form, Link, useNavigation } from "react-router";
+import { Link, useNavigation } from "react-router";
 
 import { Banner } from "../../../components/ui/banner";
 import { ChoiceList } from "../../../components/ui/choice-list";
 import { Icon } from "../../../components/ui/icon";
 import { Screen } from "../../../components/ui/screen";
+import { ValidatedForm } from "../../../components/ui/validated-form";
+import { BuyerReportFormSchema } from "../../../lib/form-validation";
 import type { BuyerOrderView } from "../../../lib/api/buyer-schemas";
 import { formatTime, formatXof, minutesUntil } from "../../../lib/format";
 import { OrderProgress } from "../../orders/order-progress";
@@ -93,7 +95,7 @@ export function ReportProblemScreen({ context }: DisputeScreenProps) {
         <Icon name="arrow-left" size="sm" /> Retour à ma commande
       </Link>
       {context.error && <Banner tone="danger">{context.error}</Banner>}
-      <Form method="post" id="report" className="stack">
+      <ValidatedForm method="post" schema={BuyerReportFormSchema} id="report" className="stack">
         <input type="hidden" name="intent" value="report" />
         <ChoiceList name="reason" legend="Que se passe-t-il ?" choices={REPORT_REASONS} />
         <div className="field">
@@ -106,7 +108,7 @@ export function ReportProblemScreen({ context }: DisputeScreenProps) {
             placeholder="La robe est en taille S, pas M."
           />
         </div>
-      </Form>
+      </ValidatedForm>
       <Banner tone="info" icon="lock">
         Votre argent reste bloqué pendant l'examen. Réponse en 2 h au plus.
       </Banner>

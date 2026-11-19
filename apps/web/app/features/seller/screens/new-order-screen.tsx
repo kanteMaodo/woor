@@ -1,9 +1,11 @@
 import { ORDER_LIMITS } from "@woor/core";
 import { useState } from "react";
-import { Form, useNavigation } from "react-router";
+import { useNavigation } from "react-router";
 
 import { Banner } from "../../../components/ui/banner";
 import { Icon } from "../../../components/ui/icon";
+import { ValidatedForm } from "../../../components/ui/validated-form";
+import { NewOrderFormSchema } from "../../../lib/form-validation";
 import type { LinkedCourier, Profile } from "../../../lib/api/account-schemas";
 import { formatXof } from "../../../lib/format";
 import { AccountScreen } from "../../account/account-screen";
@@ -20,8 +22,8 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
   const pending = navigation.state === "submitting";
   const [price, setPrice] = useState("");
   const [fee, setFee] = useState("");
-  const priceXof = Number(price) || 0;
-  const feeXof = Number(fee) || 0;
+  const priceXof = /^\d+$/.test(price) ? Number(price) : 0;
+  const feeXof = /^\d+$/.test(fee) ? Number(fee) : 0;
   const { itemLabel, itemPriceXof, deliveryFeeXof, neighborhood, landmark } = ORDER_LIMITS;
 
   return (
@@ -36,7 +38,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
       )}
       {error && <Banner tone="danger">{error}</Banner>}
 
-      <Form method="post" className="split">
+      <ValidatedForm method="post" schema={NewOrderFormSchema} className="split">
         <div className="split-main">
           <section className="panel form-panel">
             <h2>
@@ -162,7 +164,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
             </p>
           </section>
         </aside>
-      </Form>
+      </ValidatedForm>
     </AccountScreen>
   );
 }

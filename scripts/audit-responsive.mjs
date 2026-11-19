@@ -1,3 +1,4 @@
+/* global document, window, HTMLElement, getComputedStyle */
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -14,7 +15,8 @@ await mkdir(process.env.TEMP, { recursive: true });
 const { chromium } = await import(
   pathToFileURL(path.join(auditRoot, "node_modules/playwright/index.mjs"))
 );
-const browser = await chromium.launch({ headless: true });
+const launchOptions = { headless: true, args: ["--disable-gpu"] };
+let browser = await chromium.launch(launchOptions);
 const base = process.env.WOOR_AUDIT_URL ?? "http://127.0.0.1:5173";
 const routes = [
   "/",
@@ -37,8 +39,8 @@ const widths = (
 const report = { layouts: [], issues: [], interactions: [], runtimeErrors: [] };
 
 try {
-  const context = await browser.newContext({ reducedMotion: "reduce" });
-  const page = await context.newPage();
+  let context = await browser.newContext({ reducedMotion: "reduce" });
+  let page = await context.newPage();
   let currentPath = "";
   page.on("pageerror", (error) =>
     report.runtimeErrors.push({ path: currentPath, message: error.message }),
@@ -106,6 +108,15 @@ try {
         });
     }
     process.stdout.write(`${width}px: ${routes.length} pages checked.\n`);
+    // Release browser resources between viewports, including on modest Windows PCs.
+    await context.close();
+    await browser.close();
+    browser = await chromium.launch(launchOptions);
+    context = await browser.newContext({ reducedMotion: "reduce" });
+    page = await context.newPage();
+    page.on("pageerror", (error) =>
+      report.runtimeErrors.push({ path: currentPath, message: error.message }),
+    );
   }
   async function check(name, callback) {
     try {
@@ -135,14 +146,48 @@ try {
   });
   await page.setViewportSize({ width: 390, height: 844 });
   await check("Mobile navigation opens, follows a link and closes", async () => {
+    assert.equal(
+      await page.locator(".m-header a:visible").filter({ hasText: "Se connecter" }).count(),
+      0,
+    );
     await page.getByRole("button", { name: "Ouvrir le menu" }).click();
     assert.ok(await page.locator("#mobile-navigation").isVisible());
+    assert.equal(
+      await page.locator(".m-header a:visible").filter({ hasText: "Se connecter" }).count(),
+      1,
+    );
     await page
       .locator("#mobile-navigation")
       .getByRole("link", { name: "À propos de Wóor" })
       .click();
     await page.waitForURL("**/a-propos");
     assert.ok(!(await page.locator("#mobile-navigation").isVisible()));
+  });
+  await check("Mobile navigation remains scrollable in landscape", async () => {
+    await page.setViewportSize({ width: 740, height: 390 });
+    await page.getByRole("button", { name: "Ouvrir le menu" }).click();
+    const last = page
+      .locator("#mobile-navigation")
+      .getByRole("link", { name: "Se connecter", exact: true });
+    await last.scrollIntoViewIfNeeded();
+    const box = await last.boundingBox();
+    assert.ok(box.y >= 0 && box.y + box.height <= 390);
+    await page.keyboard.press("Escape");
+    await page.setViewportSize({ width: 390, height: 844 });
+  });
+  await check("Four order stages work manually and respect reduced motion", async () => {
+    await page.goto(base, { waitUntil: "networkidle" });
+    const tabs = page.getByRole("tab");
+    assert.equal(await tabs.count(), 4);
+    for (let stage = 0; stage < 4; stage++) {
+      await tabs.nth(stage).click();
+      assert.equal(await page.locator("#journey-panel").getAttribute("data-stage"), String(stage));
+    }
+    await page.keyboard.press("Home");
+    assert.equal(await tabs.nth(0).getAttribute("aria-selected"), "true");
+    assert.ok(
+      await page.getByRole("button", { name: "Lire la démonstration", exact: true }).isDisabled(),
+    );
   });
   await check("Help search and category filters work", async () => {
     await page.goto(base + "/aide", { waitUntil: "networkidle" });
@@ -182,6 +227,58 @@ try {
         .evaluate((element) => parseFloat(getComputedStyle(element).fontSize) >= 16),
     );
   });
+  await check("Invalid login is blocked before any POST request", async () => {
+    let posts = 0;
+    const watch = (request) => {
+      if (request.method() === "POST") posts++;
+    };
+    page.on("request", watch);
+    await page.locator("#phone").fill("not a phone");
+    await page.locator("#pin").fill("12345a");
+    await page.getByRole("button", { name: "Accéder à mon espace", exact: true }).click();
+    assert.ok(await page.locator(".form-validation-error").isVisible());
+    assert.equal(await page.locator("#phone").getAttribute("aria-invalid"), "true");
+    assert.equal(posts, 0);
+    page.off("request", watch);
+  });
+  await check("Contact refuses HTML, invalid email and blank messages", async () => {
+    await page.goto(base + "/contact", { waitUntil: "networkidle" });
+    await page.getByLabel("Votre nom", { exact: true }).fill("Awa Diop");
+    await page.getByLabel("Votre adresse e-mail").fill("bad-email");
+    await page.getByLabel("Votre message").fill("<script>alert(1)</script>");
+    await page.getByRole("button", { name: "Préparer mon e-mail" }).click();
+    assert.equal(await page.locator(".m-prepared-message").count(), 0);
+    assert.ok(await page.locator(".form-validation-error").isVisible());
+    await page.getByLabel("Votre adresse e-mail").fill("awa@example.invalid");
+    await page.getByRole("button", { name: "Préparer mon e-mail" }).click();
+    assert.equal(await page.getByLabel("Votre message").getAttribute("aria-invalid"), "true");
+    await page.getByLabel("Votre message").fill("          ");
+    await page.getByRole("button", { name: "Préparer mon e-mail" }).click();
+    assert.equal(await page.locator(".m-prepared-message").count(), 0);
+    assert.equal(
+      await page.locator("body script:not([src])").filter({ hasText: "alert(1)" }).count(),
+      0,
+    );
+  });
+  await check("Order and delivery forms validate fields before submission", async () => {
+    await page.goto(base + "/apercu/vendeuse-nouvelle", { waitUntil: "networkidle" });
+    await page.locator("#itemLabel").fill("<img src=x onerror=alert(1)>");
+    await page.locator("#itemPriceXof").fill("12000");
+    await page.locator("#deliveryFeeXof").fill("1500");
+    await page.locator("#neighborhood").fill("Sacré-Cœur 3");
+    await page.getByRole("button", { name: "Créer le lien", exact: true }).click();
+    assert.ok(await page.locator(".form-validation-error").isVisible());
+    assert.equal(await page.locator("#itemLabel").getAttribute("aria-invalid"), "true");
+    await page.locator("#itemLabel").fill("Robe en wax, taille M");
+    await page.locator("#itemPriceXof").fill("499");
+    await page.getByRole("button", { name: "Créer le lien", exact: true }).click();
+    assert.equal(await page.locator("#itemPriceXof").getAttribute("aria-invalid"), "true");
+    await page.goto(base + "/apercu/livreur-code", { waitUntil: "networkidle" });
+    await page.locator("#code").fill("12a456");
+    await page.getByRole("button", { name: "Valider le code", exact: true }).click();
+    assert.ok(await page.locator(".form-validation-error").isVisible());
+    assert.equal(await page.locator("#code").getAttribute("aria-invalid"), "true");
+  });
   for (const viewport of [
     { width: 900, height: 600 },
     { width: 1440, height: 900 },
@@ -206,6 +303,43 @@ try {
     );
   }
   await context.close();
+  const motionContext = await browser.newContext({
+    reducedMotion: "no-preference",
+    viewport: { width: 1440, height: 900 },
+  });
+  const animatedPage = await motionContext.newPage();
+  animatedPage.on("pageerror", (error) =>
+    report.runtimeErrors.push({ path: "/animation", message: error.message }),
+  );
+  await check("Order playback advances, pauses and stops outside the viewport", async () => {
+    await animatedPage.clock.install();
+    await animatedPage.goto(base, { waitUntil: "networkidle" });
+    await animatedPage.locator("#journey-panel").scrollIntoViewIfNeeded();
+    await animatedPage.mouse.move(0, 0);
+    await animatedPage.clock.runFor(100);
+    await animatedPage.clock.runFor(4600);
+    assert.equal(await animatedPage.locator("#journey-panel").getAttribute("data-stage"), "1");
+    await animatedPage.getByRole("button", { name: "Mettre la démonstration en pause" }).click();
+    await animatedPage.clock.runFor(6000);
+    assert.equal(await animatedPage.locator("#journey-panel").getAttribute("data-stage"), "1");
+    await animatedPage.getByRole("button", { name: "Lire la démonstration", exact: true }).click();
+    await animatedPage.mouse.move(0, 0);
+    await animatedPage.clock.runFor(4600);
+    assert.equal(await animatedPage.locator("#journey-panel").getAttribute("data-stage"), "2");
+    await animatedPage.screenshot({
+      path: path.join(output, "order-animation-1440.png"),
+      animations: "disabled",
+    });
+    await animatedPage.evaluate(() => window.scrollTo(0, 0));
+    await animatedPage.clock.runFor(100);
+    const stoppedAt = await animatedPage.locator("#journey-panel").getAttribute("data-stage");
+    await animatedPage.clock.runFor(6000);
+    assert.equal(
+      await animatedPage.locator("#journey-panel").getAttribute("data-stage"),
+      stoppedAt,
+    );
+  });
+  await motionContext.close();
 } finally {
   await browser.close();
   await writeFile(path.join(output, "responsive-report.json"), JSON.stringify(report, null, 2));

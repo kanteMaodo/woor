@@ -1,4 +1,4 @@
-import { ORDER_LIMITS } from "@woor/core";
+import { isPlainText, isSingleLineText, ORDER_LIMITS } from "@woor/core";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -14,13 +14,31 @@ export interface SellerRoutesOptions {
 
 const { itemLabel, itemPriceXof, deliveryFeeXof, neighborhood, landmark } = ORDER_LIMITS;
 
-const NewOrderBody = z.object({
-  itemLabel: z.string().trim().min(itemLabel.min).max(itemLabel.max),
+export const NewOrderBody = z.strictObject({
+  itemLabel: z
+    .string()
+    .trim()
+    .normalize("NFC")
+    .min(itemLabel.min)
+    .max(itemLabel.max)
+    .refine(isSingleLineText, "La description doit être un texte sans balise HTML."),
   itemPriceXof: z.number().int().min(itemPriceXof.min).max(itemPriceXof.max),
   deliveryFeeXof: z.number().int().min(deliveryFeeXof.min).max(deliveryFeeXof.max),
   courierId: z.uuid(),
-  neighborhood: z.string().trim().min(neighborhood.min).max(neighborhood.max),
-  landmark: z.string().trim().max(landmark.max).default(""),
+  neighborhood: z
+    .string()
+    .trim()
+    .normalize("NFC")
+    .min(neighborhood.min)
+    .max(neighborhood.max)
+    .refine(isSingleLineText, "Le quartier doit être un texte sans balise HTML."),
+  landmark: z
+    .string()
+    .trim()
+    .normalize("NFC")
+    .max(landmark.max)
+    .refine(isPlainText, "Le repère doit être un texte sans balise HTML.")
+    .default(""),
 });
 
 const OrderParams = z.object({ id: z.uuid() });
