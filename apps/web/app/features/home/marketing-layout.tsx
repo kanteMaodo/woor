@@ -104,7 +104,13 @@ function MarketingNav() {
     setMobileOpen(false);
   };
   return (
-    <header className="m-header" ref={header}>
+    <header
+      className="m-header"
+      ref={header}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) close();
+      }}
+    >
       <div className="m-nav m-container">
         <WoorBrand />
         <nav className="m-desktop-nav" aria-label="Navigation principale">

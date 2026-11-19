@@ -33,7 +33,7 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
             </li>
             <li>
               <Icon name="check-circle" />
-              Votre argent arrive directement dans votre wallet.
+              Le code confirme la remise et débloque le paiement.
             </li>
           </ul>
         </div>
@@ -74,10 +74,11 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
 
           <div className="trust">
             <b>
-              <Icon name="finger" /> Pas de mot de passe
+              <Icon name="finger" /> Connexion par passkey en préparation
             </b>
             <span className="small">
-              Votre téléphone devient votre clé (passkey). Elle ne marche que sur le vrai site Wóor.
+              Cet écran présente le parcours d’invitation prévu. La création d’une passkey n’est pas
+              encore disponible ; les comptes actuels utilisent un numéro de téléphone et un PIN.
             </span>
           </div>
 
