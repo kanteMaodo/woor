@@ -6,11 +6,12 @@ import type { loader as rootLoader } from "../../root";
 
 import { Icon } from "../../components/ui/icon";
 import { CONTACT, IMAGES, SOLUTIONS } from "./marketing-content";
+import { Logo } from "../../components/ui/logo";
 
 export function WoorBrand({ light = false }: { light?: boolean }) {
   return (
     <Link to="/" className={`m-brand${light ? " is-light" : ""}`} aria-label="Wóor, accueil">
-      Wóor
+      <Logo />
     </Link>
   );
 }

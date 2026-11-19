@@ -380,3 +380,39 @@
     grid-template-columns: 2fr 1.6fr 1fr 1fr;
   }
 }
+
+/* Logo ------------------------------------------------------------------ */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  line-height: 1;
+}
+
+.logo-mark {
+  width: 1.45em;
+  height: 1.45em;
+  flex: none;
+}
+
+.logo-word {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+/* L'accent du « ó » : un trait orange bitcoin, la signature du mot. */
+.logo-acute {
+  position: relative;
+}
+
+.logo-acute::after {
+  content: "";
+  position: absolute;
+  top: 0.1em;
+  left: 0.25em;
+  width: 0.13em;
+  height: 0.3em;
+  border-radius: 0.07em;
+  background: var(--wo-bitcoin);
+  transform: rotate(38deg);
+}

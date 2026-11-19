@@ -99,7 +99,7 @@ export const FAQ = [
   {
     question: "Et si le colis n'arrive jamais ?",
     answer:
-      "Sans code de remise, le paiement bloqué est annulé automatiquement, au plus tard 18 h après le blocage. L'argent n'a jamais quitté le wallet de l'acheteur.",
+      "Sans code de remise, le paiement bloqué est annulé automatiquement, au plus tard 18 h après le blocage. Rien n'a été encaissé : l'acheteur récupère tout.",
   },
   {
     question: "Wóor peut-il garder mon argent ?",

@@ -33,7 +33,7 @@ export function PayoutsScreen({ profile, payouts, address }: PayoutsScreenProps)
     <AccountScreen
       profile={profile}
       title="Versements"
-      subtitle="Votre argent arrive directement dans votre wallet Lightning."
+      subtitle="Chaque remise débloque votre part. Le versement vers votre wallet Lightning arrive avec la prochaine version."
     >
       <section className="stat-grid" aria-label="Résumé des versements">
         <StatCard

@@ -155,7 +155,7 @@ function PaidScreen({ profile, delivery }: { profile: Profile; delivery: Deliver
           <span>Votre course</span>
           <span>{formatXof(delivery.deliveryFeeXof)}</span>
         </div>
-        <p className="note">La vendeuse est payée automatiquement.</p>
+        <p className="note">Paiement débloqué pour la vendeuse et pour vous.</p>
         <Link to="/livreur" className="btn btn-primary">
           Retour à mes courses
         </Link>
