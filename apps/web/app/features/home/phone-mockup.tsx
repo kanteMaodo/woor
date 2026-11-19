@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Icon } from "../../components/ui/icon";
+import { Logo } from "../../components/ui/logo";
 
 interface PhoneMockupProps {
   /** Texte de la barre du haut, comme dans l'application : « En route », « Paiement 2 sur 2 ». */
@@ -20,8 +20,7 @@ export function PhoneMockup({ context, children, className = "" }: PhoneMockupPr
       <div className="phone-screen">
         <div className="appbar">
           <span className="brand">
-            <Icon name="bolt" />
-            Wóor
+            <Logo />
           </span>
           <span className="ctx">{context}</span>
         </div>

@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import { Icon } from "../../components/ui/icon";
+import { Logo } from "../../components/ui/logo";
 
 interface InvitationScreenProps {
   invitedBy: string;
@@ -14,8 +15,7 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
     <div className="auth">
       <aside className="auth-side">
         <Link to="/" className="brand auth-brand">
-          <Icon name="bolt" />
-          Wóor
+          <Logo />
         </Link>
         <div className="auth-side-body">
           <h2>Dalal ak jàmm. Bienvenue chez Wóor.</h2>
@@ -42,8 +42,7 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
       <main className="auth-main">
         <form className="auth-card">
           <Link to="/" className="brand auth-brand-mobile">
-            <Icon name="bolt" />
-            Wóor
+            <Logo />
           </Link>
           <h1>Bienvenue sur Wóor</h1>
           <p className="auth-sub">

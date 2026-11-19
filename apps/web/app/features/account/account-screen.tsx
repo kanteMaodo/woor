@@ -3,6 +3,7 @@ import { Form, Link, NavLink } from "react-router";
 
 import { Icon, type IconName } from "../../components/ui/icon";
 import type { Profile } from "../../lib/api/account-schemas";
+import { Logo } from "../../components/ui/logo";
 
 interface AccountScreenProps {
   profile: Profile;
@@ -109,8 +110,7 @@ export function AccountScreen({
     <div className={`dash${items.length > 1 ? " has-tabs" : ""}`}>
       <aside className="dash-side" aria-label="Navigation">
         <Link to={items[0]?.to ?? "/"} className="brand dash-brand">
-          <Icon name="bolt" />
-          Wóor
+          <Logo />
         </Link>
         <nav className="dash-nav">
           {sections.map((section) => (
@@ -139,8 +139,7 @@ export function AccountScreen({
 
       <header className="dash-top">
         <Link to={items[0]?.to ?? "/"} className="brand">
-          <Icon name="bolt" />
-          Wóor
+          <Logo />
         </Link>
         <div className="dash-top-user">
           <span className="dash-avatar small" aria-hidden="true">

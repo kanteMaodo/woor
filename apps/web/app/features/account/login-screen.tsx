@@ -2,6 +2,7 @@ import { Form, Link, useNavigation } from "react-router";
 
 import { Banner } from "../../components/ui/banner";
 import { Icon } from "../../components/ui/icon";
+import { Logo } from "../../components/ui/logo";
 
 /** Compte de démonstration proposé sur la page de connexion, hors production. */
 export interface DemoAccount {
@@ -33,8 +34,7 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
     <div className="auth">
       <aside className="auth-side">
         <Link to="/" className="brand auth-brand">
-          <Icon name="bolt" />
-          Wóor
+          <Logo />
         </Link>
         <div className="auth-side-body">
           <h2>Vendez sans risque. Livrez sans billets.</h2>
@@ -58,8 +58,7 @@ export function LoginScreen({ error, phone, demoAccounts }: LoginScreenProps) {
             <Icon name="arrow-left" size="sm" /> Accueil
           </Link>
           <Link to="/" className="brand auth-brand-mobile">
-            <Icon name="bolt" />
-            Wóor
+            <Logo />
           </Link>
 
           <h1>Se connecter</h1>

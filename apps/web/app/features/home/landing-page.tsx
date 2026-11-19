@@ -4,6 +4,7 @@ import { Icon } from "../../components/ui/icon";
 import { EscrowDiagram } from "./escrow-diagram";
 import { AUDIENCES, COMPARISON, FACTS, FAQ, GUARANTEES } from "./landing-content";
 import { LockedMock, PaidMock, SellerListMock, ShareMock } from "./mockup-screens";
+import { Logo } from "../../components/ui/logo";
 
 const SOURCE_URL = "https://github.com/kanteMaodo/woor";
 
@@ -39,8 +40,7 @@ function LandingNav() {
     <header className="l-nav">
       <div className="l-container l-nav-inner">
         <Link to="/" className="brand l-brand">
-          <Icon name="bolt" />
-          Wóor
+          <Logo />
         </Link>
         <nav className="l-nav-links" aria-label="Sections">
           <a href="#comment">Comment ça marche</a>
@@ -318,8 +318,7 @@ function LandingFooter() {
     <footer className="l-footer">
       <div className="l-container l-footer-inner">
         <span className="brand">
-          <Icon name="bolt" />
-          Wóor
+          <Logo />
         </span>
         <span>Dakar Bitcoin Hack 2026 · Pilote à Dakar</span>
         <a href={SOURCE_URL} target="_blank" rel="noreferrer">
