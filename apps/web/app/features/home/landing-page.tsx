@@ -111,7 +111,7 @@ function Hero() {
             </span>
             <div>
               <b>Code juste, argent débloqué</b>
-              <span>Vendeuse et livreur payés</span>
+              <span>Vendeuse et livreur débloqués</span>
             </div>
           </div>
         </div>

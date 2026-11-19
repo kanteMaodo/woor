@@ -30,7 +30,7 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
             </li>
             <li>
               <Icon name="check-circle" />
-              Votre argent arrive directement dans votre wallet.
+              Votre argent est débloqué dès la remise du colis.
             </li>
           </ul>
         </div>
