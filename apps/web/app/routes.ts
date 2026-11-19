@@ -2,6 +2,12 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
 export default [
   index("routes/home.tsx"),
+  route("fonctionnement", "routes/marketing.tsx", { id: "marketing-how" }),
+  route("solutions/:audience", "routes/marketing.tsx", { id: "marketing-solution" }),
+  route("securite", "routes/marketing.tsx", { id: "marketing-security" }),
+  route("aide", "routes/marketing.tsx", { id: "marketing-help" }),
+  route("a-propos", "routes/marketing.tsx", { id: "marketing-about" }),
+  route("contact", "routes/marketing.tsx", { id: "marketing-contact" }),
   // Lien partagé par la vendeuse sur WhatsApp, Instagram ou TikTok.
   route("o/:token", "routes/buyer-order.tsx"),
 

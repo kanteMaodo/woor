@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
 
-import { Icon } from "./icon";
-
 interface ScreenProps {
   /** Texte court à droite de la marque : « Paiement 1 sur 2 », « En route ». */
   context?: ReactNode;
@@ -15,10 +13,7 @@ export function Screen({ context, children, footer }: ScreenProps) {
   return (
     <div className="screen">
       <header className="appbar">
-        <span className="brand">
-          <Icon name="bolt" />
-          Wóor
-        </span>
+        <span className="brand">Wóor</span>
         {context && <span className="ctx">{context}</span>}
       </header>
       <main className="content">{children}</main>

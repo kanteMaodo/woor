@@ -18,29 +18,6 @@
   }
 }
 
-@media (min-width: 900px) {
-  .auth-side {
-    background:
-      var(--wo-wax-light),
-      radial-gradient(500px 360px at 90% 10%, rgba(11, 110, 79, 0.6), transparent 70%),
-      radial-gradient(420px 300px at 0% 100%, rgba(247, 147, 26, 0.2), transparent 70%), #0d1730;
-  }
-}
-
-.l-hero {
-  background:
-    var(--wo-wax-light),
-    radial-gradient(600px 400px at 85% 20%, rgba(11, 110, 79, 0.55), transparent 70%),
-    radial-gradient(500px 300px at 10% 90%, rgba(247, 147, 26, 0.18), transparent 70%), #0d1730;
-}
-
-.l-cta {
-  background:
-    var(--wo-wax-light),
-    radial-gradient(500px 300px at 80% 0%, rgba(61, 220, 151, 0.35), transparent 70%),
-    var(--wo-primary);
-}
-
 .stat-card.primary {
   background: var(--wo-wax-light), linear-gradient(135deg, var(--wo-primary), #0f8a63);
 }
