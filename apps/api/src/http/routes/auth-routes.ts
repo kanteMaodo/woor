@@ -1,3 +1,4 @@
+import { isValidPin, toSenegalE164 } from "@woor/core";
 import type { FastifyPluginAsync } from "fastify";
 import { z } from "zod";
 
@@ -9,9 +10,13 @@ export interface AuthRoutesOptions {
   secureCookies: boolean;
 }
 
-const LogInBody = z.object({
-  phone: z.string().max(30),
-  pin: z.string().max(12),
+export const LogInBody = z.strictObject({
+  phone: z
+    .string()
+    .trim()
+    .max(30)
+    .refine((value) => toSenegalE164(value) !== null, "Numéro de mobile sénégalais invalide."),
+  pin: z.string().refine(isValidPin, "Le PIN doit contenir exactement 6 chiffres."),
 });
 
 /** Connexion par numéro et PIN, profil, déconnexion. */

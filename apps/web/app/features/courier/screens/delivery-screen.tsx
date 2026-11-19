@@ -1,9 +1,11 @@
-import { Form, Link, useNavigation } from "react-router";
+import { Link, useNavigation } from "react-router";
 
 import { ActionButton } from "../../../components/ui/action-button";
 import { Banner } from "../../../components/ui/banner";
 import { Chip } from "../../../components/ui/chip";
 import { Icon } from "../../../components/ui/icon";
+import { ValidatedForm } from "../../../components/ui/validated-form";
+import { DeliveryCodeFormSchema } from "../../../lib/form-validation";
 import type { Delivery, Profile } from "../../../lib/api/account-schemas";
 import { formatTime, formatXof } from "../../../lib/format";
 import { AccountScreen } from "../../account/account-screen";
@@ -104,7 +106,7 @@ function CodeForm({ delivery }: { delivery: Delivery }) {
       <p className="muted">
         Il le lit sur son téléphone. Ne remettez le colis qu'après validation.
       </p>
-      <Form method="post" className="stack">
+      <ValidatedForm method="post" schema={DeliveryCodeFormSchema} className="stack">
         <input type="hidden" name="intent" value="code" />
         <label htmlFor="code" className="sr-only">
           Code à 6 chiffres
@@ -131,7 +133,7 @@ function CodeForm({ delivery }: { delivery: Delivery }) {
           <Icon name="check" />
           {pending ? "Vérification…" : "Valider le code"}
         </button>
-      </Form>
+      </ValidatedForm>
     </section>
   );
 }

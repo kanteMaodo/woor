@@ -8,14 +8,40 @@ import { pathToFileURL } from "node:url";
 // No real accounts, database, payment service or running application are modified.
 const roles = { "check-seller": "seller", "check-courier": "courier" };
 let apiCalls = 0;
+let writeCalls = 0;
+const courierId = "0190a1b2-0000-7000-8000-000000000001";
 const api = createServer((request, response) => {
   apiCalls++;
+  if (request.method === "POST") writeCalls++;
   const cookie = request.headers.cookie ?? "";
   const token = cookie.match(/(?:^|;\s*)woor_session=([^;]+)/)?.[1];
   const role = roles[token];
   response.setHeader("content-type", "application/json");
   if (request.url === "/v1/me" && role) {
     response.end(JSON.stringify({ displayName: "Vérification locale", role }));
+  } else if (request.url === "/v1/seller/couriers" && role === "seller") {
+    response.end(
+      JSON.stringify([{ id: courierId, displayName: "Livraison test", phoneLast2: "02" }]),
+    );
+  } else if (request.url === `/v1/courier/orders/${courierId}` && role === "courier") {
+    response.end(
+      JSON.stringify({
+        id: courierId,
+        itemLabel: "Commande test",
+        deliveryFeeXof: 1500,
+        state: "in_transit",
+        sellerName: "Vendeur test",
+        neighborhood: "Dakar",
+        landmark: null,
+        lockedAt: null,
+        pickupDeadline: null,
+        pickedUpAt: null,
+        deliveredAt: null,
+        closedAt: null,
+        codeAttemptsLeft: 5,
+        codeLocked: false,
+      }),
+    );
   } else {
     response.statusCode = token === "check-unavailable" ? 503 : 401;
     response.end(JSON.stringify({ title: "Session indisponible", status: response.statusCode }));
@@ -101,8 +127,57 @@ try {
   assert.ok(contact.html.includes('href="mailto:contact@woor.com"'));
   assert.ok(contact.html.includes('href="https://wa.me/221784184215"'));
   assert.ok(contact.html.includes('href="tel:+221784184215"'));
+  async function submit(path, values, token, contentType = "application/x-www-form-urlencoded") {
+    const response = await handle(
+      new Request(`http://woor.local${path}`, {
+        method: "POST",
+        headers: {
+          origin: "http://woor.local",
+          "content-type": contentType,
+          ...(token && { cookie: `woor_session=${token}` }),
+        },
+        body: typeof values === "string" ? values : new URLSearchParams(values),
+      }),
+    );
+    return { status: response.status, html: await response.text() };
+  }
+  const invalidLogin = await submit("/connexion", {
+    phone: "<script>alert(1)</script>",
+    pin: "123456",
+  });
+  assert.equal(invalidLogin.status, 200);
+  assert.ok(invalidLogin.html.includes("mobile sénégalais"));
+  assert.ok(!invalidLogin.html.includes("<script>alert(1)</script>"));
+  assert.equal(
+    (await submit("/connexion", "phone=770000001&phone=780000002&pin=123456")).status,
+    200,
+  );
+  assert.equal((await submit("/connexion", "x=" + "a".repeat(17000))).status, 413);
+  assert.equal((await submit("/connexion", "{}", undefined, "application/json")).status, 415);
+  const invalidOrder = await submit(
+    "/vendeuse/nouvelle",
+    {
+      itemLabel: "<script>alert(1)</script>",
+      itemPriceXof: "12000",
+      deliveryFeeXof: "1500",
+      courierId,
+      neighborhood: "Dakar",
+      landmark: "",
+    },
+    "check-seller",
+  );
+  assert.equal(invalidOrder.status, 200);
+  assert.ok(invalidOrder.html.includes("sans balise HTML"));
+  const invalidCode = await submit(
+    `/livreur/courses/${courierId}`,
+    { intent: "code", code: "12a456" },
+    "check-courier",
+  );
+  assert.equal(invalidCode.status, 200);
+  assert.ok(invalidCode.html.includes("exactement 6 chiffres"));
+  assert.equal(writeCalls, 0, "Invalid forms must never call an API write endpoint");
   process.stdout.write(
-    "OK: 9 public pages, seller/courier navigation, expired/unavailable sessions, invalid routes, login and contact links.\n",
+    "OK: 9 public pages, session navigation, contact links, invalid login/order/code forms and bounded requests; no API writes.\n",
   );
 } finally {
   api.closeAllConnections();

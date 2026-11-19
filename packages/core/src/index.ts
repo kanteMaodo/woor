@@ -3,6 +3,7 @@ export * from "./order/order-state";
 export * from "./order/order-transitions";
 export * from "./order/order-limits";
 export * from "./account/phone";
+export * from "./validation/plain-text";
 export * from "./invoice/invoice";
 export * from "./money/decimal";
 export * from "./money/fx";

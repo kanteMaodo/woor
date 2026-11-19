@@ -7,6 +7,8 @@ import type { BuyerPageContext } from "../features/buyer/buyer-page-context";
 import { selectBuyerScreen, shouldPoll } from "../features/buyer/buyer-screen";
 import { ApiError, cookieHeaderFrom } from "../lib/api/api-client.server";
 import { buyerApi } from "../lib/api/buyer-api.server";
+import { readPlainForm } from "../lib/form-data.server";
+import { BuyerReportFormSchema, formValues } from "../lib/form-validation";
 import { invoiceQrSvg } from "../lib/qr.server";
 import { assertSameOrigin, isInAppBrowser } from "../lib/security.server";
 import { usePolling } from "../lib/use-polling";
@@ -59,10 +61,19 @@ export async function action({ request, params }: Route.ActionArgs) {
   assertSameOrigin(request);
   const token = params.token;
   const cookieHeader = request.headers.get("cookie");
-  const intent = (await request.formData()).get("intent");
+  const form = await readPlainForm(request);
+  const intent = form.get("intent");
 
   if (!isBuyerIntent(intent)) {
     throw data("Action inconnue", { status: 400 });
+  }
+  if (intent === "report") {
+    const parsed = BuyerReportFormSchema.safeParse(formValues(form));
+    if (!parsed.success)
+      return {
+        revealedCode: null,
+        error: parsed.error.issues[0]?.message ?? "Vérifiez le signalement.",
+      };
   }
 
   try {

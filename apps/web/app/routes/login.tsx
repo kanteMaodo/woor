@@ -3,6 +3,8 @@ import { redirect } from "react-router";
 import { type DemoAccount, LoginScreen } from "../features/account/login-screen";
 import { authApi } from "../lib/api/account-api.server";
 import { userMessageOrThrow } from "../lib/api/api-client.server";
+import { readPlainForm } from "../lib/form-data.server";
+import { formValues, LoginFormSchema } from "../lib/form-validation";
 import { assertSameOrigin } from "../lib/security.server";
 import { findProfile, HOME_BY_ROLE } from "../lib/session.server";
 import type { Route } from "./+types/login";
@@ -34,9 +36,14 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export async function action({ request }: Route.ActionArgs) {
   assertSameOrigin(request);
-  const form = await request.formData();
-  const phone = String(form.get("phone") ?? "");
-  const pin = String(form.get("pin") ?? "");
+  const form = await readPlainForm(request);
+  const parsed = LoginFormSchema.safeParse(formValues(form));
+  if (!parsed.success)
+    return {
+      error: parsed.error.issues[0]?.message ?? "Vérifiez vos identifiants.",
+      phone: typeof form.get("phone") === "string" ? String(form.get("phone")) : "",
+    };
+  const { phone, pin } = parsed.data;
 
   try {
     const { body: profile, setCookies } = await authApi.logIn(phone, pin);
