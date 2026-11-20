@@ -163,9 +163,9 @@ export const HELP_QUESTIONS = [
   },
   {
     category: "Vendre",
-    question: "Quels sont les montants autorisés pendant le pilote ?",
+    question: "Quels sont les plafonds prévus pour les boutiques ?",
     answer:
-      "Le prix de l’article doit être compris entre 500 et 50 000 F CFA. Les frais de livraison vont de 500 à 10 000 F CFA. Ces limites concernent le pilote actuel et sont vérifiées lors de la création d’une commande.",
+      "Au démarrage, les plafonds prévus sont de 250 000 F CFA par article et de 1 000 000 F CFA de ventes par boutique sur 24 h. Après un historique fiable, ils passent à 500 000 F CFA par article et à 3 000 000 F CFA de ventes par boutique sur 24 h. Les frais de livraison restent compris entre 500 et 10 000 F CFA.",
   },
   {
     category: "Compte",
