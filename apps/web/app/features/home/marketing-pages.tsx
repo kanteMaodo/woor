@@ -187,8 +187,8 @@ function HowItWorks() {
           <div className="m-boundaries">
             <div>
               <Icon name="box" />
-              <h3>250 000 F</h3>
-              <p>Maximum par article au démarrage, puis 500 000 F après un historique fiable.</p>
+              <h3>500 à 50 000 F</h3>
+              <p>Prix autorisé pour un article.</p>
             </div>
             <div>
               <Icon name="moto" />
@@ -206,10 +206,6 @@ function HowItWorks() {
               <p>Durée maximale du paiement bloqué.</p>
             </div>
           </div>
-          <p className="m-dark-footnote">
-            Le plafond de ventes par boutique sur 24 h est de 1 000 000 F au démarrage, puis de 3
-            000 000 F après un historique fiable.
-          </p>
           <p className="m-dark-footnote">
             Les montants sont affichés en F CFA. Un wallet Bitcoin Lightning est nécessaire pour
             payer.

@@ -1,15 +1,15 @@
 import type { IconName } from "../../components/ui/icon";
 
 /**
- * Ancien catalogue de textes de présentation. Les plafonds affichés sont des objectifs
- * éditoriaux ; leur mise en application est suivie dans rectification-urgente.md.
+ * Textes de la page d'accueil. Les chiffres sont les réglages réels du pilote
+ * (table woor.settings) : aucun chiffre inventé.
  */
 
 export const FACTS = [
   { value: "15 min", label: "pour payer, sinon rien n'est prélevé" },
   { value: "6 chiffres", label: "pour débloquer, donnés à la remise" },
   { value: "18 h", label: "au plus avant le remboursement automatique" },
-  { value: "250 000 F", label: "maximum par article au démarrage" },
+  { value: "50 000 F", label: "par article pendant le pilote" },
 ] as const;
 
 export interface Audience {

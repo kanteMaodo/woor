@@ -262,32 +262,31 @@ export function LandingPage() {
       <section className="m-pilot">
         <div className="m-container">
           <div>
-            <p className="m-eyebrow">Des plafonds évolutifs</p>
+            <p className="m-eyebrow">Un pilote, des règles claires</p>
             <h2>
-              Des plafonds qui suivent
-              <br />
-              l’activité de votre boutique.
+              Les montants et les délais
+              <br />à connaître avant de commencer.
             </h2>
             <Link to="/aide" className="m-text-link">
-              Comprendre les plafonds des boutiques
+              Consulter les conditions du pilote
             </Link>
           </div>
           <div className="m-pilot-facts">
             <div>
-              <strong>250 000 F</strong>
-              <span>maximum par article au démarrage</span>
+              <strong>6 chiffres</strong>
+              <span>pour confirmer la remise</span>
             </div>
             <div>
-              <strong>500 000 F</strong>
-              <span>maximum par article après un historique fiable</span>
+              <strong>50 000 F</strong>
+              <span>maximum par article</span>
             </div>
             <div>
-              <strong>1 000 000 F</strong>
-              <span>de ventes par boutique sur 24 h au démarrage</span>
+              <strong>18 heures</strong>
+              <span>durée maximale du blocage</span>
             </div>
             <div>
-              <strong>3 000 000 F</strong>
-              <span>de ventes par boutique sur 24 h après un historique fiable</span>
+              <strong>0 compte</strong>
+              <span>à créer pour l’acheteur</span>
             </div>
           </div>
         </div>
