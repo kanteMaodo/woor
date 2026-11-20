@@ -13,6 +13,7 @@
   "dependencies": {
     "@react-router/node": "7.18.5",
     "@react-router/serve": "7.18.5",
+    "@vercel/react-router": "^1.3.7",
     "@woor/core": "workspace:*",
     "isbot": "^5.2.3",
     "qrcode": "^1.5.4",
