@@ -62,7 +62,7 @@ export function InvitationScreen({ invitedBy, roleLabel, phone }: InvitationScre
               <span aria-hidden="true">+221</span>
               <input id="invite-phone" className="input" defaultValue={phone} readOnly />
             </div>
-            <span className="hint">Le code d'invitation est réservé à ce numéro.</span>
+            <span className="hint">Le code d’invitation est réservé à ce numéro.</span>
           </div>
           <div className="field">
             <label htmlFor="invite-name">Nom affiché aux acheteurs</label>

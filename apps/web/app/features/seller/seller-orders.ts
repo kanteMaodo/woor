@@ -3,7 +3,7 @@ import type { OrderState } from "@woor/core";
 import type { ChipProps } from "../../components/ui/chip";
 import type { SellerOrder } from "../../lib/api/account-schemas";
 
-/** État d'une commande, dit avec les mots de la vendeuse. */
+/** État d’une commande, dit avec les mots de la vendeuse. */
 export const SELLER_STATUS: Record<OrderState, ChipProps> = {
   awaiting_payment: { tone: "wait", icon: "clock", label: "À payer" },
   locked: { tone: "locked", icon: "lock", label: "Bloqué" },
@@ -38,7 +38,7 @@ export function filterSellerOrders(orders: SellerOrder[], key: SellerFilterKey):
   return orders.filter((order) => states.includes(order.state));
 }
 
-/** Nombre de commandes derrière chaque filtre, affiché sur l'onglet. */
+/** Nombre de commandes derrière chaque filtre, affiché sur l’onglet. */
 export function countByFilter(orders: SellerOrder[]): Record<SellerFilterKey, number> {
   return Object.fromEntries(
     SELLER_FILTERS.map((filter) => [filter.key, filterSellerOrders(orders, filter.key).length]),
@@ -51,7 +51,7 @@ export interface SellerKpis {
   pendingCount: number;
   /** Liens envoyés, pas encore payés. */
   awaitingCount: number;
-  /** Commandes remises : le prix de l'article est acquis à la vendeuse. */
+  /** Commandes remises : le prix de l’article est acquis à la vendeuse. */
   deliveredCount: number;
   earnedXof: number;
 }
@@ -87,7 +87,7 @@ export function sellerTimeline(order: SellerOrder): TimelineEntry[] {
     [order.claimedAt, "Un téléphone a commandé"],
     [order.lockedAt, "Les deux paiements sont bloqués"],
     [order.pickedUpAt, `Ramassé par ${order.courierName}`],
-    [order.arrivedAt, `${order.courierName} est arrivé chez l'acheteur`],
+    [order.arrivedAt, `${order.courierName} est arrivé chez l’acheteur`],
     [order.deliveredAt, "Remis : le paiement est débloqué"],
     [order.closedAt, `Commande close : ${SELLER_STATUS[order.state].label.toLowerCase()}`],
   ];

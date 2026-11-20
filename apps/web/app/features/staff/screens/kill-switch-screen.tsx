@@ -10,15 +10,15 @@ interface KillSwitchScreenProps {
 }
 
 /**
- * A3 : l'interrupteur général. Un seul arbitre peut tout arrêter ; il en faut deux
- * pour tout relancer. Les commandes en cours vont jusqu'au bout.
+ * A3 : l’interrupteur général. Un seul arbitre peut tout arrêter ; il en faut deux
+ * pour tout relancer. Les commandes en cours vont jusqu’au bout.
  */
 export function KillSwitchScreen({ profile, killSwitch }: KillSwitchScreenProps) {
   return (
     <AccountScreen
       profile={profile}
       title="Interrupteur général"
-      subtitle="Arrêter les nouvelles commandes en cas d'anomalie."
+      subtitle="Arrêter les nouvelles commandes en cas d’anomalie."
     >
       <div className="alert-block" role="alert">
         <Icon name="power" />
@@ -29,7 +29,7 @@ export function KillSwitchScreen({ profile, killSwitch }: KillSwitchScreenProps)
           <p>Motif : {killSwitch.reason}.</p>
           <p>
             Plus aucune nouvelle commande ni nouveau blocage. Les commandes en cours continuent
-            jusqu'au bout.
+            jusqu’au bout.
           </p>
         </div>
       </div>

@@ -17,7 +17,7 @@ interface PaymentScreenProps {
   context: BuyerPageContext;
 }
 
-/** B3 et B4 : une facture à la fois, la course d'abord, puis l'article. */
+/** B3 et B4 : une facture à la fois, la course d’abord, puis l’article. */
 export function PaymentScreen({ view, step, invoice, context }: PaymentScreenProps) {
   const minutesLeft = minutesUntil(invoice.expiresAt, context.now);
   const qr = context.qr[invoice.kind];
@@ -50,7 +50,7 @@ export function PaymentScreen({ view, step, invoice, context }: PaymentScreenPro
         </Banner>
       )}
 
-      <h1 className="h2">{step === 1 ? "D'abord, la livraison" : "Maintenant, l'article"}</h1>
+      <h1 className="h2">{step === 1 ? "D’abord, la livraison" : "Maintenant, l’article"}</h1>
       <Amount xof={invoice.amountXof} sats={invoice.amountSats} />
 
       {qr && (
@@ -108,7 +108,7 @@ export function ConfirmingScreen() {
   );
 }
 
-/** Une facture a expiré avant d'être payée : rien n'est prélevé. */
+/** Une facture a expiré avant d’être payée : rien n’est prélevé. */
 export function PaymentExpiredScreen() {
   return (
     <Screen>
@@ -117,7 +117,7 @@ export function PaymentExpiredScreen() {
       </div>
       <h1 className="h1 center">Délai de paiement dépassé</h1>
       <p className="center muted">
-        Rien n'a été prélevé : un paiement déjà bloqué revient à votre wallet. Demandez un nouveau
+        Rien n’a été prélevé : un paiement déjà bloqué revient à votre wallet. Demandez un nouveau
         lien à la vendeuse.
       </p>
     </Screen>

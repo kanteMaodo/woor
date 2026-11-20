@@ -31,7 +31,7 @@ export function SettingsScreen({ profile, settings }: SettingsScreenProps) {
         </section>
         <aside className="split-side">
           <Banner tone="info" icon="shield">
-            Chaque changement demande votre passkey et reste dans le journal d'audit.
+            Chaque changement demande votre passkey et reste dans le journal d’audit.
           </Banner>
           <button type="button" className="btn btn-primary" disabled title="Bientôt disponible">
             <Icon name="finger" />

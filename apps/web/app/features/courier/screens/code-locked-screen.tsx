@@ -31,7 +31,7 @@ export function CodeLockedScreen({
               <Icon name="lock" size="xl" />
             </div>
             <Banner tone="danger" icon="alert">
-              5 codes faux : plus aucun code n'est accepté pour cette commande. Gardez le colis. Un
+              5 codes faux : plus aucun code n’est accepté pour cette commande. Gardez le colis. Un
               arbitre Wóor vous appelle et décide sur preuves.
             </Banner>
           </section>
@@ -48,7 +48,7 @@ export function CodeLockedScreen({
             </div>
             <div className="row">
               <span className="muted">Argent</span>
-              <span>gelé, rien n'est perdu</span>
+              <span>gelé, rien n’est perdu</span>
             </div>
           </section>
           <button type="button" className="btn btn-secondary" disabled title="Bientôt disponible">

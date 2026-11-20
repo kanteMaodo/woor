@@ -16,9 +16,14 @@ export function meta(_: Route.MetaArgs) {
   return [{ title: "Aperçu des écrans · Wóor" }, { name: "robots", content: "noindex, nofollow" }];
 }
 
-/** Galerie des écrans avec des données fictives. N'existe pas en production. */
+/** En ligne, la galerie n’existe que si on l’ouvre exprès (vitrine pour le jury). */
+function previewEnabled(): boolean {
+  return !import.meta.env.PROD || process.env.WOOR_PREVIEW === "1";
+}
+
+/** Galerie des écrans avec des données fictives. */
 export async function loader({ params, request }: Route.LoaderArgs) {
-  if (import.meta.env.PROD) {
+  if (!previewEnabled()) {
     throw data("Introuvable", { status: 404 });
   }
 

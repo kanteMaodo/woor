@@ -17,7 +17,7 @@ interface LockedScreenProps {
   context: BuyerPageContext;
 }
 
-/** B5 et B6 : l'argent est bloqué, le code est prêt, le livreur va ramasser le colis. */
+/** B5 et B6 : l’argent est bloqué, le code est prêt, le livreur va ramasser le colis. */
 export function LockedScreen({ view, context }: LockedScreenProps) {
   return (
     <Screen
@@ -76,7 +76,7 @@ export function TrackingScreen({ view, context }: LockedScreenProps) {
           <p>
             <b>Un arbitre examine la commande.</b>
           </p>
-          <p>Votre argent reste bloqué pendant l'examen. Réponse en 2 h au plus.</p>
+          <p>Votre argent reste bloqué pendant l’examen. Réponse en 2 h au plus.</p>
         </Banner>
       )}
 
@@ -86,7 +86,7 @@ export function TrackingScreen({ view, context }: LockedScreenProps) {
             <b>Le livreur indique que vous refusez le colis.</b>
           </p>
           <p>
-            Si c'est vrai, vous payez seulement la livraison. L'article reste dans votre wallet.
+            Si c’est vrai, vous payez seulement la livraison. L’article reste dans votre wallet.
           </p>
         </Banner>
       )}
@@ -115,7 +115,7 @@ export function TrackingScreen({ view, context }: LockedScreenProps) {
         </div>
         {view.hardStopAt && (
           <p className="small muted">
-            Remboursé automatiquement si rien n'arrive avant {formatTime(view.hardStopAt)}.
+            Remboursé automatiquement si rien n’arrive avant {formatTime(view.hardStopAt)}.
           </p>
         )}
       </div>

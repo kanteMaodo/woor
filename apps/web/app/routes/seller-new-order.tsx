@@ -20,7 +20,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 /**
  * Crée la commande et montre le lien aussitôt, dans la réponse même :
- * le jeton n'est jamais stocké, ni en base ni dans une adresse de page.
+ * le jeton n’est jamais stocké, ni en base ni dans une adresse de page.
  */
 export async function action({ request }: Route.ActionArgs) {
   assertSameOrigin(request);

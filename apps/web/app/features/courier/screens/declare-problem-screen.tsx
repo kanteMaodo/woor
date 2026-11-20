@@ -23,14 +23,14 @@ interface DeclareProblemScreenProps {
 const PROBLEMS = [
   {
     value: "no_show",
-    label: "L'acheteur est absent ou injoignable",
-    hint: "15 min d'attente et 2 appels sont exigés",
+    label: "L’acheteur est absent ou injoignable",
+    hint: "15 min d’attente et 2 appels sont exigés",
   },
-  { value: "refusal", label: "L'acheteur refuse le colis" },
+  { value: "refusal", label: "L’acheteur refuse le colis" },
 ];
 
 /**
- * C6 : le livreur déclare une absence ou un refus. Les preuves sont réunies d'avance
+ * C6 : le livreur déclare une absence ou un refus. Les preuves sont réunies d’avance
  * (arrivée, appels, position approximative) : la déclaration ne se fait pas sur parole.
  */
 export function DeclareProblemScreen({ profile, delivery, facts }: DeclareProblemScreenProps) {
@@ -70,7 +70,7 @@ export function DeclareProblemScreen({ profile, delivery, facts }: DeclareProble
                   done: callsDone,
                   label: callsDone
                     ? `${facts.calls.length} appels sans réponse (${facts.calls.join(", ")})`
-                    : "2 appels à l'acheteur exigés",
+                    : "2 appels à l’acheteur exigés",
                 },
                 {
                   done: facts.locationAttached,
@@ -80,8 +80,8 @@ export function DeclareProblemScreen({ profile, delivery, facts }: DeclareProble
             />
           </section>
           <Banner tone="info" icon="clock">
-            L'acheteur a 10 min pour contester. Sans contestation, votre course est payée et
-            l'article revient à la vendeuse.
+            L’acheteur a 10 min pour contester. Sans contestation, votre course est payée et
+            l’article revient à la vendeuse.
           </Banner>
           <button type="submit" className="btn btn-primary" disabled={pending}>
             {pending ? "Envoi…" : "Envoyer la déclaration"}

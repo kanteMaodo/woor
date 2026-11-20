@@ -39,7 +39,7 @@ export function CouriersScreen({ profile, couriers }: CouriersScreenProps) {
           {couriers.length === 0 ? (
             <div className="empty-state">
               <Icon name="moto" size="lg" />
-              <p>Aucun livreur pour l'instant.</p>
+              <p>Aucun livreur pour l’instant.</p>
             </div>
           ) : (
             <div>
@@ -56,7 +56,7 @@ export function CouriersScreen({ profile, couriers }: CouriersScreenProps) {
         </section>
         <aside className="split-side">
           <Banner tone="info" icon="shield">
-            Votre livreur reçoit un code d'invitation à usage unique, valable 48 h. L'équipe Wóor
+            Votre livreur reçoit un code d’invitation à usage unique, valable 48 h. L’équipe Wóor
             vérifie son identité en personne avant sa première course.
           </Banner>
         </aside>

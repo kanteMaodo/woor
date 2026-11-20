@@ -10,7 +10,7 @@ export function meta(_: Route.MetaArgs) {
 export async function loader({ request }: Route.LoaderArgs) {
   const profile = await requireAccount(request, "seller");
   const linked = await sellerApi.couriers(request.headers.get("cookie"));
-  // Un livreur lié est actif et vérifié : la base n'accepte pas d'autre livreur sur une commande.
+  // Un livreur lié est actif et vérifié : la base n’accepte pas d’autre livreur sur une commande.
   const couriers = linked.map((courier) => ({
     ...courier,
     status: "active" as const,

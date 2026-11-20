@@ -13,7 +13,7 @@ export function meta(_: Route.MetaArgs) {
   return [{ title: "Se connecter · Wóor" }, { name: "robots", content: "noindex, nofollow" }];
 }
 
-/** Comptes créés par le script seed:demo de l'API. */
+/** Comptes créés par le script seed:demo de l’API. */
 const DEMO_ACCOUNTS: DemoAccount[] = [
   { label: "Vendeuse", phone: "77 000 00 01", pin: "111111" },
   { label: "Livreur", phone: "77 000 00 02", pin: "222222" },
@@ -26,7 +26,7 @@ function demoEnabled(): boolean {
 
 /** Déjà connecté : directement vers son espace. */
 export async function loader({ request }: Route.LoaderArgs) {
-  // API injoignable : on montre quand même le formulaire, l'envoi dira ce qui ne va pas.
+  // API injoignable : on montre quand même le formulaire, l’envoi dira ce qui ne va pas.
   const profile = await findProfile(request).catch(() => null);
   if (profile) {
     throw redirect(HOME_BY_ROLE[profile.role]);

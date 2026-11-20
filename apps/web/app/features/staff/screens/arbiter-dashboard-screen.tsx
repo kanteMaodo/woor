@@ -13,7 +13,7 @@ interface ArbiterDashboardScreenProps {
   alerts: AlertView[];
 }
 
-/** A1 : l'argent en jeu, la santé du nœud, et ce qui demande une décision. */
+/** A1 : l’argent en jeu, la santé du nœud, et ce qui demande une décision. */
 export function ArbiterDashboardScreen({ profile, health, alerts }: ArbiterDashboardScreenProps) {
   const usage = Math.round((health.lockedXof / health.lockedCapXof) * 100);
 
@@ -47,7 +47,7 @@ export function ArbiterDashboardScreen({ profile, health, alerts }: ArbiterDashb
           icon="clock"
           label="Marge HTLC"
           value={`${health.htlcMarginBlocks} blocs`}
-          hint="avant l'expiration la plus proche"
+          hint="avant l’expiration la plus proche"
         />
         <StatCard
           icon="node"

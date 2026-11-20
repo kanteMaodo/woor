@@ -1,5 +1,5 @@
 /**
- * Données des écrans de l'équipe Wóor (arbitre, administrateur).
+ * Données des écrans de l’équipe Wóor (arbitre, administrateur).
  * Les montants et compteurs viennent des vues du schéma : v_locked_totals, v_alerts,
  * v_courier_record, v_user_strikes, settings.
  */

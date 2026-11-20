@@ -10,7 +10,7 @@ import type { PayoutAddressView, PayoutStatus, PayoutView } from "./account-view
 const PAYOUT_STATUS: Record<PayoutStatus, ChipProps> = {
   received: { tone: "done", icon: "check", label: "Reçu" },
   upcoming: { tone: "wait", icon: "clock", label: "À venir" },
-  failed: { tone: "danger", icon: "alert", label: "En attente d'adresse" },
+  failed: { tone: "danger", icon: "alert", label: "En attente d’adresse" },
 };
 
 interface PayoutsScreenProps {
@@ -20,9 +20,9 @@ interface PayoutsScreenProps {
 }
 
 /**
- * S6 et C8 : où arrive l'argent, et ce qui est déjà arrivé.
- * Un changement d'adresse ne prend effet qu'après 24 h : un voleur de téléphone
- * ne peut pas détourner les versements d'un coup.
+ * S6 et C8 : où arrive l’argent, et ce qui est déjà arrivé.
+ * Un changement d’adresse ne prend effet qu’après 24 h : un voleur de téléphone
+ * ne peut pas détourner les versements d’un coup.
  */
 export function PayoutsScreen({ profile, payouts, address }: PayoutsScreenProps) {
   const received = payouts.filter((payout) => payout.status === "received");
@@ -58,7 +58,7 @@ export function PayoutsScreen({ profile, payouts, address }: PayoutsScreenProps)
           {payouts.length === 0 ? (
             <div className="empty-state">
               <Icon name="coin" size="lg" />
-              <p>Aucun versement pour l'instant.</p>
+              <p>Aucun versement pour l’instant.</p>
             </div>
           ) : (
             <div className="data-table payouts" role="table" aria-label="Versements">
@@ -122,12 +122,12 @@ function PayoutAddressPanel({ address }: { address: PayoutAddressView }) {
         </div>
       )}
       <Banner tone="info" icon="shield">
-        Un changement d'adresse prend effet 24 h après la demande. Vous recevez une alerte à chaque
+        Un changement d’adresse prend effet 24 h après la demande. Vous recevez une alerte à chaque
         demande.
       </Banner>
       <button type="button" className="btn btn-secondary" disabled title="Bientôt disponible">
         <Icon name="finger" />
-        Changer d'adresse
+        Changer d’adresse
       </button>
     </section>
   );

@@ -18,7 +18,7 @@ interface AccountsScreenProps {
   accounts: AccountListItem[];
 }
 
-/** D1 : les comptes du pilote. L'identité se vérifie en personne avant la première commande. */
+/** D1 : les comptes du pilote. L’identité se vérifie en personne avant la première commande. */
 export function AccountsScreen({ profile, accounts }: AccountsScreenProps) {
   return (
     <AccountScreen
@@ -28,7 +28,7 @@ export function AccountsScreen({ profile, accounts }: AccountsScreenProps) {
       actions={
         <button type="button" className="btn btn-primary" disabled title="Bientôt disponible">
           <Icon name="plus" />
-          Inviter quelqu'un
+          Inviter quelqu’un
         </button>
       }
     >

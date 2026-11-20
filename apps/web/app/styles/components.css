@@ -837,20 +837,77 @@ textarea.input {
 }
 
 /*
- * Sur ordinateur, l'application garde sa taille de téléphone, posée au centre
- * comme un écran : c'est sur le téléphone qu'elle sert, à Dakar.
+ * Tablette : la colonne s'élargit un peu et garde de l'air sur les côtés.
+ * Ordinateur : vraie page web, barre pleine largeur, contenu à gauche et
+ * actions dans un panneau qui reste visible à droite.
  */
-@media (min-width: 600px) {
+@media (min-width: 640px) {
   body:has(.screen) {
-    background: #efeadf;
+    background: #f2f6f3;
   }
 
   .screen {
-    min-height: calc(100dvh - 48px);
-    margin: 24px auto;
-    overflow: clip;
+    max-width: 640px;
+    background: transparent;
+  }
+
+  .content {
+    padding: 28px 24px;
+  }
+
+  .bottom {
+    padding: 16px 24px 20px;
+    background: #fff;
+  }
+}
+
+@media (min-width: 1000px) {
+  .screen {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 680px) 360px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "bar bar bar bar"
+      ". main side .";
+    column-gap: 40px;
+    max-width: none;
+    margin: 0;
+    min-height: 100dvh;
+  }
+
+  .screen:not(:has(> .bottom)) {
+    grid-template-areas:
+      "bar bar bar bar"
+      ". main main .";
+  }
+
+  .appbar {
+    grid-area: bar;
+    height: 72px;
+    padding: 0 max(32px, calc((100vw - 1080px) / 2));
+    background: #fff;
+  }
+
+  .ctx {
+    font-size: var(--wo-text-sm, 14px);
+  }
+
+  .content {
+    grid-area: main;
+    gap: 18px;
+    padding: 40px 0 64px;
+  }
+
+  .bottom {
+    position: sticky;
+    top: 32px;
+    grid-area: side;
+    align-self: start;
+    gap: 10px;
+    margin-top: 40px;
+    padding: 24px;
     border: 1px solid var(--wo-line);
-    border-radius: 24px;
-    box-shadow: 0 24px 60px -24px rgba(20, 33, 61, 0.3);
+    border-radius: 16px;
+    background: #fff;
   }
 }

@@ -7,7 +7,7 @@ interface OpenInBrowserScreenProps {
   pageUrl: string;
 }
 
-/** B2 : le navigateur d'Instagram ou de TikTok peut effacer le code ; on passe par Chrome. */
+/** B2 : le navigateur d’Instagram ou de TikTok peut effacer le code ; on passe par Chrome. */
 export function OpenInBrowserScreen({ chromeIntentUrl, pageUrl }: OpenInBrowserScreenProps) {
   return (
     <Screen
@@ -26,7 +26,7 @@ export function OpenInBrowserScreen({ chromeIntentUrl, pageUrl }: OpenInBrowserS
       </div>
       <h1 className="h1 center">Ouvrez cette page dans Chrome</h1>
       <p className="center muted">
-        Le navigateur d'Instagram ou de TikTok peut effacer votre commande. Dans Chrome, votre code
+        Le navigateur d’Instagram ou de TikTok peut effacer votre commande. Dans Chrome, votre code
         reste sur ce téléphone.
       </p>
       <div className="card">
@@ -60,7 +60,7 @@ export function UnavailableScreen({ reason }: UnavailableScreenProps) {
       </h1>
       <p className="center muted">
         {claimed
-          ? "Seul le téléphone qui a commandé peut payer et recevoir le code. Si c'était vous, rouvrez le lien depuis ce téléphone."
+          ? "Seul le téléphone qui a commandé peut payer et recevoir le code. Si c’était vous, rouvrez le lien depuis ce téléphone."
           : "Ce lien a expiré ou la commande est terminée. Demandez un nouveau lien à la vendeuse."}
       </p>
     </Screen>
