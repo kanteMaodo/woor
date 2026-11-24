@@ -4,6 +4,7 @@ import {
   isSingleLineText,
   isValidPin,
   ORDER_LIMITS,
+  OTHER_LOCALITY,
   toSenegalE164,
 } from "@woor/core";
 import { z } from "zod";
@@ -49,16 +50,42 @@ const money = (label: string, limits: { min: number; max: number }) =>
         .max(limits.max, `${label} : ${limits.max} F CFA au maximum.`),
     );
 
-export const NewOrderFormSchema = z.strictObject({
-  itemLabel: plain("La description", ORDER_LIMITS.itemLabel.min, ORDER_LIMITS.itemLabel.max),
-  itemPriceXof: money("Le prix de l’article", ORDER_LIMITS.itemPriceXof),
-  deliveryFeeXof: money("Les frais de livraison", ORDER_LIMITS.deliveryFeeXof),
-  courierId: z.uuid("Sélectionnez un livreur valide."),
-  neighborhood: z
-    .string({ error: "Choisissez une localité dans la liste." })
-    .refine(isLocality, "Choisissez une localité dans la liste."),
-  landmark: plain("Le repère", 0, ORDER_LIMITS.landmark.max, true),
-});
+const otherLocality = plain(
+  "La localité",
+  ORDER_LIMITS.neighborhood.min,
+  ORDER_LIMITS.neighborhood.max,
+);
+
+export const NewOrderFormSchema = z
+  .strictObject({
+    itemLabel: plain("La description", ORDER_LIMITS.itemLabel.min, ORDER_LIMITS.itemLabel.max),
+    itemPriceXof: money("Le prix de l’article", ORDER_LIMITS.itemPriceXof),
+    deliveryFeeXof: money("Les frais de livraison", ORDER_LIMITS.deliveryFeeXof),
+    courierId: z.uuid("Sélectionnez un livreur valide."),
+    neighborhood: z
+      .string({ error: "Choisissez une localité dans la liste." })
+      .refine(
+        (value) => value === OTHER_LOCALITY || isLocality(value),
+        "Choisissez une localité dans la liste.",
+      ),
+    neighborhoodOther: z.string().default(""),
+    landmark: plain("Le repère", 0, ORDER_LIMITS.landmark.max, true),
+  })
+  /** « Autre » : la localité saisie à la main remplace le choix de la liste. */
+  .transform(({ neighborhoodOther, ...order }, context) => {
+    if (order.neighborhood !== OTHER_LOCALITY) return order;
+    const typed = otherLocality.safeParse(neighborhoodOther);
+    if (typed.success) return { ...order, neighborhood: typed.data };
+    for (const issue of typed.error.issues) {
+      context.issues.push({
+        code: "custom",
+        message: issue.message,
+        input: neighborhoodOther,
+        path: ["neighborhoodOther"],
+      });
+    }
+    return z.NEVER;
+  });
 
 export const DeliveryCodeFormSchema = z.strictObject({
   intent: z.literal("code"),

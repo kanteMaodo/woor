@@ -1,4 +1,4 @@
-import { DELIVERY_ZONES, ORDER_LIMITS } from "@woor/core";
+import { DELIVERY_ZONES, ORDER_LIMITS, OTHER_LOCALITY } from "@woor/core";
 import { useState } from "react";
 import { useNavigation } from "react-router";
 
@@ -24,7 +24,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
   const [fee, setFee] = useState("");
   const priceXof = /^\d+$/.test(price) ? Number(price) : 0;
   const feeXof = /^\d+$/.test(fee) ? Number(fee) : 0;
-  const { itemLabel, itemPriceXof, deliveryFeeXof, landmark } = ORDER_LIMITS;
+  const { itemLabel, itemPriceXof, deliveryFeeXof, neighborhood, landmark } = ORDER_LIMITS;
 
   return (
     <AccountScreen
@@ -120,7 +120,19 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
                     ))}
                   </optgroup>
                 ))}
+                <option value={OTHER_LOCALITY}>Autre localité</option>
               </select>
+            </div>
+            <div className="field field-other-locality">
+              <label htmlFor="neighborhoodOther">Précisez la localité</label>
+              <input
+                id="neighborhoodOther"
+                name="neighborhoodOther"
+                className="input"
+                minLength={neighborhood.min}
+                maxLength={neighborhood.max}
+                placeholder="Cité Mixta"
+              />
             </div>
             <div className="field">
               <label htmlFor="landmark">Repère</label>

@@ -542,6 +542,14 @@ select[aria-invalid="true"] {
   gap: 6px;
 }
 
+/* La saisie libre n’apparaît que si « Autre localité » est choisie, même sans JavaScript. */
+.field-other-locality {
+  display: none;
+}
+.field:has(option[value="Autre"]:checked) + .field-other-locality {
+  display: flex;
+}
+
 .field label {
   font-size: var(--wo-text-xs);
   font-weight: 500;

@@ -1,7 +1,7 @@
 /**
  * Localités desservies, regroupées par zone de la région de Dakar.
- * La vendeuse choisit dans cette liste : une saisie libre donnait dix orthographes
- * pour un même quartier, illisibles pour le livreur.
+ * La vendeuse choisit dans cette liste pour une orthographe unique ; « Autre » ouvre
+ * une saisie libre quand son quartier n’y figure pas.
  */
 export const DELIVERY_ZONES = [
   {
@@ -90,6 +90,9 @@ export const DELIVERY_ZONES = [
     ],
   },
 ] as const;
+
+/** Choix du formulaire qui ouvre la saisie libre ; jamais enregistré tel quel. */
+export const OTHER_LOCALITY = "Autre";
 
 export type Locality = (typeof DELIVERY_ZONES)[number]["localities"][number];
 
