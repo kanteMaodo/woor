@@ -1,4 +1,4 @@
-import { ORDER_LIMITS } from "@woor/core";
+import { DELIVERY_ZONES, ORDER_LIMITS } from "@woor/core";
 import { useState } from "react";
 import { useNavigation } from "react-router";
 
@@ -24,7 +24,7 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
   const [fee, setFee] = useState("");
   const priceXof = /^\d+$/.test(price) ? Number(price) : 0;
   const feeXof = /^\d+$/.test(fee) ? Number(fee) : 0;
-  const { itemLabel, itemPriceXof, deliveryFeeXof, neighborhood, landmark } = ORDER_LIMITS;
+  const { itemLabel, itemPriceXof, deliveryFeeXof, landmark } = ORDER_LIMITS;
 
   return (
     <AccountScreen
@@ -100,16 +100,27 @@ export function NewOrderScreen({ profile, couriers, error }: NewOrderScreenProps
               <Icon name="moto" /> La livraison
             </h2>
             <div className="field">
-              <label htmlFor="neighborhood">Quartier</label>
-              <input
+              <label htmlFor="neighborhood">Localité</label>
+              <select
                 id="neighborhood"
                 name="neighborhood"
                 className="input"
-                minLength={neighborhood.min}
-                maxLength={neighborhood.max}
-                placeholder="Sacré-Cœur 3"
+                defaultValue=""
                 required
-              />
+              >
+                <option value="" disabled>
+                  Choisir une localité
+                </option>
+                {DELIVERY_ZONES.map(({ zone, localities }) => (
+                  <optgroup key={zone} label={zone}>
+                    {localities.map((locality) => (
+                      <option key={locality} value={locality}>
+                        {locality}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
             </div>
             <div className="field">
               <label htmlFor="landmark">Repère</label>

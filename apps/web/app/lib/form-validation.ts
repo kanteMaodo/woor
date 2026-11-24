@@ -1,4 +1,11 @@
-import { isPlainText, isSingleLineText, isValidPin, ORDER_LIMITS, toSenegalE164 } from "@woor/core";
+import {
+  isLocality,
+  isPlainText,
+  isSingleLineText,
+  isValidPin,
+  ORDER_LIMITS,
+  toSenegalE164,
+} from "@woor/core";
 import { z } from "zod";
 
 const plain = (label: string, min: number, max: number, multiline = false) =>
@@ -47,7 +54,9 @@ export const NewOrderFormSchema = z.strictObject({
   itemPriceXof: money("Le prix de l’article", ORDER_LIMITS.itemPriceXof),
   deliveryFeeXof: money("Les frais de livraison", ORDER_LIMITS.deliveryFeeXof),
   courierId: z.uuid("Sélectionnez un livreur valide."),
-  neighborhood: plain("Le quartier", ORDER_LIMITS.neighborhood.min, ORDER_LIMITS.neighborhood.max),
+  neighborhood: z
+    .string({ error: "Choisissez une localité dans la liste." })
+    .refine(isLocality, "Choisissez une localité dans la liste."),
   landmark: plain("Le repère", 0, ORDER_LIMITS.landmark.max, true),
 });
 

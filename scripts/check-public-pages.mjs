@@ -161,7 +161,7 @@ try {
       itemPriceXof: "12000",
       deliveryFeeXof: "1500",
       courierId,
-      neighborhood: "Dakar",
+      neighborhood: "Médina",
       landmark: "",
     },
     "check-seller",

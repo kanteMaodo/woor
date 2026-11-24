@@ -265,7 +265,7 @@ try {
     await page.locator("#itemLabel").fill("<img src=x onerror=alert(1)>");
     await page.locator("#itemPriceXof").fill("12000");
     await page.locator("#deliveryFeeXof").fill("1500");
-    await page.locator("#neighborhood").fill("Sacré-Cœur 3");
+    await page.locator("#neighborhood").selectOption("Sacré-Cœur 3");
     await page.getByRole("button", { name: "Créer le lien", exact: true }).click();
     assert.ok(await page.locator(".form-validation-error").isVisible());
     assert.equal(await page.locator("#itemLabel").getAttribute("aria-invalid"), "true");

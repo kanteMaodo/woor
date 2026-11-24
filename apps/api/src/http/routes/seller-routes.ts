@@ -1,4 +1,4 @@
-import { isPlainText, isSingleLineText, ORDER_LIMITS } from "@woor/core";
+import { isLocality, isPlainText, isSingleLineText, ORDER_LIMITS } from "@woor/core";
 import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -12,7 +12,7 @@ export interface SellerRoutesOptions {
   seller: SellerUseCases;
 }
 
-const { itemLabel, itemPriceXof, deliveryFeeXof, neighborhood, landmark } = ORDER_LIMITS;
+const { itemLabel, itemPriceXof, deliveryFeeXof, landmark } = ORDER_LIMITS;
 
 export const NewOrderBody = z.strictObject({
   itemLabel: z
@@ -25,13 +25,7 @@ export const NewOrderBody = z.strictObject({
   itemPriceXof: z.number().int().min(itemPriceXof.min).max(itemPriceXof.max),
   deliveryFeeXof: z.number().int().min(deliveryFeeXof.min).max(deliveryFeeXof.max),
   courierId: z.uuid(),
-  neighborhood: z
-    .string()
-    .trim()
-    .normalize("NFC")
-    .min(neighborhood.min)
-    .max(neighborhood.max)
-    .refine(isSingleLineText, "Le quartier doit être un texte sans balise HTML."),
+  neighborhood: z.string().refine(isLocality, "La localité doit venir de la liste desservie."),
   landmark: z
     .string()
     .trim()
